@@ -2,5 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/FiapCloundGames.API/FiapCloundGames.API.csproj" Id="c1edca7b-ed13-4737-8314-fc3edb1d749a" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/FiapCloundGames.UnitTests/FiapCloundGames.UnitTests.csproj" Id="76769519-502c-4eb4-be6a-89f85e1e9389" />
+  </Folder>
 </Solution>
