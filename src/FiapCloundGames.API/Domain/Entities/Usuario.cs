@@ -21,6 +21,22 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public PerfilUsuario Perfil { get; set; }
 
-        public string Documento { get; private set; }   
+        public string Documento { get; private set; }
+        public Usuario(string nomeUsuario, string emailUsuario, string senhaUsuario, 
+            string confirmacaoSenhaUsuario, PerfilUsuario perfilUsuario, string documentoUsuario)
+        {
+            NomeUsuario = nomeUsuario;
+            Email = emailUsuario;   
+            Senha = senhaUsuario;
+            reSenha = confirmacaoSenhaUsuario;
+            Documento = documentoUsuario;
+            Perfil = perfilUsuario; 
+            Validar(this);
+        }
+
+        public bool Validar(Usuario usuario)
+        {
+            return true;
+        }
     }
 }
