@@ -12,7 +12,7 @@ namespace FiapCloundGames.UnitTests.Fixtures
             _faker = new Faker();
         }
 
-        public Usuario GerarUsuarioJogadorComSucesso()
+        public Usuario ObtemJogadorComSucesso()
         {
             var nomeUsuario = _faker.Name.FullName();
             var emailUsuario = _faker.Internet.Email();
@@ -21,17 +21,15 @@ namespace FiapCloundGames.UnitTests.Fixtures
             return new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
         }
 
-        public Usuario GerarUsuarioJogadorEmailInvalido(string emailInvalido)
+        public Usuario ObtemUsuarioEmailInvalido(string emailInvalido)
         {
-            var usuario = new Usuario();
-            var nomeUsuario = _faker.Name.FullName();
-            var emailUsuario = emailInvalido;
-            var senhaUsuario = "Teste@123";
-            var confirmacaoSenhaUsuario = senhaUsuario;
-            return new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
+            return new Usuario(nomeUsuario: _faker.Name.FullName(),
+                emailUsuario: emailInvalido,
+                senhaUsuario: "Teste@123",
+                confirmacaoSenhaUsuario: "Teste@123");
         }
 
-        public Usuario GerarUsuarioJogadorComEmailNaoPreenchido()
+        public Usuario ObtemUsuarioComEmailNaoPreenchido()
         {
             var nomeUsuario = _faker.Name.FullName();
             var emailUsuario = string.Empty;
@@ -40,9 +38,7 @@ namespace FiapCloundGames.UnitTests.Fixtures
             return new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
         }
 
-       
-
-        public Usuario GerarUsuarioJogadorComNomeNaoPreenchido()
+        public Usuario ObtemUsuarioComNomeNaoPreenchido()
         {
             var nomeUsuario = string.Empty;
             var emailUsuario = _faker.Internet.Email();
@@ -50,22 +46,46 @@ namespace FiapCloundGames.UnitTests.Fixtures
             var confirmacaoSenhaUsuario = senhaUsuario;
             return new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
         }
-
-        public Usuario GerarUsuarioJogadorComSenhaInvalida()
+        public Usuario ObtemUsuarioComNomeInvalido(string nomeInvalido)
         {
-            var nomeUsuario = _faker.Name.FullName();
+            var nomeUsuario = nomeInvalido;
             var emailUsuario = _faker.Internet.Email();
-            var senhaUsuario = "123"; 
+            var senhaUsuario = "Teste@123";
             var confirmacaoSenhaUsuario = senhaUsuario;
             return new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
         }
-        public Usuario GerarUsuarioJogadorComConfirmacaoDeSenhaDiferente()
+
+        public Usuario ObtemUsuarioComSenhaInvalida()
+        {
+            var nomeUsuario = _faker.Name.FullName();
+            var emailUsuario = _faker.Internet.Email();
+            var senhaUsuario = "123";
+            var confirmacaoSenhaUsuario = senhaUsuario;
+            return new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
+        }
+        public Usuario ObtemUsuarioComSenhaNaoPreenchida()
+        {
+            var nomeUsuario = _faker.Name.FullName();
+            var emailUsuario = _faker.Internet.Email();
+            var senhaUsuario = string.Empty;
+            var confirmacaoSenhaUsuario = senhaUsuario;
+            return new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
+        }
+
+        public Usuario ObtemUsuarioComConfirmacaoDeSenhaDiferente()
         {
             var nomeUsuario = _faker.Name.FullName();
             var emailUsuario = _faker.Internet.Email();
             var senhaUsuario = "Teste@123";
-            var confirmacaoSenhaUsuario = senhaUsuario + "123"; 
+            var confirmacaoSenhaUsuario = senhaUsuario + "123";
             return new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
+        }
+
+        public Usuario ObtemAdminComSucesso()
+        {
+            var usuario = new Usuario(_faker.Internet.Email(), "Teste@123");
+            typeof(Usuario).GetProperty("Perfil").SetValue(usuario, TipoUsuario.Administrador);
+            return usuario;
         }
     }
 }
