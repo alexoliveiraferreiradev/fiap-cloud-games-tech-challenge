@@ -18,13 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Services\" />
-    <Folder Include="Application\Services\" />
     <Folder Include="Infrastructure\Caching\" />
     <Folder Include="Infrastructure\Caching\" />
-    <Folder Include="Infrastructure\Repository\" />
     <Folder Include="Infrastructure\Persistance\" />
-    <Folder Include="Infrastructure\Repository\" />
     <Folder Include="Infrastructure\Persistance\" />
   </ItemGroup>
 
