@@ -1,6 +1,6 @@
 ﻿namespace FiapCloundGames.API.Domain.Enum
 {
-    public enum PerfilUsuario
+    public enum TipoUsuario
     {
         Jogador = 0,
         Administrador = 2
