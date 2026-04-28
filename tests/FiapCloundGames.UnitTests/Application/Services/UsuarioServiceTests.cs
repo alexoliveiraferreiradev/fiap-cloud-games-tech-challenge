@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using FiapCloundGames.API.Application.Dtos;
 using FiapCloundGames.API.Application.Services;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
@@ -27,17 +28,17 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// <remarks> Este teste verifica se um usuário com perfil de Administrador é criado corretamente quando as permissões e o
         /// token de acesso são válidos. Ele utiliza um mock do serviço de usuário para simular a criação do administrador e 
         /// valida se o perfil do usuário criado é realmente de Administrador.</remarks> 
-        [Fact(DisplayName = "Adicionar novo admistrador")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioAdministrador_AdministradorValido_DeveCriarComSucesso()
+        [Fact(DisplayName = "Promovendo novo admistrador")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task PromovendoUsuarioAdministrador_AdministradorValido_DeveCriarComSucesso()
         {
             //Arrange            
-            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var usuarioRequest = _usuarioFixture.UsuarioRequest();
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act
-            var result = service.CriaAdministrador(usuario, true, "INVITE-ADMIN-VALID");
+            var result = await service.CriaAdministrador(usuarioRequest, true, "INVITE-ADMIN-VALID");
             //Assert
             Assert.Equal(TipoUsuario.Administrador, result.Perfil);
         }
@@ -48,17 +49,17 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// <returns></returns>
         /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando as permissões 
         /// para criar um administrador são inválidas.</remarks>
-        [Fact(DisplayName = "Falha ao adicionar novo admistrador - não há permissões")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioAdministrador_AdministradorInvalidoSemPermissao_DeveLancarExcecao()
+        [Fact(DisplayName = "Falha ao promover novo admistrador - não há permissões")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task PromoverUsuarioAdministrador_AdministradorInvalidoSemPermissao_DeveLancarExcecao()
         {
             //Arrange            
-            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var usuario = _usuarioFixture.UsuarioRequest();
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act 
-            var result = Assert.Throws<DomainException>(() => service.CriaAdministrador(usuario, false, "INVITE-ADMIN-VALID"));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaAdministrador(usuario, false, "INVITE-ADMIN-VALID"));
             //Assert
             Assert.Equal(MensagensDominio.PermissaoNegadaCriarAdministrador, result.Message);
         }
@@ -69,17 +70,17 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// <returns></returns>
         /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando o token de acesso 
         /// para criar um administrador é inválido ou ausente.</remarks>
-        [Fact(DisplayName = "Falha ao adicionar novo admistrador - não há token")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioAdministrador_AdministradorInvalidoSemToken_DeveLancarExcecao()
+        [Fact(DisplayName = "Falha ao promover novo admistrador - não há token")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task PromoverUsuarioAdministrador_AdministradorInvalidoSemToken_DeveLancarExcecao()
         {
             //Arrange            
-            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var usuario = _usuarioFixture.UsuarioRequest();
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act 
-            var result = Assert.Throws<DomainException>(() => service.CriaAdministrador(usuario, true, ""));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaAdministrador(usuario, true, ""));
             //Assert
             Assert.Equal(MensagensDominio.PermissaoNegadaCriarAdministrador, result.Message);
         }
@@ -88,20 +89,17 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// </summary>
         /// <returns></returns>
         /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando o email do usuário para criar um administrador não é preenchido.</remarks>
-        [Fact(DisplayName = "Falha ao adicionar novo admistrador - email não preenchido")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioAdministrador_EmailNãoPreenchido_DeveLancarExcecao()
+        [Fact(DisplayName = "Falha ao promover novo admistrador - email não preenchido")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task PromoverUsuarioAdministrador_EmailNãoPreenchido_DeveLancarExcecao()
         {
-            //Arrange            
-            var nomeUsuario = _faker.Name.FullName();
-            var emailUsuario = string.Empty;
-            var senhaUsuario = "Teste@123";
-            var confirmacaoSenha = senhaUsuario;
+            //Arrange
+            var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), string.Empty, "Teste@123", "Teste@123");
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act 
-            var result = Assert.Throws<DomainException>(() => service.CriaAdministrador(new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenha), true, ""));
+            var result =await Assert.ThrowsAsync<DomainException>(async () => await service.CriaAdministrador(usuarioRequest, true, ""));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioEmailObrigatorio, result.Message);
         }
@@ -110,20 +108,17 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// Verifica se o método CriaAdministrador lança uma exceção do tipo DomainException quando a senha do usuário para criar um administrador não é preenchida.
         /// </summary>
         /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando a senha do usuário para criar um administrador não é preenchida.</remarks>
-        [Fact(DisplayName = "Falha ao adicionar novo admistrador - senha não preenchida")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioAdministrador_SenhaNaoPreenchida_DeveLancarExcecao()
+        [Fact(DisplayName = "Falha ao promover novo admistrador - senha não preenchida")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task PromoverUsuarioAdministrador_SenhaNaoPreenchida_DeveLancarExcecao()
         {
-            //Arrange            
-            var nomeUsuario = _faker.Name.FullName();
-            var emailUsuario = _faker.Internet.Email();
-            var senhaUsuario = string.Empty;
-            var confirmacaoSenha = senhaUsuario;
+            //Arrange
+            var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), _faker.Internet.Email(), string.Empty, string.Empty);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act
-            var result = Assert.Throws<DomainException>(() => service.CriaAdministrador(new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenha), true, ""));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaAdministrador(usuarioRequest, true, ""));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaObrigatoria, result.Message);
         }
@@ -133,26 +128,23 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// </summary>
         /// <param name="senhaInvalida"> A senha inválida a ser testada</param>
         /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando a senha do usuário para criar um administrador é inválida </remarks>
-        [Theory(DisplayName = "Falha ao adicionar novo admistrador - senha inválida")]
-        [Trait("Categoria", "Usuario Tests")]
+        [Theory(DisplayName = "Falha ao promover novo admistrador - senha inválida")]
+        [Trait("Categoria", "Usuario Service Tests")]
         [InlineData("senhaFraca")]
         [InlineData("123456")]
         [InlineData("abcdefg")]
         [InlineData("@@@@@a")]
         [InlineData("senha@123")]
         [InlineData("SENHA@123")]
-        public void AdicionarUsuarioAdministrador_SenhaInvalida_DeveLancarExcecao(string senhaInvalida)
+        public async Task PromoverUsuarioAdministrador_SenhaInvalida_DeveLancarExcecao(string senhaInvalida)
         {
-            //Arrange            
-            var nomeUsuario = _faker.Name.FullName();
-            var emailUsuario = _faker.Internet.Email();
-            var senhaUsuario = senhaInvalida;
-            var confirmacaoSenha = senhaUsuario;
+            //Arrange
+            var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), _faker.Internet.Email(), senhaInvalida, senhaInvalida);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act 
-            var result = Assert.Throws<DomainException>(() => service.CriaAdministrador(new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenha), true, ""));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaAdministrador(usuarioRequest, true, ""));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaFraca, result.Message);
         }
@@ -162,25 +154,22 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// <param name="emailInvalido">O email inválido a ser testado.</param>
         /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando o email do usuário para criar um administrador é inválido,
         /// utilizando diferentes formatos de email inválidos.</remarks>
-        [Theory(DisplayName = "Falha ao adicionar novo admistrador - email inválido")]
-        [Trait("Categoria", "Usuario Tests")]
+        [Theory(DisplayName = "Falha ao promover novo admistrador - email inválido")]
+        [Trait("Categoria", "Usuario Service Tests")]
         [InlineData("emailinvalido")]
         [InlineData("email@invalido")]
         [InlineData("@dominio.com")]
         [InlineData("usuario@dominio")]
         [InlineData("usuario@dominio..com")]
-        public void AdicionarUsuarioAdministrador_EmailInvalido_DeveLancarExcecao(string emailInvalido)
+        public async Task PromoverUsuarioAdministrador_EmailInvalido_DeveLancarExcecao(string emailInvalido)
         {
-            //Arrange            
-            var nomeUsuario = _faker.Name.FullName();
-            var emailUsuario = emailInvalido;
-            var senhaUsuario = "Teste@123";
-            var confirmacaoSenha = senhaUsuario;
+            //Arrange
+            var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), emailInvalido, "Teste@123", "Teste@123");
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act 
-            var result = Assert.Throws<DomainException>(() => service.CriaAdministrador(new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenha), true, ""));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaAdministrador(usuarioRequest, true, ""));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioEmailInvalido, result.Message);
         }
@@ -189,16 +178,16 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// Verifica se o método CriaAdministrador lança uma exceção do tipo DomainException quando a confirmação de senha do usuário para criar um administrador é diferente da senha.
         /// </summary>
         /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando a confirmação de senha do usuário para criar um administrador é diferente da senha </remarks>
-        [Fact(DisplayName = "Falha ao adicionar novo admistrador - confirmação de senha diferente")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioAdministrador_ConfirmacaoDeSenhaInvalida_DeveLancarExcecao()
+        [Fact(DisplayName = "Falha ao promover novo admistrador - confirmação de senha diferente")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task PromoverUsuarioAdministrador_ConfirmacaoDeSenhaInvalida_DeveLancarExcecao()
         {
             //Arrange                       
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act
-            var result = Assert.Throws<DomainException>(() => service.CriaAdministrador(_usuarioFixture.ObtemUsuarioComConfirmacaoDeSenhaDiferente(), true, ""));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaAdministrador(_usuarioFixture.UsuarioRequestSenhaDiferente(), true, ""));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaConfirmacaoDiferente, result.Message);
         }
@@ -208,19 +197,19 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// </summary>
         /// <remarks>Este teste verifica se um usuário com perfil de Jogador é criado corretamente quando os dados fornecidos são válidos. Ele utiliza um mock do serviço de usuário para simular a criação do jogador e valida se o perfil do usuário criado é realmente de Jogador, além de verificar se o método de adição do repositório foi chamado corretamente.</remarks>
         [Fact(DisplayName = "Adicionar novo jogador")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioJogador_JogadorValido_DeveCriarComSucesso()
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task AdicionarUsuarioJogador_JogadorValido_DeveCriarComSucesso()
         {
-            //Arrange            
-            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            //Arrange
+            var usuarioRequest = _usuarioFixture.UsuarioRequest();
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act
-            var result = service.CriaJogador(usuario);
+            var result = await service.CriaJogador(usuarioRequest);
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(usuario.Email, result.Email);
+            Assert.Equal(usuarioRequest.Email, result.Email);
             Assert.Equal(TipoUsuario.Jogador, result.Perfil);
 
             repoMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Once);
@@ -231,24 +220,21 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// <param name="emailInvalido">O email inválido a ser testado.</param>
         /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando o email do usuário para criar um jogador é inválido, utilizando diferentes formatos de email inválidos.</remarks>
         [Theory(DisplayName = "Falha ao adicionar novo jogador - email inválido")]
-        [Trait("Categoria", "Usuario Tests")]
+        [Trait("Categoria", "Usuario Service Tests")]
         [InlineData("emailinvalido")]
         [InlineData("email@invalido")]
         [InlineData("@dominio.com")]
         [InlineData("usuario@dominio")]
         [InlineData("usuario@dominio..com")]
-        public void AdicionarUsuarioJogador_EmailInvalido_DeveLancarExcecao(string emailInvalido)
+        public async Task AdicionarUsuarioJogador_EmailInvalido_DeveLancarExcecao(string emailInvalido)
         {
-            //Arrange            
-            var nomeUsuario = _faker.Name.FullName();
-            var emailUsuario = emailInvalido;
-            var senhaUsuario = "Teste@123";
-            var confirmacaoSenha = senhaUsuario;
+            //Arrange
+            var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), emailInvalido, "Teste@123", "Teste@123");
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act
-            var result = Assert.Throws<DomainException>(() => service.CriaJogador(new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenha)));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaJogador(usuarioRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioEmailInvalido, result.Message);
         }
@@ -260,19 +246,16 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// O teste garante que uma <see cref="DomainException"/> seja lançada ao tentar instanciar 
         /// um usuário com e-mail nulo ou vazio, preservando a integridade da entidade. </remarks>
         [Fact(DisplayName = "Falha ao adicionar novo jogador - email não preenchido")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioJogador_EmailNaoPreenchido_DeveLancarExcecao()
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task AdicionarUsuarioJogador_EmailNaoPreenchido_DeveLancarExcecao()
         {
-            //Arrange            
-            var nomeUsuario = _faker.Name.FullName();
-            var emailUsuario = string.Empty;
-            var senhaUsuario = "Teste@123";
-            var confirmacaoSenha = senhaUsuario;
+            //Arrange
+            var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), string.Empty, "Teste@123", "Teste@123");
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act 
-            var result = Assert.Throws<DomainException>(() => service.CriaJogador(new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenha)));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaJogador(usuarioRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioEmailObrigatorio, result.Message);
         }
@@ -285,19 +268,16 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// </remarks>
 
         [Fact(DisplayName = "Falha ao adicionar novo jogador - senha não preenchida")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioJogador_SenhaNaoPreenchida_DeveLancarExcecao()
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task AdicionarUsuarioJogador_SenhaNaoPreenchida_DeveLancarExcecao()
         {
-            //Arrange            
-            var nomeUsuario = _faker.Name.FullName();
-            var emailUsuario = _faker.Internet.Email();
-            var senhaUsuario = string.Empty;
-            var confirmacaoSenha = senhaUsuario;
+            //Arrange
+            var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), _faker.Internet.Email(), string.Empty, string.Empty);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act 
-            var result = Assert.Throws<DomainException>(() => service.CriaJogador(new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenha)));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaJogador(usuarioRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaObrigatoria, result.Message);
         }
@@ -310,25 +290,22 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// para garantir que apenas senhas fortes sejam aceitas.
         /// </remarks>
         [Theory(DisplayName = "Falha ao adicionar novo jogador - senha inválida")]
-        [Trait("Categoria", "Usuario Tests")]
+        [Trait("Categoria", "Usuario Service Tests")]
         [InlineData("senhaFraca")]
         [InlineData("123456")]
         [InlineData("abcdefg")]
         [InlineData("@@@@@a")]
         [InlineData("senha@123")]
         [InlineData("SENHA@123")]
-        public void AdicionarUsuarioJogador_SenhaInvalida_DeveLancarExcecao(string senhaInvalida)
+        public async Task AdicionarUsuarioJogador_SenhaInvalida_DeveLancarExcecao(string senhaInvalida)
         {
-            //Arrange            
-            var nomeUsuario = _faker.Name.FullName();
-            var emailUsuario = _faker.Internet.Email();
-            var senhaUsuario = senhaInvalida;
-            var confirmacaoSenha = senhaUsuario;
+            //Arrange
+            var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), _faker.Internet.Email(), senhaInvalida, senhaInvalida);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act
-            var result = Assert.Throws<DomainException>(() => service.CriaJogador(new Usuario(nomeUsuario, emailUsuario, senhaUsuario, confirmacaoSenha)));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaJogador(usuarioRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaFraca, result.Message);
         }
@@ -340,21 +317,21 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// no <see cref="AssertionConcern"/> bloqueia a criação do objeto com senhas distintas.
         /// </remarks>
         [Fact(DisplayName = "Falha ao adicionar novo jogador - confirmação de senha diferente")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioJogador_ConfirmacaoDeSenhaInvalida_DeveLancarExcecao()
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task AdicionarUsuarioJogador_ConfirmacaoDeSenhaInvalida_DeveLancarExcecao()
         {
             //Arrange                       
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act 
-            var result = Assert.Throws<DomainException>(() => service.CriaJogador(_usuarioFixture.ObtemUsuarioComConfirmacaoDeSenhaDiferente()));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaJogador(_usuarioFixture.UsuarioRequestSenhaDiferente()));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaConfirmacaoDiferente, result.Message);
         }
 
         [Fact(DisplayName = "Sucesso ao rebaixar um adminstrador para jogador")]
-        [Trait("Categoria","Usuario Tests")]
+        [Trait("Categoria", "Usuario Service Tests")]
         public async Task RebaixarPerfil_UsuarioEhAdmin_DeveMudarParaJogador()
         {
             //Arrange
@@ -370,12 +347,12 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             await service.RebaixarPerfil(usuarioRebaixar.Id, admin.Id);
             //Assert
-            Assert.Equal(TipoUsuario.Jogador, usuarioRebaixar.Perfil); 
+            Assert.Equal(TipoUsuario.Jogador, usuarioRebaixar.Perfil);
         }
 
 
         [Fact(DisplayName = "Falha ao rebaixar um jogador que já é jogador")]
-        [Trait("Categoria", "Usuario Tests")]
+        [Trait("Categoria", "Usuario Service Tests")]
         public async Task RebaixarPerfil_UsuarioJaEhJogador_DeveLancarExcecao()
         {
             //Arrange
@@ -389,9 +366,48 @@ namespace FiapCloundGames.UnitTests.Application.Services
             repoMock.Setup(r => r.ObterPorId(usuarioRebaixar.Id)).ReturnsAsync(usuarioRebaixar);
 
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(usuarioRebaixar.Id, admin.Id));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(idUsuarioRebaixar: usuarioRebaixar.Id, idAdminExecutor: admin.Id));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioPerfilRebaixarInvalido, result.Message);
+        }
+
+        [Fact(DisplayName = "Falha ao rebaixar um administrador - não há administrador para rebaixar")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task RebaixarPerfil_AdministradorNaoExiste_DeveLancarExcecao()
+        {
+            var idAdminInexistente = Guid.NewGuid();
+            var usuarioRebaixar = _usuarioFixture.ObtemJogadorComSucesso();
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var service = new UsuarioService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(usuarioRebaixar.Id)).ReturnsAsync(usuarioRebaixar);
+            repoMock.Setup(r => r.ObterPorId(idAdminInexistente))
+            .ReturnsAsync((Usuario)null);
+            // Act & Assert
+            var ex = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(idUsuarioRebaixar: usuarioRebaixar.Id, idAdminExecutor: idAdminInexistente));
+
+            Assert.Equal(MensagensDominio.PermissaoNegadaCriarAdministrador, ex.Message);
+        }
+
+
+        [Fact(DisplayName = "Falha ao rebaixar um administrador - não há administrador para ser rebaixado")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task RebaixarPerfil_UsuarioNaoExiste_DeveLancarExcecao()
+        {
+            var admin = _usuarioFixture.ObtemAdminComSucesso();
+            var idUsuarioARebaixar = Guid.NewGuid();
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var service = new UsuarioService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(admin.Id)).ReturnsAsync(admin);
+            repoMock.Setup(r => r.ObterPorId(idUsuarioARebaixar)).ReturnsAsync((Usuario)null);
+
+            // Act & Assert
+            var ex = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(idUsuarioRebaixar: idUsuarioARebaixar, idAdminExecutor: admin.Id));
+
+            Assert.Equal(MensagensDominio.UsuarioObrigatorio, ex.Message);
         }
     }
 }
