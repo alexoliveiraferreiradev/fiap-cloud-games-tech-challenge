@@ -1,4 +1,5 @@
 ﻿using FiapCloundGames.API.Domain.Common.Exceptions;
+using FiapCloundGames.API.Domain.Resources;
 using System.Text.RegularExpressions;
 
 namespace FiapCloundGames.API.Domain.Common
@@ -162,13 +163,38 @@ namespace FiapCloundGames.API.Domain.Common
                 var emailAddress = new System.Net.Mail.MailAddress(email);
                 if (email.Contains("..")) throw new DomainException(message);
                 if (emailAddress.Address != email) throw new DomainException(message);
-                if(!email.Contains(".")) throw new DomainException(message);
+                if (!email.Contains(".")) throw new DomainException(message);
             }
             catch
             {
                 throw new DomainException(message);
             }
         }
+        /// <summary>
+        /// Valida se o valor decimal é negativo, e lança uma exceção de domínio com a mensagem fornecida caso seja negativo.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="message"></param>
+        /// <exception cref="DomainException"></exception>
         public static void AssertArgumentValueFormat(decimal value, string message)
+        {
+            if (value < 0) throw new DomainException(MensagensDominio.JogoPrecoInvalido);
+        }
+
+        /// <summary>
+        /// Valida se um valor inteiro está dentro de um intervalo especificado (inclusivo), e lança uma exceção de domínio com a mensagem fornecida caso esteja fora do intervalo.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="minimum"></param>
+        /// <param name="maximum"></param>
+        /// <param name="message"></param>
+        /// <exception cref="DomainException"></exception>
+        public static void AssertArgumentRange(int value, int minimum, int maximum, string message)
+        {
+            if (value < minimum || value > maximum)
+            {
+                throw new DomainException(message);
+            }
+        }
     }
 }
