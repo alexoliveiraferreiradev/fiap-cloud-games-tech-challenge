@@ -1,4 +1,5 @@
-﻿using FiapCloundGames.API.Application.Services.Interfaces;
+﻿using FiapCloundGames.API.Application.Dtos;
+using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
@@ -17,9 +18,9 @@ namespace FiapCloundGames.API.Application.Services
         }
 
 
-        public Task Adicionar(Usuario entity)
+        public async Task Adicionar(Usuario entity)
         {
-            throw new NotImplementedException();
+            await _usuarioRepository.Adicionar(entity);
         }
 
         public async Task Atualizar(Usuario entity)
@@ -27,27 +28,27 @@ namespace FiapCloundGames.API.Application.Services
             await _usuarioRepository.Atualizar(entity);
         }
 
-        public Usuario CriaAdministrador(Usuario dadosUsuario,bool hasPermision, string token)
+        public async Task<Usuario> CriaAdministrador(CriaUsuarioRequest request, bool hasPermision, string token)
         {
-            var usuario = new Usuario(dadosUsuario.NomeUsuario, dadosUsuario.Email, dadosUsuario.Senha, dadosUsuario.Senha);
-            if(!ValidaPermissoesAdministrador(hasPermision, token)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
+            var usuario = new Usuario(request.Nome, request.Email, request.Senha, request.reSenha);
+            if (!ValidaPermissoesAdministrador(hasPermision, token)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
             usuario.PromoverPerfil(usuario);
-            _usuarioRepository.Adicionar(usuario);
-            return usuario; 
+            await Adicionar(usuario);
+            return usuario;
         }
-        
+
         public async Task RebaixarPerfil(Guid idUsuarioRebaixar, Guid idAdminExecutor)
         {
             var adminExecutor = await _usuarioRepository.ObterPorId(idAdminExecutor);
-            if(!adminExecutor.Perfil.Equals(TipoUsuario.Administrador) || adminExecutor == null) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
+            if (adminExecutor == null || !adminExecutor.Perfil.Equals(TipoUsuario.Administrador)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
 
             var usuario = await _usuarioRepository.ObterPorId(idUsuarioRebaixar);
-            if(usuario == null) throw new DomainException(MensagensDominio.UsuarioObrigatorio);
+            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioObrigatorio);
             if (usuario.Perfil.Equals(TipoUsuario.Jogador)) throw new DomainException(MensagensDominio.UsuarioPerfilRebaixarInvalido);
 
             usuario.RebaixarPerfil();
 
-            await _usuarioRepository.Atualizar(usuario);    
+            await _usuarioRepository.Atualizar(usuario);
         }
 
 
@@ -62,23 +63,23 @@ namespace FiapCloundGames.API.Application.Services
 
         private bool IsValidToken(string token)
         {
-            if(string.IsNullOrWhiteSpace(token))
+            if (string.IsNullOrWhiteSpace(token))
             {
                 return false;
             }
             return true;
         }
 
-        public Usuario CriaJogador(Usuario entity)
+        public async Task<Usuario> CriaJogador(CriaUsuarioRequest request)
         {
-            var usuario = new Usuario(entity.NomeUsuario, entity.Email, entity.Senha,entity.Senha);
-            _usuarioRepository.Adicionar(usuario);  
+            var usuario = new Usuario(request.Nome, request.Email, request.Senha, request.reSenha);
+            await Adicionar(usuario);
             return usuario;
         }
 
         public async Task<Usuario> ObterPorId(Guid id)
         {
-           return await _usuarioRepository.ObterPorId(id);    
+            return await _usuarioRepository.ObterPorId(id);
         }
 
         public Task<IEnumerable<Usuario>> ObterTodos()
