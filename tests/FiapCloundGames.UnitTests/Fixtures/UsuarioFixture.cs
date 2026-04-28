@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using FiapCloundGames.API.Application.Dtos;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
 
@@ -10,6 +11,26 @@ namespace FiapCloundGames.UnitTests.Fixtures
         public UsuarioFixture()
         {
             _faker = new Faker();
+        }
+
+        public CriaUsuarioRequest UsuarioRequest()
+        {
+            return new CriaUsuarioRequest(
+                Nome: _faker.Name.FullName(),
+                Email: _faker.Internet.Email(),
+                Senha: "Teste@123",
+                reSenha: "Teste@123"
+            );
+        }
+
+        public CriaUsuarioRequest UsuarioRequestSenhaDiferente()
+        {
+            return new CriaUsuarioRequest(
+                Nome: _faker.Name.FullName(),
+                Email: _faker.Internet.Email(),
+                Senha: "Teste@123",
+                reSenha: "Teste@1243"
+            );
         }
 
         public Usuario ObtemJogadorComSucesso()
