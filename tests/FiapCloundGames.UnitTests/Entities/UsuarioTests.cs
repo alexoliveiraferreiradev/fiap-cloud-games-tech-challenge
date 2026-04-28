@@ -186,9 +186,9 @@ namespace FiapCloundGames.UnitTests.Entities
         public void DeletarUsuario_EmailUsuarioInvalido_DeveLancarExcecao(string emailInvalido)
         {
             //Arrange
-            var usuario = new Usuario(emailInvalido, "Teste@123");
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.Deletar(usuario.Email, usuario.Senha));
+            var result = Assert.Throws<DomainException>(() => usuario.Deletar(emailInvalido, usuario.Senha));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioEmailInvalido, result.Message);
         }
@@ -205,9 +205,9 @@ namespace FiapCloundGames.UnitTests.Entities
         public void DeletarUsuario_EmailNaoPreenchido_DeveLancarExcecao()
         {
             //Arrange
-            var usuario = new Usuario(string.Empty, "Teste@123");
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.Deletar(usuario.Email, usuario.Senha));
+            var result = Assert.Throws<DomainException>(() => usuario.Deletar(string.Empty, usuario.Senha));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioEmailObrigatorio, result.Message);
         }
@@ -222,9 +222,9 @@ namespace FiapCloundGames.UnitTests.Entities
         public void DeletarUsuario_SenhaNaoPreenchida_DeveLancarExcecao()
         {
             //Arrange
-            var usuario = new Usuario(_faker.Internet.Email(), string.Empty);
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.Deletar(usuario.Email, usuario.Senha));
+            var result = Assert.Throws<DomainException>(() => usuario.Deletar(usuario.Email, string.Empty));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaObrigatoria, result.Message);
         }
@@ -248,9 +248,9 @@ namespace FiapCloundGames.UnitTests.Entities
         public void DeletarUsuario_SenhaInvalida_DeveLancarExcecao(string senhaInvalida)
         {
             //Arrange
-            var usuario = new Usuario(_faker.Internet.Email(), senhaInvalida);
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.Deletar(usuario.Email, usuario.Senha));
+            var result = Assert.Throws<DomainException>(() => usuario.Deletar(usuario.Email, senhaInvalida));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaFraca, result.Message);
         }
@@ -384,5 +384,7 @@ namespace FiapCloundGames.UnitTests.Entities
             //Assert
             Assert.Equal(MensagensDominio.UsuarioPerfilRebaixarInvalido, result.Message);
         }
+
+        
     }
 }
