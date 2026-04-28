@@ -21,6 +21,8 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public TipoUsuario Perfil { get;private set; }
         public bool Ativo {  get; private set; }
+        public DateTime DataCadastro { get; private set; }
+        public DateTime DataAlteracao { get; private set; }
 
         private string confirmacaoSenha = string.Empty;
 
@@ -33,6 +35,8 @@ namespace FiapCloundGames.API.Domain.Entities
             confirmacaoSenha = confirmacaoSenhaUsuario;
             Perfil = TipoUsuario.Jogador;
             Ativo = true;
+            DataCadastro = DateTime.UtcNow;
+            DataAlteracao = DataCadastro;
             ValidarEntidade();
         }
 
@@ -66,11 +70,13 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public void Deletar(string emailUsuario,string senhaUsuario)
         {
-            AssertionConcern.AssertArgumentNotEmpty(emailUsuario, MensagensDominio.UsuarioEmailObrigatorio);
-            AssertionConcern.AssertArgumentNotEmpty(senhaUsuario, MensagensDominio.UsuarioSenhaObrigatoria);
-            AssertionConcern.AssertArgumentPasswordStrenght(senhaUsuario, MensagensDominio.UsuarioSenhaFraca);         
-            AssertionConcern.AssertArgumentEmailFormat(emailUsuario, MensagensDominio.UsuarioEmailInvalido);
+            if(!Ativo) throw new DomainException(MensagensDominio.UsuarioJaExcluido);            
+            if(string.IsNullOrEmpty(emailUsuario)) throw new DomainException(MensagensDominio.UsuarioEmailObrigatorio);
+            if (Email != emailUsuario) throw new DomainException(MensagensDominio.UsuarioEmailInvalido);
+            if(string.IsNullOrEmpty(senhaUsuario)) throw new DomainException(MensagensDominio.UsuarioSenhaObrigatoria);
+           if(Senha != senhaUsuario) throw new DomainException(MensagensDominio.UsuarioSenhaFraca);
             Ativo = false;
+            DataAlteracao = DateTime.UtcNow;
         }
 
         public void AtualizarEmail(string antigoEmail, string novoEmail)
