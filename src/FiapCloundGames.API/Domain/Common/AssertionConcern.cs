@@ -169,5 +169,6 @@ namespace FiapCloundGames.API.Domain.Common
                 throw new DomainException(message);
             }
         }
+        public static void AssertArgumentValueFormat(decimal value, string message)
     }
 }
