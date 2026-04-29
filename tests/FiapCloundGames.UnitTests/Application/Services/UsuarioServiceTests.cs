@@ -246,6 +246,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
+            hashMock.Setup(h => h.Hash(usuarioRequest.Senha)).Returns(usuarioRequest.Senha);
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarJogador(usuarioRequest));
             //Assert
