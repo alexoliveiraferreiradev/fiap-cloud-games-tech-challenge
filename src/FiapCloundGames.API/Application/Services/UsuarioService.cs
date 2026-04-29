@@ -76,7 +76,7 @@ namespace FiapCloundGames.API.Application.Services
         public async Task<Usuario> CadastrarJogador(CriaUsuarioRequest request)
         {
             ValidaSenhas(request.Senha,request.reSenha);
-            var senhaCifrada = _passwordHasher.Hash(request.Senha);
+            var senhaCifrada = _passwordHasher.HashPassword(request.Senha);
             var confirmacaoSenha = senhaCifrada;
             var usuario = new Usuario(request.Nome, request.Email, senhaCifrada, confirmacaoSenha);
             await Adicionar(usuario);
@@ -94,7 +94,7 @@ namespace FiapCloundGames.API.Application.Services
             var usuario = await _usuarioRepository.ObterPorId(id);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
 
-            var novaSenhaCriptografa = _passwordHasher.Hash(request.senhaUsuario);
+            var novaSenhaCriptografa = _passwordHasher.HashPassword(request.senhaUsuario);
             var confirmacaoSenha = novaSenhaCriptografa;
             usuario.Atualizar(request.nomeUsuario, request.emailUsuario, novaSenhaCriptografa, confirmacaoSenha);
             await Atualizar(usuario);

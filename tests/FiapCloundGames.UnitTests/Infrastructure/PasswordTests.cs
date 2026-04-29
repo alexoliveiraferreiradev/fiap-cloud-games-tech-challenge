@@ -13,7 +13,7 @@ namespace FiapCloundGames.UnitTests.Infrastructure
             var senhaPura = "123456";
 
             // Act
-            var hash = hasher.Hash(senhaPura);
+            var hash = hasher.HashPassword(senhaPura);
 
             // Assert
             Assert.StartsWith("$2", hash); // Hashes BCrypt começam com $2a, $2b ou $2y
