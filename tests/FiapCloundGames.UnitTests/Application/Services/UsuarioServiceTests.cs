@@ -621,7 +621,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
-            repoMock.Setup(r => r.ObterPorId(idUsuario)).ReturnsAsync((Usuario)null);
+            repoMock.Setup(r =>  r.ObterPorId(idUsuario)).ReturnsAsync((Usuario)null);
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(() => service.DesativarUsuario(idUsuario));
             //Assert
@@ -635,11 +635,13 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange
             var loginRequest = new LoginRequest(_faker.Internet.Email(), "Senha@123");
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hasherMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object,hasherMock.Object);    
             hasherMock.Setup(h => h.HashPassword(loginRequest.senhaUsuario)).Returns(loginRequest.senhaUsuario);
+            repoMock.Setup( r => r.ObterPorEmail(loginRequest.emailUsuario)).ReturnsAsync(usuario);
             //Act
             var result = await service.Autenticar(loginRequest);
             //Assert
