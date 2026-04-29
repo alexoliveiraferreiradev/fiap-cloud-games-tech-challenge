@@ -29,7 +29,7 @@ namespace FiapCloundGames.API.Application.Services
             await _usuarioRepository.Atualizar(entity);
         }
 
-        public async Task<Usuario> CriaAdministrador(CriaUsuarioRequest request, bool hasPermision, string token)
+        public async Task<Usuario> CadastrarAdministrador(CriaUsuarioRequest request, bool hasPermision, string token)
         {
             var usuario = new Usuario(request.Nome, request.Email, request.Senha, request.reSenha);
             if (!ValidaPermissoesAdministrador(hasPermision, token)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
@@ -71,7 +71,7 @@ namespace FiapCloundGames.API.Application.Services
             return true;
         }
 
-        public async Task<Usuario> CriaJogador(CriaUsuarioRequest request)
+        public async Task<Usuario> CadastrarJogador(CriaUsuarioRequest request)
         {
             var usuario = new Usuario(request.Nome, request.Email, request.Senha, request.reSenha);
             await Adicionar(usuario);
