@@ -34,5 +34,6 @@
         public static string JogoNaoEncontrado = "O jogo não foi encontrado.";
         public static string JogoPrecoInvalido = "O preço do jogo deve ser um valor positivo."; 
         public static string JogoInvalido = "O jogo já está desativado.";
+        public static string CrendenciasInvalidas = "Credenciais inválidas.";
     }
 }
