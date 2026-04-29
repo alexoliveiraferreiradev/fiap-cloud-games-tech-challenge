@@ -27,9 +27,9 @@ namespace FiapCloundGames.UnitTests.Entities
         /// Testa a criação de um usuário com perfil de jogador válido.
         /// Verifica que a entidade é criada, que o perfil é `Jogador` e que os campos essenciais não estão vazios.
         /// </summary>
-        [Fact(DisplayName = "Sucesso ao adicionar novo usuário - perfil Jogador")]
+        [Fact(DisplayName = "Sucesso ao cadastrar novo usuário - perfil Jogador")]
         [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioJogador_UsuarioJogadorValido_DeveCriarComSucesso()
+        public void CadastrarUsuarioJogador_UsuarioJogadorValido_DeveCriarComSucesso()
         {
             //Arrange
             //Act             
@@ -46,9 +46,9 @@ namespace FiapCloundGames.UnitTests.Entities
         /// Testa falha na criação quando o nome do usuário não é preenchido.
         /// Deve lançar <see cref="DomainException"/> com a mensagem esperada.
         /// </summary>
-        [Fact(DisplayName = "Falha ao adicionar novo Usuário - nome não preenchido")]
+        [Fact(DisplayName = "Falha ao cadastrar novo Usuário - nome não preenchido")]
         [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioJogador_NomeNaoPreenchido_DeveLancarExcecao()
+        public void CadastrarUsuarioJogador_NomeNaoPreenchido_DeveLancarExcecao()
         {
             //Arrange
             //Act             
@@ -60,11 +60,11 @@ namespace FiapCloundGames.UnitTests.Entities
         /// Testa falha na criação quando nome de usuário é inválido
         /// </summary>
         /// <param name="nomeInvalido"></param>
-        [Theory(DisplayName = "Falha ao adicionar novo Usuário - nome não preenchido")]
+        [Theory(DisplayName = "Falha ao cadastrar novo Usuário - nome não preenchido")]
         [Trait("Categoria", "Usuario Tests")]
         [InlineData("aB")]
         [InlineData("xD")]
-        public void AdicionarUsuarioJogador_NomeInvalido_DeveLancarExcecao(string nomeInvalido)
+        public void CadastrarUsuarioJogador_NomeInvalido_DeveLancarExcecao(string nomeInvalido)
         {
             //Arrange
             //Act             
@@ -78,9 +78,9 @@ namespace FiapCloundGames.UnitTests.Entities
         /// Testa falha na criação quando o email do usuário não é preenchido.
         /// Deve lançar <see cref="DomainException"/> com a mensagem esperada.
         /// </summary>
-        [Fact(DisplayName = "Falha ao adicionar novo usuário - email não preenchido")]
+        [Fact(DisplayName = "Falha ao cadastrar novo usuário - email não preenchido")]
         [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioJogador_EmailJogadorNaoPreenchido_DeveLancarExcecao()
+        public void CadastrarUsuarioJogador_EmailJogadorNaoPreenchido_DeveLancarExcecao()
         {
             //Arrange
             //Act             
@@ -94,14 +94,14 @@ namespace FiapCloundGames.UnitTests.Entities
         /// Testa falhas de validação de email inválido.
         /// Para cada email inválido passado, deve ser lançada uma <see cref="DomainException"/> com a mensagem apropriada.
         /// </summary>
-        [Theory(DisplayName = "Falha ao adicionar novo usuário - email inválido")]
+        [Theory(DisplayName = "Falha ao cadastrar novo usuário - email inválido")]
         [Trait("Categoria", "Usuario Tests")]
         [InlineData("email_sem_arroba.com")]
         [InlineData("usuario@")]
         [InlineData("@dominio.com")]
         [InlineData("usuario@dominio")]
         [InlineData("usuario@dominio..com")]
-        public void AdicionarUsuarioJogador_EmailInvalido_DeveLancarExcecao(string emailInvalido)
+        public void CadastrarUsuarioJogador_EmailInvalido_DeveLancarExcecao(string emailInvalido)
         {
             //Arrange
             //Act             
@@ -110,9 +110,9 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.Equal(MensagensDominio.UsuarioEmailInvalido, result.Message);
         }
 
-        [Fact(DisplayName = "Falha ao adicionar novo usuário - senha não preenchida")]
+        [Fact(DisplayName = "Falha ao cadastrar novo usuário - senha não preenchida")]
         [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioJogador_SenhanaoPreenchida_DeveLancarExcecao()
+        public void CadastrarUsuarioJogador_SenhanaoPreenchida_DeveLancarExcecao()
         {
             //Arrange
             //Act             
@@ -125,9 +125,9 @@ namespace FiapCloundGames.UnitTests.Entities
         /// Testa falha quando a senha não atende aos requisitos de força.
         /// Deve lançar <see cref="DomainException"/> com a mensagem de senha fraca.
         /// </summary>
-        [Fact(DisplayName = "Falha ao adicionar novo usuário - senha fraca")]
+        [Fact(DisplayName = "Falha ao cadastrar novo usuário - senha fraca")]
         [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioJogador_SenhaFraca_DeveLancarExcecao()
+        public void CadastrarUsuarioJogador_SenhaFraca_DeveLancarExcecao()
         {
             //Arrange
             //Act             
@@ -140,9 +140,9 @@ namespace FiapCloundGames.UnitTests.Entities
         /// Testa falha quando a confirmação de senha é diferente da senha informada.
         /// Deve lançar <see cref="DomainException"/> com a mensagem de confirmação divergente.
         /// </summary>
-        [Fact(DisplayName = "Falha ao adicionar novo Usuário - confirmação de senha diferente")]
+        [Fact(DisplayName = "Falha ao cadastrar novo Usuário - confirmação de senha diferente")]
         [Trait("Categoria", "Usuario Tests")]
-        public void AdicionarUsuarioJogador_ConfirmacaoDeSenhaDiferente_DeveLancarExcecao()
+        public void CadastrarUsuarioJogador_ConfirmacaoDeSenhaDiferente_DeveLancarExcecao()
         {
             //Arrange
             //Act             
