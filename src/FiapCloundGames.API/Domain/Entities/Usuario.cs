@@ -64,7 +64,6 @@ namespace FiapCloundGames.API.Domain.Entities
             AssertionConcern.AssertArgumentEmpty(confirmacaoSenha, MensagensDominio.UsuarioConfirmacaoSenhaObrigatoria);
             AssertionConcern.AssertArgumentLength(NomeUsuario, 3, 20, MensagensDominio.UsuarioTamanhoNomeInvalido);
             AssertionConcern.AssertArgumentPasswordStrenght(Senha, MensagensDominio.UsuarioSenhaFraca);
-            AssertionConcern.AssertArgumentNotEquals(Senha, confirmacaoSenha, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
             AssertionConcern.AssertArgumentEmailFormat(Email, MensagensDominio.UsuarioEmailInvalido);
         }
 
@@ -116,7 +115,7 @@ namespace FiapCloundGames.API.Domain.Entities
             AssertionConcern.AssertArgumentEmpty(novaSenha, MensagensDominio.UsuarioSenhaNovaObrigatoria);
             if (Senha == novaSenha) return;
             AssertionConcern.AssertArgumentPasswordStrenght(novaSenha, MensagensDominio.UsuarioSenhaNovaFraca);
-            AssertionConcern.AssertArgumentNotEquals(novaSenha, confirmacaoSenhaNova, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
+            AssertionConcern.AssertArgumentEquals(novaSenha, confirmacaoSenhaNova, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
             Senha = novaSenha;
         }
 
