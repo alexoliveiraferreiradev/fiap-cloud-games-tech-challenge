@@ -75,22 +75,22 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> CadastrarJogador(CriaUsuarioRequest request)
         {
-            ValidaSenhas(request);
+            ValidaSenhas(request.Senha,request.reSenha);
             var senhaCifrada = _passwordHasher.Hash(request.Senha);
-            var usuario = new Usuario(request.Nome, request.Email, request.Senha, request.reSenha);
+            var confirmacaoSenha = senhaCifrada;
+            var usuario = new Usuario(request.Nome, request.Email, senhaCifrada, confirmacaoSenha);
             await Adicionar(usuario);
             return usuario;
         }
 
-        private static void ValidaSenhas(CriaUsuarioRequest request)
+        private static void ValidaSenhas(string senhaRequest, string confirmacaoSenhaRequest)
         {
-            AssertionConcern.AssertArgumentEmpty(request.Senha, MensagensDominio.UsuarioSenhaObrigatoria);
-            AssertionConcern.AssertArgumentEmpty(request.reSenha, MensagensDominio.UsuarioConfirmacaoSenhaObrigatoria);
-            AssertionConcern.AssertArgumentNotEquals(request.Senha, request.reSenha, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
+            AssertionConcern.AssertArgumentEquals(senhaRequest, confirmacaoSenhaRequest, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
         }
 
         public async Task AtualizarUsuario(Guid id, UpdateUsuarioRequest request)
         {
+            ValidaSenhas(request.senhaUsuario, request.reSenhaUsuario);
             var usuario = await _usuarioRepository.ObterPorId(id);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
             usuario.Atualizar(request.nomeUsuario, request.emailUsuario, request.senhaUsuario, request.reSenhaUsuario);
