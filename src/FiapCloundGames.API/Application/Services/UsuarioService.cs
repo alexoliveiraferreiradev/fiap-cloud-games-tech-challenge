@@ -93,7 +93,10 @@ namespace FiapCloundGames.API.Application.Services
             ValidaSenhas(request.senhaUsuario, request.reSenhaUsuario);
             var usuario = await _usuarioRepository.ObterPorId(id);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
-            usuario.Atualizar(request.nomeUsuario, request.emailUsuario, request.senhaUsuario, request.reSenhaUsuario);
+
+            var novaSenhaCriptografa = _passwordHasher.Hash(request.senhaUsuario);
+            var confirmacaoSenha = novaSenhaCriptografa;
+            usuario.Atualizar(request.nomeUsuario, request.emailUsuario, novaSenhaCriptografa, confirmacaoSenha);
             await Atualizar(usuario);
         }
 
