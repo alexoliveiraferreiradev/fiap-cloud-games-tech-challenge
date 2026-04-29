@@ -1,4 +1,4 @@
-﻿using FiapCloundGames.API.Application.Dtos;
+﻿using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common;
 using FiapCloundGames.API.Domain.Common.Exceptions;
@@ -6,6 +6,7 @@ using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Infrastructure.Repository;
+using System.Security.Cryptography.Xml;
 
 namespace FiapCloundGames.API.Application.Services
 {
@@ -43,7 +44,7 @@ namespace FiapCloundGames.API.Application.Services
             if (adminExecutor == null || !adminExecutor.Perfil.Equals(TipoUsuario.Administrador)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
 
             var usuario = await _usuarioRepository.ObterPorId(idUsuarioRebaixar);
-            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioObrigatorio);
+            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
             if (usuario.Perfil.Equals(TipoUsuario.Jogador)) throw new DomainException(MensagensDominio.UsuarioPerfilRebaixarInvalido);
 
             usuario.RebaixarPerfil();
@@ -77,6 +78,14 @@ namespace FiapCloundGames.API.Application.Services
             return usuario;
         }
 
+        public async Task AtualizarUsuario(Guid id, UpdateUsuarioRequest request)
+        {
+            var usuario = await _usuarioRepository.ObterPorId(id);
+            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
+            usuario.Atualizar(request.nomeUsuario, request.emailUsuario, request.senhaUsuario, request.reSenhaUsuario);
+            await Atualizar(usuario);
+        }
+
         public async Task<Usuario> ObterPorId(Guid id)
         {
             return await _usuarioRepository.ObterPorId(id);
@@ -87,9 +96,13 @@ namespace FiapCloundGames.API.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task Remover(Usuario entity)
+        public async Task DesativarUsuario(Guid usuarioId)
         {
-            throw new NotImplementedException();
+            var usuario = await _usuarioRepository.ObterPorId(usuarioId);
+            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
+            usuario.Desativar();
+            await _usuarioRepository.Atualizar(usuario);
         }
+
     }
 }
