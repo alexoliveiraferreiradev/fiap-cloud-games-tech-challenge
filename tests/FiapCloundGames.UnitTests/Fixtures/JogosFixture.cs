@@ -7,7 +7,8 @@ namespace FiapCloundGames.UnitTests.Fixtures
     public class JogosFixture
     {
         private readonly Faker _faker;
-        public JogosFixture() { 
+        public JogosFixture()
+        {
             _faker = new Faker();
         }
 
@@ -18,6 +19,12 @@ namespace FiapCloundGames.UnitTests.Fixtures
             var precoJogo = _faker.Random.Decimal(10, 100);
             GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
             return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
+        }
+        public Jogos ObtemJogosInativo()
+        {
+            var jogos = new Jogos(_faker.Random.String(10), _faker.Random.String(50), _faker.Random.Decimal(10, 100), _faker.PickRandom<GeneroJogo>());
+            typeof(Jogos).GetProperty("Ativo").SetValue(jogos, false);
+            return jogos;
         }
 
         public Jogos ObtemJogosNomeNaoPreenchido()
