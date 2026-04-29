@@ -88,7 +88,7 @@ namespace FiapCloundGames.API.Domain.Common
         /// <exception cref="DomainException"></exception>
         public static void AssertArgumentEquals(object object1, object object2, string message)
         {
-            if (object1.Equals(object2))
+            if (!object1.Equals(object2))
             {
                 throw new DomainException(message);
             }
@@ -102,7 +102,7 @@ namespace FiapCloundGames.API.Domain.Common
         /// <exception cref="DomainException"></exception>
         public static void AssertArgumentNotEquals(object object1, object object2, string message)
         {
-            if (!object1.Equals(object2))
+            if (object1.Equals(object2))
             {
                 throw new DomainException(message);
             }
