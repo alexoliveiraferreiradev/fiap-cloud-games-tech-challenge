@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
