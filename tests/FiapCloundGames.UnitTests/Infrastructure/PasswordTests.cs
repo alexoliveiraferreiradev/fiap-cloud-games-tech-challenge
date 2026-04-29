@@ -19,5 +19,20 @@ namespace FiapCloundGames.UnitTests.Infrastructure
             Assert.StartsWith("$2", hash); // Hashes BCrypt começam com $2a, $2b ou $2y
             Assert.True(BCrypt.Net.BCrypt.Verify(senhaPura, hash));
         }
+
+        [Fact(DisplayName = "Deve verificar um hash válido")]
+        [Trait("Categoria","Password Tests")]
+        public void Hash_DeveVerificarPassword()
+        {
+            // Arrange - Classe REAL, sem Mock
+            var hasher = new PasswordHasher();
+            var senhaPura = "MinhaSenha@123";
+            var hashGerado = hasher.HashPassword(senhaPura);    
+            // Act
+            var result = hasher.VerifyPassword(senhaPura, hashGerado);
+
+            // Assert
+            Assert.True(result, "O VerifyPassword deveria ter validado a senha correta.");
+        }
     }
 }
