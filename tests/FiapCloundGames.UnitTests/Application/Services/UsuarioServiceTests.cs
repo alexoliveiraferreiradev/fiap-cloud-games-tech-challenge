@@ -215,6 +215,8 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
+
+            hashMock.Setup(h => h.Hash(usuarioRequest.Senha)).Returns(usuarioRequest.Senha);
             //Act
             var result = await service.CadastrarJogador(usuarioRequest);
             //Assert
@@ -448,6 +450,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
 
+            hashMock.Setup(h => h.Hash(updataRequest.senhaUsuario)).Returns(updataRequest.senhaUsuario);
             repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             //Act
             await service.AtualizarUsuario(usuario.Id, updataRequest);
