@@ -64,6 +64,7 @@ namespace FiapCloundGames.API.Domain.Entities
             AssertionConcern.AssertArgumentEmpty(confirmacaoSenha, MensagensDominio.UsuarioConfirmacaoSenhaObrigatoria);
             AssertionConcern.AssertArgumentLength(NomeUsuario, 3, 20, MensagensDominio.UsuarioTamanhoNomeInvalido);
             AssertionConcern.AssertArgumentPasswordStrenght(Senha, MensagensDominio.UsuarioSenhaFraca);
+            AssertionConcern.AssertArgumentEquals(Senha, confirmacaoSenha, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
             AssertionConcern.AssertArgumentEmailFormat(Email, MensagensDominio.UsuarioEmailInvalido);
         }
 
