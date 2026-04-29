@@ -5,6 +5,7 @@ using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.UnitTests.Fixtures;
 using Moq;
+using System.ComponentModel.DataAnnotations;
 
 namespace FiapCloundGames.UnitTests.Entities
 {
@@ -151,133 +152,70 @@ namespace FiapCloundGames.UnitTests.Entities
         }
 
 
-        /// <summary>
-        /// Testa a deleção de um usuário com perfil jogador.
-        /// Verifica que o usuário é marcado como inativo quando dados válidos são fornecidos.
-        /// </summary>
-        [Fact(DisplayName = "Sucesso ao deletar o usuário - perfil jogador")]
+        [Fact(DisplayName = "Sucesso ao atualizar nome do usuário - nome válido")]
         [Trait("Categoria", "Usuario Tests")]
-        public void DeletarUsuario_DadosUsuarioValidos_DeveDeletarComSucesso()
-        {
-            //Arrange
-            var usuario = new Usuario(_faker.Internet.Email(), "Teste@123");
-            //Act             
-            usuario.Deletar(usuario.Email, usuario.Senha);
-            //Assert
-            Assert.False(usuario.Ativo);
-        }
-
-
-        /// <summary>
-        /// Verifica se a tentativa de deletar um usuário com um endereço de e-mail inválido resulta em uma exceção de
-        /// domínio, indicando falha na operação conforme esperado.
-        /// </summary>
-        /// <remarks>Este teste garante que o método de exclusão de usuário lança uma exceção apropriada
-        /// quando fornecido um e-mail em formato inválido, reforçando a validação de dados de entrada.</remarks>
-        /// <param name="emailInvalido">O endereço de e-mail inválido a ser utilizado na tentativa de exclusão do usuário. Deve representar um
-        /// formato de e-mail que não atende aos critérios de validação.</param>
-        [Theory(DisplayName = "Falha ao adicionar novo Usuário - email inválido")]
-        [Trait("Categoria", "Usuario Tests")]
-        [InlineData("email_sem_arroba.com")]
-        [InlineData("usuario@")]
-        [InlineData("@dominio.com")]
-        [InlineData("usuario@dominio")]
-        [InlineData("usuario@dominio..com")]
-        public void DeletarUsuario_EmailUsuarioInvalido_DeveLancarExcecao(string emailInvalido)
+        public void AtualizarNomeUsuario_UsuarioValido_DeveAtualizarComSucesso()
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.Deletar(emailInvalido, usuario.Senha));
+            var novoNome = _faker.Internet.UserName();
+            //Act
+            usuario.AtualizarNomeUsuario(nomeNovo: novoNome);
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioEmailInvalido, result.Message);
+            Assert.Equal(novoNome, usuario.NomeUsuario);
         }
 
-        /// <summary>
-        /// Verifica se a tentativa de deletar um usuário jogador com o e-mail não preenchido retorna uma falha conforme
-        /// esperado.
-        /// </summary>
-        /// <remarks>O teste assegura que a exceção DomainException é lançada quando o método Deletar é
-        /// chamado com um e-mail inválido, validando o tratamento de entradas obrigatórias.</remarks>
-        /// <param name="emailInvalido">O valor de e-mail inválido a ser testado. Deve representar um e-mail não preenchido ou inválido.</param>
-        [Fact(DisplayName = "Falha ao deletar o usuário - email não preenchido")]
+        [Fact(DisplayName = "Falha ao atualizar nome do usuário - nome novo não preenchido")]
         [Trait("Categoria", "Usuario Tests")]
-        public void DeletarUsuario_EmailNaoPreenchido_DeveLancarExcecao()
+        public void AtualizarNomeUsuario_NomeNovoNaoPreenchido_DeveLancarExcecao()
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var novoNome = string.Empty;
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.Deletar(string.Empty, usuario.Senha));
+            var result = Assert.Throws<DomainException>(() => usuario.AtualizarNomeUsuario(nomeNovo: novoNome));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioEmailObrigatorio, result.Message);
+            Assert.Equal(MensagensDominio.UsuarioNomeNovoObrigatorio, result.Message);
         }
 
-        /// <summary>
-        /// Verifica se o método Deletar lança uma exceção quando a senha não é fornecida.
-        /// </summary>
-        /// <remarks>Este teste garante que a tentativa de deletar um usuário sem informar a senha resulta
-        /// em uma DomainException, validando a obrigatoriedade do preenchimento da senha para esta operação.</remarks>
-        [Fact(DisplayName = "Falha ao deletar o usuário - senha não preenchida")]
+       
+
+        [Fact(DisplayName = "Falha ao atualizar nome do usuário - nome novo inválido")]
         [Trait("Categoria", "Usuario Tests")]
-        public void DeletarUsuario_SenhaNaoPreenchida_DeveLancarExcecao()
+        public void AtualizarNomeUsuario_NomeNovoInvalido_DeveLancarExcecao()
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var novoNome = _faker.Random.String(21);
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.Deletar(usuario.Email, string.Empty));
+            var result = Assert.Throws<DomainException>(() => usuario.AtualizarNomeUsuario(nomeNovo: novoNome));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioSenhaObrigatoria, result.Message);
-        }
-        /// <summary>
-        /// Verifica se o método Deletar lança uma exceção quando uma senha inválida é fornecida ao tentar deletar um
-        /// usuário.
-        /// </summary>
-        /// <remarks>Este teste utiliza diferentes valores de senha inválida para garantir que o método
-        /// Deletar do usuário lança uma DomainException quando a senha não é aceita. O teste cobre múltiplos cenários
-        /// de senha fraca ou inadequada.</remarks>
-        /// <param name="senhaInvalida">A senha considerada inválida para a operação de exclusão do usuário. Deve ser uma senha que não atende aos
-        /// critérios de validação exigidos pelo domínio.</param>
-        [Theory(DisplayName = "Falha ao deletar o usuário - senha inválida")]
-        [Trait("Categoria", "Usuario Tests")]
-        [InlineData("senhaFraca")]
-        [InlineData("123456")]
-        [InlineData("abcdefg")]
-        [InlineData("@@@@@a")]
-        [InlineData("senha@123")]
-        [InlineData("SENHA@123")]
-        public void DeletarUsuario_SenhaInvalida_DeveLancarExcecao(string senhaInvalida)
-        {
-            //Arrange
-            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.Deletar(usuario.Email, senhaInvalida));
-            //Assert
-            Assert.Equal(MensagensDominio.UsuarioSenhaFraca, result.Message);
+            Assert.Equal(MensagensDominio.UsuarioTamanhoNomeInvalido, result.Message);
         }
 
 
-        [Fact(DisplayName = "Sucesso ao atualizar email usuario - perfil jogador")]
+        [Fact(DisplayName = "Sucesso ao atualizar email do usuário - email válido")]
         [Trait("Categoria", "Usuario Tests")]
-        public void AtualizarEmailJogador_UsuarioValido_DeveCriarComSucesso()
+        public void AtualizarEmailUsuario_UsuarioValido_DeveCriarComSucesso()
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var novoEmail = _faker.Internet.Email();
             //Act
-            usuario.AtualizarEmail(antigoEmail: usuario.Email, novoEmail: novoEmail);
+            usuario.AtualizarEmail(novoEmail: novoEmail);
             //Assert
             Assert.Equal(novoEmail, usuario.Email);
         }
 
         [Fact(DisplayName = "Falha ao atualizar o usuário - email não preenchido")]
         [Trait("Categoria", "Usuario Tests")]
-        public void AtualizarEmailJogador_NovoEmailNaoPreenchido_DeveLancarExcecao()
+        public void AtualizarEmailUsuario_NovoEmailNaoPreenchido_DeveLancarExcecao()
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var novoEmail = string.Empty;
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarEmail(antigoEmail: usuario.Email, novoEmail: novoEmail));
+            var result = Assert.Throws<DomainException>(() => usuario.AtualizarEmail( novoEmail: novoEmail));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioEmailNovoObrigatorio, result.Message);
         }
@@ -289,26 +227,26 @@ namespace FiapCloundGames.UnitTests.Entities
         [InlineData("@dominio.com")]
         [InlineData("usuario@dominio")]
         [InlineData("usuario@dominio..com")]
-        public void AtualizarEmailJogador_NovoEmailInvalido_DeveLancarExcecao(string emailInvalido)
+        public void AtualizarEmailUsuario_NovoEmailInvalido_DeveLancarExcecao(string emailInvalido)
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var novoEmail = emailInvalido;
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarEmail(antigoEmail: usuario.Email, novoEmail: novoEmail));
+            var result = Assert.Throws<DomainException>(() => usuario.AtualizarEmail(novoEmail: novoEmail));
             //Assert    
             Assert.Equal(MensagensDominio.UsuarioEmailNovoInvalido, result.Message);
         }
 
-        [Fact(DisplayName = "Sucesso ao atualizar senha do usuário - perfil jogador")]
+        [Fact(DisplayName = "Sucesso ao atualizar senha do usuário - senha válida")]
         [Trait("Categoria", "Usuario Tests")]
-        public void AtualizarSenhaJogador_UsuarioValido_ComSucesso()
+        public void AtualizarSenhaUsuario_UsuarioValido_ComSucesso()
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var novaSenha = "NovaSenha@123";
             //Act
-            usuario.AtualizarSenha(senhaAntiga: usuario.Senha, novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha);
+            usuario.AtualizarSenha(novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha);
             //Assert
             Assert.Equal(novaSenha, usuario.Senha);
 
@@ -322,40 +260,40 @@ namespace FiapCloundGames.UnitTests.Entities
         [InlineData("@@@@@a")]
         [InlineData("senha@123")]
         [InlineData("SENHA@123")]
-        public void AtualizarSenhaJogador_NovaSenhaInvalida_DeveLancarExcecao(string senhaInvalida)
+        public void AtualizarSenhaUsuario_NovaSenhaInvalida_DeveLancarExcecao(string senhaInvalida)
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var novaSenha = senhaInvalida;
             //Act
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarSenha(senhaAntiga: usuario.Senha, novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha));
+            var result = Assert.Throws<DomainException>(() => usuario.AtualizarSenha( novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaNovaFraca, result.Message);
         }
 
         [Fact(DisplayName = "Falha ao atualizar senha do usuário - senha não preenchida")]
         [Trait("Categoria", "Usuario Tests")]
-        public void AtualizarSenhaJogador_SenhaNaoPreenchida_DeveLancarExcecao()
+        public void AtualizarSenhaUsuario_SenhaNaoPreenchida_DeveLancarExcecao()
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var novaSenha = string.Empty;
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarSenha(senhaAntiga: usuario.Senha, novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha));
+            var result = Assert.Throws<DomainException>(() => usuario.AtualizarSenha(novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaNovaObrigatoria, result.Message);
         }
 
         [Fact(DisplayName = "Falha ao atualizar senha do usuário - confirmação de nova senha diferente")]
         [Trait("Categoria", "Usuario Tests")]
-        public void AtualizarSenhaJogador_ConfirmacaoDeNovaSenhaDiferente_DeveLancarExcecao()
+        public void AtualizarSenhaUsuario_ConfirmacaoDeNovaSenhaDiferente_DeveLancarExcecao()
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var novaSenha = "NovaSenha@123";
             var confirmacaoNovaSenha = "Teste123";
             //Act
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarSenha(senhaAntiga: usuario.Senha, novaSenha: novaSenha, confirmacaoSenhaNova: confirmacaoNovaSenha));
+            var result = Assert.Throws<DomainException>(() => usuario.AtualizarSenha(novaSenha: novaSenha, confirmacaoSenhaNova: confirmacaoNovaSenha));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaConfirmacaoDiferente, result.Message);
 
