@@ -4,8 +4,8 @@ namespace FiapCloundGames.API.Infrastructure.Security
 {
     public class PasswordHasher : IPasswordHasher
     {
-        public string Hash(string password) => BCrypt.Net.BCrypt.HashPassword(password);
+        public string Hash(string password) { return BCrypt.Net.BCrypt.HashPassword(password); }
 
-        public bool Verify(string password, string hashedPassoword) => BCrypt.Net.BCrypt.Verify(password, hashedPassoword); 
+        public bool Verify(string password, string hashedPassoword) { return BCrypt.Net.BCrypt.Verify(password, hashedPassoword); } 
     }
 }
