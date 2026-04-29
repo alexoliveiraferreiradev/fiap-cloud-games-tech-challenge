@@ -1,6 +1,5 @@
 ﻿using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Domain.Entities;
-using FiapCloundGames.API.Infrastructure.Repository;
 
 namespace FiapCloundGames.API.Application.Services.Interfaces
 {
@@ -10,6 +9,7 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task<Usuario> CadastrarJogador(CriaUsuarioRequest request);
         Task AtualizarUsuario(Guid usuarioId, UpdateUsuarioRequest updateUsuarioRequest);
         Task DesativarUsuario(Guid usuarioId);
+        Task<Usuario> Autenticar(LoginRequest loginRequest);
 
     }
 }
