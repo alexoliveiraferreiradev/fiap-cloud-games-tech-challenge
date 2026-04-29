@@ -330,6 +330,13 @@ namespace FiapCloundGames.UnitTests.Application.Services
             Assert.Equal(MensagensDominio.UsuarioSenhaConfirmacaoDiferente, result.Message);
         }
 
+        [Fact(DisplayName = "Cadastrar usuário  - Deve criptografar a senha ao cadastrar")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task CadastrarUsuario_ValidacaoSenha_DeveCadastrarComSucesso()
+        {
+            
+        }
+
         [Fact(DisplayName = "Sucesso ao rebaixar um adminstrador para jogador")]
         [Trait("Categoria", "Usuario Service Tests")]
         public async Task RebaixarPerfil_UsuarioEhAdmin_DeveMudarParaJogador()
