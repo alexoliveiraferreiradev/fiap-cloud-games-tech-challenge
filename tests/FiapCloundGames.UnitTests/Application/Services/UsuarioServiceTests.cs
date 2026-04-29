@@ -629,5 +629,22 @@ namespace FiapCloundGames.UnitTests.Application.Services
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
+        [Fact(DisplayName = "Login de usuário - usuário autenticado com sucesso")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task AutenticarUsuario_UsuarioValido_DeveAutenticarComSucesso()
+        {
+            //Arrange
+            var loginRequest = new LoginRequest(_faker.Internet.Email(), "Senha@123");
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var hasherMock = new Mock<IPasswordHasher>();
+            var service = new UsuarioService(repoMock.Object,hasherMock.Object);    
+            hasherMock.Setup(h => h.HashPassword(loginRequest.senhaUsuario)).Returns(loginRequest.senhaUsuario);
+            //Act
+            var result = await service.Autenticar(loginRequest);
+            //Assert
+            Assert.NotNull(result);
+        }
+
     }
 }
