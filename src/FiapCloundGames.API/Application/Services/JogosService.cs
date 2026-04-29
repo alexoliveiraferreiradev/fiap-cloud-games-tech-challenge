@@ -1,6 +1,8 @@
-﻿using FiapCloundGames.API.Application.Dtos;
+﻿using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Services.Interfaces;
+using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
+using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Infrastructure.Repository;
 
 namespace FiapCloundGames.API.Application.Services
@@ -21,6 +23,14 @@ namespace FiapCloundGames.API.Application.Services
         private async Task Adicionar(Jogos jogos)
         {
             await _jogoRepository.Adicionar(jogos); 
+        }
+
+        public async Task AtualizarJogo(Guid id, UpdateJogosRequest updateJogosRequest)
+        {
+            var jogo = await _jogoRepository.ObterPorId(id);            
+            if(jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+            jogo.Atualizar(updateJogosRequest.novoNome,updateJogosRequest.novaDescricao, updateJogosRequest.novoPreco, updateJogosRequest.novoGenero);
+            await _jogoRepository.Atualizar(jogo);  
         }
     }
 }
