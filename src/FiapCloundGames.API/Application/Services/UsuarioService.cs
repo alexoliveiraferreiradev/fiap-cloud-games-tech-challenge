@@ -1,5 +1,6 @@
 ﻿using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Application.Services.Interfaces;
+using FiapCloundGames.API.Domain.Common;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Common.Interfaces;
 using FiapCloundGames.API.Domain.Entities;
@@ -74,10 +75,18 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> CadastrarJogador(CriaUsuarioRequest request)
         {
+            ValidaSenhas(request);
             var senhaCifrada = _passwordHasher.Hash(request.Senha);
             var usuario = new Usuario(request.Nome, request.Email, request.Senha, request.reSenha);
             await Adicionar(usuario);
             return usuario;
+        }
+
+        private static void ValidaSenhas(CriaUsuarioRequest request)
+        {
+            AssertionConcern.AssertArgumentEmpty(request.Senha, MensagensDominio.UsuarioSenhaObrigatoria);
+            AssertionConcern.AssertArgumentEmpty(request.reSenha, MensagensDominio.UsuarioConfirmacaoSenhaObrigatoria);
+            AssertionConcern.AssertArgumentNotEquals(request.Senha, request.reSenha, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
         }
 
         public async Task AtualizarUsuario(Guid id, UpdateUsuarioRequest request)
