@@ -196,9 +196,9 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// Verifica se o método CriaJogador cria um usuário com perfil de Jogador corretamente quando os dados fornecidos são válidos.
         /// </summary>
         /// <remarks>Este teste verifica se um usuário com perfil de Jogador é criado corretamente quando os dados fornecidos são válidos. Ele utiliza um mock do serviço de usuário para simular a criação do jogador e valida se o perfil do usuário criado é realmente de Jogador, além de verificar se o método de adição do repositório foi chamado corretamente.</remarks>
-        [Fact(DisplayName = "Adicionar novo jogador")]
+        [Fact(DisplayName = "Cadastrar novo jogador")]
         [Trait("Categoria", "Usuario Service Tests")]
-        public async Task AdicionarUsuarioJogador_JogadorValido_DeveCriarComSucesso()
+        public async Task CadastrarUsuarioJogador_JogadorValido_DeveCriarComSucesso()
         {
             //Arrange
             var usuarioRequest = _usuarioFixture.UsuarioRequest();
@@ -219,14 +219,14 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// </summary>
         /// <param name="emailInvalido">O email inválido a ser testado.</param>
         /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando o email do usuário para criar um jogador é inválido, utilizando diferentes formatos de email inválidos.</remarks>
-        [Theory(DisplayName = "Falha ao adicionar novo jogador - email inválido")]
+        [Theory(DisplayName = "Falha ao cadastrar novo jogador - email inválido")]
         [Trait("Categoria", "Usuario Service Tests")]
         [InlineData("emailinvalido")]
         [InlineData("email@invalido")]
         [InlineData("@dominio.com")]
         [InlineData("usuario@dominio")]
         [InlineData("usuario@dominio..com")]
-        public async Task AdicionarUsuarioJogador_EmailInvalido_DeveLancarExcecao(string emailInvalido)
+        public async Task CadastrarUsuarioJogador_EmailInvalido_DeveLancarExcecao(string emailInvalido)
         {
             //Arrange
             var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), emailInvalido, "Teste@123", "Teste@123");
@@ -245,9 +245,9 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// <remarks>
         /// O teste garante que uma <see cref="DomainException"/> seja lançada ao tentar instanciar 
         /// um usuário com e-mail nulo ou vazio, preservando a integridade da entidade. </remarks>
-        [Fact(DisplayName = "Falha ao adicionar novo jogador - email não preenchido")]
+        [Fact(DisplayName = "Falha ao cadastrar novo jogador - email não preenchido")]
         [Trait("Categoria", "Usuario Service Tests")]
-        public async Task AdicionarUsuarioJogador_EmailNaoPreenchido_DeveLancarExcecao()
+        public async Task CadastrarUsuarioJogador_EmailNaoPreenchido_DeveLancarExcecao()
         {
             //Arrange
             var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), string.Empty, "Teste@123", "Teste@123");
@@ -267,9 +267,9 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// exceção de domínio caso o argumento esteja ausente.
         /// </remarks>
 
-        [Fact(DisplayName = "Falha ao adicionar novo jogador - senha não preenchida")]
+        [Fact(DisplayName = "Falha ao cadastrar novo jogador - senha não preenchida")]
         [Trait("Categoria", "Usuario Service Tests")]
-        public async Task AdicionarUsuarioJogador_SenhaNaoPreenchida_DeveLancarExcecao()
+        public async Task CadastrarUsuarioJogador_SenhaNaoPreenchida_DeveLancarExcecao()
         {
             //Arrange
             var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), _faker.Internet.Email(), string.Empty, string.Empty);
@@ -289,7 +289,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// O teste percorre diversos cenários (falta de caracteres especiais, números, maiúsculas ou tamanho insuficiente) 
         /// para garantir que apenas senhas fortes sejam aceitas.
         /// </remarks>
-        [Theory(DisplayName = "Falha ao adicionar novo jogador - senha inválida")]
+        [Theory(DisplayName = "Falha ao cadastrar novo jogador - senha inválida")]
         [Trait("Categoria", "Usuario Service Tests")]
         [InlineData("senhaFraca")]
         [InlineData("123456")]
@@ -297,7 +297,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         [InlineData("@@@@@a")]
         [InlineData("senha@123")]
         [InlineData("SENHA@123")]
-        public async Task AdicionarUsuarioJogador_SenhaInvalida_DeveLancarExcecao(string senhaInvalida)
+        public async Task CadastrarUsuarioJogador_SenhaInvalida_DeveLancarExcecao(string senhaInvalida)
         {
             //Arrange
             var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), _faker.Internet.Email(), senhaInvalida, senhaInvalida);
@@ -316,9 +316,9 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// Garante a consistência dos dados de acesso, verificando se a lógica de comparação 
         /// no <see cref="AssertionConcern"/> bloqueia a criação do objeto com senhas distintas.
         /// </remarks>
-        [Fact(DisplayName = "Falha ao adicionar novo jogador - confirmação de senha diferente")]
+        [Fact(DisplayName = "Falha ao cadastrar novo jogador - confirmação de senha diferente")]
         [Trait("Categoria", "Usuario Service Tests")]
-        public async Task AdicionarUsuarioJogador_ConfirmacaoDeSenhaInvalida_DeveLancarExcecao()
+        public async Task CadastrarUsuarioJogador_ConfirmacaoDeSenhaInvalida_DeveLancarExcecao()
         {
             //Arrange                       
             //Mock
