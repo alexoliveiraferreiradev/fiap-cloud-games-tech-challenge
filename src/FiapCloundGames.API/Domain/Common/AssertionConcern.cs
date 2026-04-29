@@ -59,7 +59,7 @@ namespace FiapCloundGames.API.Domain.Common
         /// <param name="stringValue"></param>
         /// <param name="message"></param>
         /// <exception cref="DomainException"></exception>
-        public static void AssertArgumentNotEmpty(string stringValue, string message)
+        public static void AssertArgumentEmpty(string stringValue, string message)
         {
             if (string.IsNullOrWhiteSpace(stringValue))
             {
@@ -88,7 +88,7 @@ namespace FiapCloundGames.API.Domain.Common
         /// <exception cref="DomainException"></exception>
         public static void AssertArgumentEquals(object object1, object object2, string message)
         {
-            if (!object1.Equals(object2))
+            if (object1.Equals(object2))
             {
                 throw new DomainException(message);
             }
@@ -102,7 +102,7 @@ namespace FiapCloundGames.API.Domain.Common
         /// <exception cref="DomainException"></exception>
         public static void AssertArgumentNotEquals(object object1, object object2, string message)
         {
-            if (object1.Equals(object2))
+            if (!object1.Equals(object2))
             {
                 throw new DomainException(message);
             }
@@ -149,6 +149,15 @@ namespace FiapCloundGames.API.Domain.Common
                 throw new DomainException(message);
             }
         }
+
+        public static void AssertStateFalse(bool boolValue, string message)
+        {
+            if (!boolValue)
+            {
+                throw new DomainException(message);
+            }
+        }
+
         /// <summary>
         /// Valida se o formato do email é válido, verificando se ele contém um endereço de email válido
         /// e não possui pontos consecutivos.
