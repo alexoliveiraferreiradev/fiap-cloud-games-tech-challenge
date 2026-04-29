@@ -33,7 +33,6 @@ namespace FiapCloundGames.UnitTests.Infrastructure
 
             // Assert
             Assert.True(result, "O VerifyPassword deveria ter validado a senha correta.");
-            //teste gpg
         }
     }
 }
