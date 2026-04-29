@@ -18,7 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Common\Interfaces\" />
     <Folder Include="Infrastructure\Caching\" />
     <Folder Include="Infrastructure\Caching\" />
     <Folder Include="Infrastructure\Persistance\" />
