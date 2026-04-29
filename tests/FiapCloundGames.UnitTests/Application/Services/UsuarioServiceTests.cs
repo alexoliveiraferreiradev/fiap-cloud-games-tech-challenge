@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using FiapCloundGames.API.Application.Dtos;
+using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Application.Services;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
@@ -99,7 +99,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object);
             //Act 
-            var result =await Assert.ThrowsAsync<DomainException>(async () => await service.CriaAdministrador(usuarioRequest, true, ""));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaAdministrador(usuarioRequest, true, ""));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioEmailObrigatorio, result.Message);
         }
@@ -404,10 +404,176 @@ namespace FiapCloundGames.UnitTests.Application.Services
             repoMock.Setup(r => r.ObterPorId(admin.Id)).ReturnsAsync(admin);
             repoMock.Setup(r => r.ObterPorId(idUsuarioARebaixar)).ReturnsAsync((Usuario)null);
 
-            // Act & Assert
-            var ex = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(idUsuarioRebaixar: idUsuarioARebaixar, idAdminExecutor: admin.Id));
-
-            Assert.Equal(MensagensDominio.UsuarioObrigatorio, ex.Message);
+            // Act  
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(idUsuarioRebaixar: idUsuarioARebaixar, idAdminExecutor: admin.Id));
+            //Assert
+            Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
         }
+
+        [Fact(DisplayName = "Atualizar usuário - dados com sucesso")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task AtualizarUsuario_UsuarioValido_DeveAtualizarComSucesso()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso(); 
+            var updataRequest = new UpdateUsuarioRequest(_faker.Internet.UserName(), _faker.Internet.Email(), "Teste@1234","Teste@1234");
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var service = new UsuarioService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            //Act
+            await service.AtualizarUsuario(usuario.Id, updataRequest);
+            //Assert
+            Assert.Equal(updataRequest.nomeUsuario, usuario.NomeUsuario);
+            Assert.Equal(updataRequest.emailUsuario, usuario.Email);
+            Assert.Equal(updataRequest.senhaUsuario, usuario.Senha);    
+
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);
+        }
+                
+
+        [Fact(DisplayName = "Falha ao atualizar usuário - novo email não preenchido")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task AtualizarUsuario_NovoEmailNaoPreenchido_DeveLancarExcecao()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var updataRequest = new UpdateUsuarioRequest(_faker.Internet.UserName(), string.Empty, "Teste@123","Teste@123");
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var service = new UsuarioService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            //Act
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
+            //Assert
+            Assert.Equal(MensagensDominio.UsuarioEmailNovoObrigatorio, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
+        }
+
+        [Theory(DisplayName = "Falha ao atualizar usuário - novo email inválido")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        [InlineData("email@invalido")]
+        [InlineData("@dominio.com")]
+        [InlineData("usuario@dominio")]
+        [InlineData("usuario@dominio..com")]
+        public async Task AtualizarUsuario_NovoEmailInvalido_DeveLancarExcecao(string novoEmail)
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var updataRequest = new UpdateUsuarioRequest(_faker.Internet.UserName(), novoEmail, "Teste@123","Teste@123");
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var service = new UsuarioService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            //Act
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
+            //Assert
+            Assert.Equal(MensagensDominio.UsuarioEmailNovoInvalido, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
+        }
+
+        [Fact(DisplayName = "Falha ao atualizar usuário - nova senha não preenchida")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task AtualizarUsuario_NovaSenhaNaoPreenchida_DeveLancarExcecao()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var updataRequest = new UpdateUsuarioRequest(_faker.Internet.UserName(), _faker.Internet.Email(), string.Empty,string.Empty);
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var service = new UsuarioService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            //Act
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
+            //Assert
+            Assert.Equal(MensagensDominio.UsuarioSenhaNovaObrigatoria, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
+        }
+        
+
+        [Fact(DisplayName = "Falha ao atualizar usuário - confirmação de senha diferente")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task AtualizarUsuario_NovaSenhaConfirmacaoDeSenhaDiferente_DeveLancarExcecao()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var updataRequest = new UpdateUsuarioRequest(_faker.Internet.UserName(), _faker.Internet.Email(), "Teste1234@", "Teste12345@");
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var service = new UsuarioService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            //Act
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
+            //Assert
+            Assert.Equal(MensagensDominio.UsuarioSenhaConfirmacaoDiferente, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
+        }
+
+        [Theory(DisplayName = "Falha ao atualizar usuário - nova senha inválida")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        [InlineData("senha")]
+        [InlineData("123456")]
+        [InlineData("abcdef")]
+        [InlineData("senha123")]
+        [InlineData("SENHA123")]
+        public async Task AtualizarUsuario_NovaSenhaInvalida_DeveLancarExcecao(string novaSenha)
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var updataRequest = new UpdateUsuarioRequest(_faker.Internet.UserName(), _faker.Internet.Email(), novaSenha,novaSenha);
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var service = new UsuarioService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            //Act
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
+            //Assert
+            Assert.Equal(MensagensDominio.UsuarioSenhaNovaFraca, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
+        }
+
+
+        [Fact(DisplayName = "Desativar usuário - desativação com sucesso")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task DesativarUsuario_UsuarioValido_DeveDesativarComSucesso()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso(); 
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();  
+            var service = new UsuarioService(repoMock.Object);
+            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            //Act
+             await service.DesativarUsuario(usuario.Id);
+            //Assert
+            Assert.False(usuario.Ativo);
+
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);
+        }
+
+
+        [Fact(DisplayName = "Desativar usuário - usuário não existe")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task DesativarUsuario_UsuarioInexistente_DeveLancarExcecao()
+        {
+            //Arrange
+            var idUsuario = Guid.NewGuid();
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();  
+            var service = new UsuarioService(repoMock.Object);
+            repoMock.Setup(r => r.ObterPorId(idUsuario)).ReturnsAsync((Usuario)null);
+            //Act
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.DesativarUsuario(idUsuario));
+            //Assert
+            Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
+        }
+
     }
 }
