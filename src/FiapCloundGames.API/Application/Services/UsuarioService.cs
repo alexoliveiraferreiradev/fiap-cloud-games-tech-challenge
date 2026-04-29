@@ -121,6 +121,10 @@ namespace FiapCloundGames.API.Application.Services
         public async Task<Usuario> Autenticar(LoginRequest request)
         {
             var usuario = await _usuarioRepository.ObterPorEmail(request.emailUsuario);
+            if (usuario == null) throw new DomainException(MensagensDominio.CrendenciasInvalidas);
+            if (!usuario.Ativo) throw new DomainException(MensagensDominio.UsuarioInativo);
+            bool senhaValida = _passwordHasher.VerifyPassword(request.senhaUsuario, usuario.Senha);
+            if (!senhaValida) throw new DomainException(MensagensDominio.CrendenciasInvalidas);
             return usuario;
         }
 
