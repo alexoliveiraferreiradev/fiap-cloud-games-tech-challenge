@@ -1,21 +1,22 @@
 ﻿using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Domain.Common;
 using FiapCloundGames.API.Domain.Common.Exceptions;
+using FiapCloundGames.API.Domain.Common.Interfaces;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Infrastructure.Repository;
-using System.Security.Cryptography.Xml;
 
 namespace FiapCloundGames.API.Application.Services
 {
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        public UsuarioService(IUsuarioRepository usuarioRepository)
+        private readonly IPasswordHasher _passwordHasher;
+        public UsuarioService(IUsuarioRepository usuarioRepository, IPasswordHasher passwordHasher)
         {
             _usuarioRepository = usuarioRepository;
+            _passwordHasher = passwordHasher;
         }
 
 
@@ -73,6 +74,7 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> CadastrarJogador(CriaUsuarioRequest request)
         {
+            var senhaCifrada = _passwordHasher.Hash(request.Senha);
             var usuario = new Usuario(request.Nome, request.Email, request.Senha, request.reSenha);
             await Adicionar(usuario);
             return usuario;
