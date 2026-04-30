@@ -76,5 +76,18 @@ namespace FiapCloundGames.API.Application.Services
             await _jogoRepository.Atualizar(jogo);
         }
 
+        public async Task<IEnumerable<JogoResponse>> ObtemCatalagoJogos()
+        {
+            var jogos = await _jogoRepository.ObtemJogosAtivos();
+            return jogos.Select(j => new JogoResponse
+            {
+                Id = j.Id,
+                Nome = j.Nome,
+                Descricao = j.Descricao,
+                PrecoOriginal = j.Preco,
+                PrecoAtual = j.ObterPrecoAtual()
+            });
+        }
+
     }
 }
