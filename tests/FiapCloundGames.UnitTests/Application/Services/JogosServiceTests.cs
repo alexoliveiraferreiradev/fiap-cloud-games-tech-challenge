@@ -248,7 +248,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task ReativarJogo_JogoValido_DeveReativarComSucesso()
         {
             //Arrange
-            var jogo = _jogosFixture.ObtemJogosComSucesso();
+            var jogo = _jogosFixture.ObtemJogosInativo();
             //Mock
             var repoMock = new Mock<IJogosRepository>();
             var service = new JogosService(repoMock.Object);
@@ -260,6 +260,26 @@ namespace FiapCloundGames.UnitTests.Application.Services
             Assert.True(jogo.Ativo);
 
             repoMock.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Once);
+        }
+
+
+        [Fact(DisplayName = "Falha ao reativar jogo - jogo ativo")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task ReativarJogo_JogoAtivo_DeveLancarExcecao()
+        {
+            //Arrange
+            var jogo = _jogosFixture.ObtemJogosComSucesso();
+            //Mock
+            var repoMock = new Mock<IJogosRepository>();
+            var service = new JogosService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+            //Act 
+            var result = await Assert.ThrowsAsync<DomainException>(async ()=> await service.Reativar(jogo.Id));
+            //Assert
+            Assert.Equal(MensagensDominio.JogoAtivo, result.Message);
+
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
         }
     }
 }
