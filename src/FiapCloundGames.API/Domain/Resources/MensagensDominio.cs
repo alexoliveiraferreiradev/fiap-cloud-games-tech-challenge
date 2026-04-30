@@ -50,5 +50,10 @@
         public static string PedidoJogoNaoRascunhos = "Não é possível adicionar itens a um pedido que não esteja em rascunho.";
         public static string PedidoJogoJaAdicionado = "Este jogo já foi adicionado ao pedido.";
         #endregion
+
+        #region Promoção
+        public static string PromocaoValorInvalido = "O valor da promoção deve ser um valor positivo.";
+        public static string PromocaoDataFimInvalida = "A data de término deve ser no futuro.";
+        #endregion
     }
 }
