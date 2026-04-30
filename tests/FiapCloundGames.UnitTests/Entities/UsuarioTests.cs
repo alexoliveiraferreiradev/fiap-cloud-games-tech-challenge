@@ -350,6 +350,18 @@ namespace FiapCloundGames.UnitTests.Entities
         }
 
 
+        [Fact(DisplayName = "Reativar usuário - reativar usuário com sucesso")]
+        [Trait("Categoria", "Usuario Tests")]
+        public void ReativarUsuario_UsuarioInativo_DeveReativarComSucesso()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemUsuarioInativo();
+            //Act
+            usuario.Reativar();
+            //Assert
+            Assert.True(usuario.Ativo);
+        }
+
 
     }
 }
