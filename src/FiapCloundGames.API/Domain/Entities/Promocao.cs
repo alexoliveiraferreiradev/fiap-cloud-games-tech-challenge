@@ -8,7 +8,7 @@ namespace FiapCloundGames.API.Domain.Entities
     {
         public Promocao(Guid jogoId, decimal valorPromocao, DateTime dataFim)
         {
-            JogoId = jogoId;    
+            JogoId = jogoId;
             Valor = valorPromocao;
             Ativo = true;
             DataInicio = DateTime.UtcNow;
@@ -29,10 +29,14 @@ namespace FiapCloundGames.API.Domain.Entities
             if (DataFim <= DateTime.UtcNow) throw new DomainException(MensagensDominio.PromocaoDataFimInvalida);
         }
 
-        public bool EstaValida()=>
+        public bool EstaValida() =>
             Ativo && DateTime.UtcNow >= DataInicio && DateTime.UtcNow <= DataFim;
 
-        public void Desativar() => Ativo = false;
+        public void Desativar()
+        {
+            if (EstaValida()) throw new DomainException(MensagensDominio.PromocaoInativa);
+             Ativo = false;
+        }
 
         public void AtualizarPrecoPromocional(decimal novoValor)
         {
