@@ -108,5 +108,12 @@ namespace FiapCloundGames.UnitTests.Fixtures
             typeof(Usuario).GetProperty("Perfil").SetValue(usuario, TipoUsuario.Administrador);
             return usuario;
         }
+
+        public Usuario ObtemUsuarioInativo()
+        {
+            var usuario = new Usuario(_faker.Internet.Email(), "Teste@123");
+            typeof(Usuario).GetProperty("Ativo").SetValue(usuario, false);
+            return usuario;
+        }
     }
 }
