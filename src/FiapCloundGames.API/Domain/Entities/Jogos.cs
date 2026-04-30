@@ -77,7 +77,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         private void AtualizarPreco(decimal novoPreco)
         {
-            AssertionConcern.AssertArgumentValueFormat(novoPreco, MensagensDominio.JogoPrecoInvalido);
+            AssertionConcern.AssertArgumentValueFormat(novoPreco, MensagensDominio.ValorInvalido);
             if (Preco == novoPreco) return;
             Preco = novoPreco;
         }
