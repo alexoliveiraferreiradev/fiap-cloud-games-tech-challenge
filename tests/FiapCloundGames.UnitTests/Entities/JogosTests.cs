@@ -166,7 +166,7 @@ namespace FiapCloundGames.UnitTests.Entities
             //Act
             var result = Assert.Throws<DomainException>(() => jogo.Reativar());
             //Assert
-            Assert.Equal(MensagensDominio.JogoInvalido, result.Message);
+            Assert.Equal(MensagensDominio.JogoAtivo, result.Message);
         }
 
         [Fact(DisplayName = "Atualizar jogo - jogo válido deve atualizar jogo com sucesso")]
@@ -289,7 +289,13 @@ namespace FiapCloundGames.UnitTests.Entities
         [Trait("Categoria","Jogos Tests")]
         public void AdicionaPromocaoJogo_JogoValido_DeveAdicionarPromocaoComSucesso()
         {
-            
+            //Arrange
+            var jogo = _jogoFixture.ObtemJogosComSucesso();
+            var precoBase = jogo.Preco;
+            //Act
+            jogo.AdicionarPromocao();
+            //Assert
+            Assert.NotEqual(precoBase, jogo.Preco);
         }
     }
 }
