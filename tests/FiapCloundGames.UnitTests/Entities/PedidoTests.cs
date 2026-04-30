@@ -43,8 +43,9 @@ namespace FiapCloundGames.UnitTests.Entities
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var pedido = new Pedido(usuario.Id);
-       
+
             //Act 
+            pedido.AdicionarItem(Guid.NewGuid(),150.00m);
             pedido.FinalizarPedido();
             //Assert
             Assert.Equal(PedidoStatus.Finalizado, pedido.Status);
