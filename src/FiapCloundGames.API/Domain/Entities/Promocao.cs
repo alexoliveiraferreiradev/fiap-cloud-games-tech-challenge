@@ -34,7 +34,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public void Desativar()
         {
-            if (EstaValida()) throw new DomainException(MensagensDominio.PromocaoInativa);
+            if (!EstaValida()) throw new DomainException(MensagensDominio.PromocaoInativa);
              Ativo = false;
         }
 
