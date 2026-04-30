@@ -1,4 +1,5 @@
 ﻿using FiapCloundGames.API.Application.Dtos.Jogos;
+using FiapCloundGames.API.Application.Dtos.Promocao;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
@@ -56,6 +57,12 @@ namespace FiapCloundGames.API.Application.Services
             if (jogo != null) throw new DomainException(MensagensDominio.JogoMesmoNomeExistente);
 
             return true;
+        }
+
+        public async Task AdicionarPromocao(CriaPromocaoRequest promocaoRequest)
+        {
+            var jogo = await _jogoRepository.ObterPorId(promocaoRequest.jogoId);
+            jogo.AdicionarPromocao(promocaoRequest.valorPromocao, promocaoRequest.dataFim);
         }
 
     }
