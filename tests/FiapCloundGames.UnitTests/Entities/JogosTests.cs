@@ -92,7 +92,7 @@ namespace FiapCloundGames.UnitTests.Entities
             //Act 
             var result = Assert.Throws<DomainException>(() => _jogoFixture.ObtemJogosPrecoInvalido());
             //Assert
-            Assert.Equal(MensagensDominio.JogoPrecoInvalido, result.Message);
+            Assert.Equal(MensagensDominio.ValorInvalido, result.Message);
         }
 
 
