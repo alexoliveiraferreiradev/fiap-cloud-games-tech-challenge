@@ -279,6 +279,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             await _jogosService.AdicionarPromocao(criaPromocaoRequest);
             //Assert
             Assert.Contains(jogo.Promocoes, p => p.Ativo);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Once);
         }
 
         [Fact(DisplayName = "Falha ao adicionar promocão - jogo não encontrado")]
