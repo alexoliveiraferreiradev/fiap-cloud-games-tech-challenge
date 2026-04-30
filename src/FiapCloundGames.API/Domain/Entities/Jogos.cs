@@ -15,9 +15,6 @@ namespace FiapCloundGames.API.Domain.Entities
         public DateTime DataAlteracao { get; private set; }
         public GeneroJogo Genero { get; private set; }
 
-        private List<Promocao> _promocoes = new List<Promocao>();   
-        public IReadOnlyCollection<Promocao> Promocoes => _promocoes;
-
         protected Jogos()
         {
         }
@@ -67,21 +64,7 @@ namespace FiapCloundGames.API.Domain.Entities
             AtualizarPreco(novoPreco);
             AtualizarGenero(novoGenero);
             DataAlteracao = DateTime.UtcNow;    
-        }
-
-        public decimal ObterPrecoAtual()
-        {
-            var promoAtiva = _promocoes.FirstOrDefault(p=>p.EstaValida());
-            return promoAtiva != null ? promoAtiva.Valor : Preco;
-        }
-
-        public void DesativarPromocao(Guid promocaoId)
-        {
-            var promocao = _promocoes.FirstOrDefault(p => p.Id == promocaoId);
-            if (promocao != null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);
-            
-            promocao.Desativar();
-        }
+        }        
 
         private void AtualizarGenero(GeneroJogo novoGenero)
         {
@@ -111,11 +94,6 @@ namespace FiapCloundGames.API.Domain.Entities
             if (Nome == novoNome) return;
             AssertionConcern.AssertArgumentLength(novoNome, 3, 20, MensagensDominio.JogoTamanhoNomeInvalido);
             Nome = novoNome;
-        }
-
-        public void AdicionarPromocao(decimal valorPromocao, DateTime dataFim)
-        {
-
         }
     }
 }
