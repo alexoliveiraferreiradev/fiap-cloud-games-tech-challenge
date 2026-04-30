@@ -45,7 +45,7 @@ namespace FiapCloundGames.API.Domain.Entities
         public void FinalizarPedido()
         {
             if (Status != PedidoStatus.Rascunho) throw new DomainException(MensagensDominio.PedidoNaoRascunhos);
-            if (_jogos.Any()) throw new DomainException(MensagensDominio.PedidoSemJogos);
+            if (!_jogos.Any()) throw new DomainException(MensagensDominio.PedidoSemJogos);
             Status = PedidoStatus.Finalizado;
         }
 
