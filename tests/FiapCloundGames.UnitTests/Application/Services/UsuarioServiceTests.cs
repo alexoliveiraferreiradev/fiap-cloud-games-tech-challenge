@@ -595,15 +595,16 @@ namespace FiapCloundGames.UnitTests.Application.Services
         [Trait("Categoria", "Usuario Service Tests")]
         public async Task DesativarUsuario_UsuarioValido_DeveDesativarComSucesso()
         {
-            //Arrange
+            //Arrange            
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var deleteUsuarioRequest = new DeleteUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
-            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            repoMock.Setup(r => r.ObterPorId(deleteUsuarioRequest.id)).ReturnsAsync(usuario);
             //Act
-            await service.DesativarUsuario(usuario.Id);
+            await service.DesativarUsuario(deleteUsuarioRequest);
             //Assert
             Assert.False(usuario.Ativo);
 
@@ -617,13 +618,14 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange
             var idUsuario = Guid.NewGuid();
+            var deleteUsuarioRequest = new DeleteUsuarioRequest(idUsuario, MotivoExclusao.Inatividade);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
-            repoMock.Setup(r =>  r.ObterPorId(idUsuario)).ReturnsAsync((Usuario)null);
+            repoMock.Setup(r =>  r.ObterPorId(deleteUsuarioRequest.id)).ReturnsAsync((Usuario)null);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.DesativarUsuario(idUsuario));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.DesativarUsuario(deleteUsuarioRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
