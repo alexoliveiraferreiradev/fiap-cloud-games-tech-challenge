@@ -142,7 +142,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
             //Assert
-            Assert.Equal(MensagensDominio.JogoPrecoInvalido, result.Message);
+            Assert.Equal(MensagensDominio.ValorInvalido, result.Message);
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
         }
 
