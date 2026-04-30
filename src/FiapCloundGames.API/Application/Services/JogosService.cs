@@ -32,5 +32,16 @@ namespace FiapCloundGames.API.Application.Services
             jogo.Atualizar(updateJogosRequest.novoNome,updateJogosRequest.novaDescricao, updateJogosRequest.novoPreco, updateJogosRequest.novoGenero);
             await _jogoRepository.Atualizar(jogo);  
         }
+
+        public async Task Desativar(Guid jogoId)
+        {
+            var jogo = await _jogoRepository.ObterPorId(jogoId);            
+            jogo.Desativar();
+        }
+
+        public Task Reativar(Guid jogoId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
