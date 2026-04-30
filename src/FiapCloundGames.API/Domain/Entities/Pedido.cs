@@ -1,4 +1,5 @@
 ﻿using FiapCloundGames.API.Domain.Common;
+using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
 
@@ -28,7 +29,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public override void ValidarEntidade()
         {
-                       
+            if (UsuarioId == Guid.Empty) throw new DomainException(MensagensDominio.PedidoSemUsuario);
         }
 
         public void FinalizarPedido()
