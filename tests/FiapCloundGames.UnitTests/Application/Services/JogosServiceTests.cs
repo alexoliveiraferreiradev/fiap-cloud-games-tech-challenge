@@ -73,6 +73,23 @@ namespace FiapCloundGames.UnitTests.Application.Services
             repoMock.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
         }
 
+        [Fact(DisplayName = "Falha ao adicionar jogo - nome duplicado")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task AdicionarJogo_NomeDuplicado_DeveLancarExcecao()
+        {
+            //Arrange
+            var request = new CriarJogoRequest("Read Dead 2", "Melhor jogo do mundo", 150.00m, GeneroJogo.Aventura);
+            var jogoExistente = _jogosFixture.ObtemJogosComSucesso();
+            //Mock
+            var repoMock = new Mock<IJogosRepository>();
+            var service = new JogosService(repoMock.Object);
+            repoMock.Setup(r=>r.ObtemPorNome(request.Nome)).ReturnsAsync(jogoExistente);    
+            //Act 
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaJogo(request));
+            //Assert
+            Assert.Equal(MensagensDominio.JogoMesmoNomeExistente, result.Message);
+            repoMock.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
+        }
 
         [Fact(DisplayName = "Falha ao adicionar jogo - descrição não preenchida")]
         [Trait("Categoria", "JogosService Tests")]
