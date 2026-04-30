@@ -7,5 +7,7 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
     {
         Task<Jogos> CriaJogo(CriarJogoRequest request);
         Task AtualizarJogo(Guid usuarioId,UpdateJogosRequest updateJogoRequest);
+        Task Desativar(Guid jogoId);
+        Task Reativar(Guid jogoId); 
     }
 }
