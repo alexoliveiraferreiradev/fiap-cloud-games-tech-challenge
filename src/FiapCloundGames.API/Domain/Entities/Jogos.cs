@@ -15,7 +15,7 @@ namespace FiapCloundGames.API.Domain.Entities
         public DateTime DataAlteracao { get; private set; }
         public GeneroJogo Genero { get; private set; }
         private List<Promocao> _promocoes = new List<Promocao>();
-        private IReadOnlyCollection<Promocao> Promocoes => _promocoes;
+        public IReadOnlyCollection<Promocao> Promocoes => _promocoes;
 
         protected Jogos()
         {
@@ -103,12 +103,16 @@ namespace FiapCloundGames.API.Domain.Entities
             if (valorPromocao >= Preco) throw new DomainException(MensagensDominio.PromocaoValorMaior);
             foreach (var p in _promocoes.Where(x => x.Ativo)) p.Desativar();
             _promocoes.Add(new Promocao(Id, valorPromocao, dataFim));
-            Preco = ObterPrecoAtual();
+            ObterPrecoAtual();
         }
         public decimal ObterPrecoAtual()
         {
             var promoAtiva = _promocoes.FirstOrDefault(p => p.EstaValida());
             return promoAtiva != null ? promoAtiva.Valor : Preco;
+        }
+        public void DesativarPromocao()
+        {
+            foreach (var p in _promocoes.Where(x => x.Ativo)) p.Desativar();
         }
     }
 }
