@@ -58,5 +58,6 @@
         #endregion
 
         public static string ValorInvalido = "O valor deve ser positivo.";
+        public static string PrecoObrigatorio = "O preço é obrigatório.";
     }
 }
