@@ -44,7 +44,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public void AtualizarPrecoPromocional(decimal novoValor)
         {
-            AssertionConcern.AssertArgumentValueFormat(novoValor, MensagensDominio.PromocaoValorInvalido);
+            AssertionConcern.AssertArgumentValueFormat(novoValor, MensagensDominio.ValorInvalido);
             Valor = novoValor;
             DataAlteracao = DateTime.UtcNow;
         }
