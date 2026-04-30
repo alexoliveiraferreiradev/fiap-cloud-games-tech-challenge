@@ -71,8 +71,16 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public decimal ObterPrecoAtual()
         {
-            var promoAtiva = _promocoes.FirstOrDefault(p=>p.Ativo && p.DataFim > DateTime.UtcNow);
+            var promoAtiva = _promocoes.FirstOrDefault(p=>p.EstaValida());
             return promoAtiva != null ? promoAtiva.Valor : Preco;
+        }
+
+        public void DesativarPromocao(Guid promocaoId)
+        {
+            var promocao = _promocoes.FirstOrDefault(p => p.Id == promocaoId);
+            if (promocao != null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);
+            
+            promocao.Desativar();
         }
 
         private void AtualizarGenero(GeneroJogo novoGenero)
