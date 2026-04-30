@@ -15,6 +15,8 @@ namespace FiapCloundGames.API.Domain.Entities
         public DateTime DataAlteracao { get; private set; }
         public GeneroJogo Genero { get; private set; }
 
+        private List<Promocao> _promocoes = new List<Promocao>();   
+        public IReadOnlyCollection<Promocao> Promocoes => _promocoes;
 
         protected Jogos()
         {
@@ -65,6 +67,12 @@ namespace FiapCloundGames.API.Domain.Entities
             AtualizarPreco(novoPreco);
             AtualizarGenero(novoGenero);
             DataAlteracao = DateTime.UtcNow;    
+        }
+
+        public decimal ObterPrecoAtual()
+        {
+            var promoAtiva = _promocoes.FirstOrDefault(p=>p.Ativo && p.DataFim > DateTime.UtcNow);
+            return promoAtiva != null ? promoAtiva.Valor : Preco;
         }
 
         private void AtualizarGenero(GeneroJogo novoGenero)
