@@ -12,5 +12,6 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task Reativar(Guid jogoId);
         Task<bool> VerificaDuplicidadeNome(string nomeJogo);
         Task AdicionarPromocao(CriaPromocaoRequest criaPromocaoRequest);
+        Task DesativarPromocao(Guid jogoId,Guid promocaoId);
     }
 }
