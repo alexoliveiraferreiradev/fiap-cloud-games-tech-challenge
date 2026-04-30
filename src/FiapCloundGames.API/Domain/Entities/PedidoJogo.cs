@@ -5,8 +5,8 @@ namespace FiapCloundGames.API.Domain.Entities
 {
     public class PedidoJogo
     {
-        public Guid JogoId { get; set; }
-        public decimal PrecoNoMomento { get; set; }
+        public Guid JogoId { get; private set; }
+        public decimal PrecoNoMomento { get; private set; }
 
         protected PedidoJogo()
         {
