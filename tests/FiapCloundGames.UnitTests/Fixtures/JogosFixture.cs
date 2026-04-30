@@ -20,6 +20,14 @@ namespace FiapCloundGames.UnitTests.Fixtures
             GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
             return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
         }
+        public Jogos ObtemJogosParaPromocao()
+        {
+            var nomeJogo = _faker.Random.String(10);
+            var descricaoJogo = _faker.Random.String(50);
+            var precoJogo = 150.00m;
+            GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
+            return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
+        }
         public Jogos ObtemJogosInativo()
         {
             var jogos = new Jogos(_faker.Random.String(10), _faker.Random.String(50), _faker.Random.Decimal(10, 100), _faker.PickRandom<GeneroJogo>());
