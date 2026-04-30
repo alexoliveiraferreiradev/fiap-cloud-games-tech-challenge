@@ -315,6 +315,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Assert
             var promocaoDesativada = jogo.Promocoes.First(p => p.Id == idPromocao);
             Assert.False(promocaoDesativada.Ativo);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
         }
 
         [Fact(DisplayName = "Falha ao desativar promocão - promoção não encontrada")]
