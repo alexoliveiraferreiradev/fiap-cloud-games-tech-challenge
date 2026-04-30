@@ -16,10 +16,12 @@ namespace FiapCloundGames.UnitTests.Application.Services
     {
         private readonly Faker _faker;
         private readonly JogosFixture _jogosFixture;
+        private readonly PromocaoFixture _promocaoFixture;
         public JogosServiceTests()
         {
             _faker = new Faker();
             _jogosFixture = new JogosFixture();
+            _promocaoFixture = new PromocaoFixture();
         }
 
         [Fact(DisplayName = "Adicionar jogo - deve criar um jogo com sucesso")]
@@ -84,7 +86,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock
             var repoMock = new Mock<IJogosRepository>();
             var service = new JogosService(repoMock.Object);
-            repoMock.Setup(r=>r.ObtemPorNome(request.Nome)).ReturnsAsync(jogoExistente);    
+            repoMock.Setup(r => r.ObtemPorNome(request.Nome)).ReturnsAsync(jogoExistente);
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CriaJogo(request));
             //Assert
@@ -293,7 +295,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             repoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async ()=> await service.Reativar(jogo.Id));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.Reativar(jogo.Id));
             //Assert
             Assert.Equal(MensagensDominio.JogoAtivo, result.Message);
 
@@ -316,7 +318,65 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             await service.AdicionarPromocao(criaPromocaoRequest);
             //Assert
-            Assert.Contains(jogo.Promocoes, p => p.Ativo);            
+            Assert.Contains(jogo.Promocoes, p => p.Ativo);
+        }
+
+        [Fact(DisplayName = "Falha ao adicionar promocão - jogo não encontrado")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task AdicionarPromocao_JogoNaoEncontrado_DeveLancarExcecao()
+        {
+            //Arrange
+            var jogo = _jogosFixture.ObtemJogosParaPromocao();
+            var criaPromocaoRequest = new CriaPromocaoRequest(jogo.Id, 90.00m, DateTime.UtcNow.AddDays(10));
+            //Mock
+            var repoMock = new Mock<IJogosRepository>();
+            var service = new JogosService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync((Jogos)null);
+            //Act 
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.AdicionarPromocao(criaPromocaoRequest));
+            //Assert
+            Assert.Equal(MensagensDominio.JogoNaoEncontrado, result.Message);
+        }
+
+        [Fact(DisplayName = "Desativar promocão - deve desativar com sucesso")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task DesativarPromocao_JogoValido_DeveDesativarComSucesso()
+        {
+            //Arrange
+            var jogo = _jogosFixture.ObtemJogosParaPromocao();
+            var promocaoRequest = _promocaoFixture.ObtemPromacaoRequest(jogo.Id);
+            //Mock
+            var repoMock = new Mock<IJogosRepository>();
+            var service = new JogosService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+            //Act 
+            await service.AdicionarPromocao(promocaoRequest);
+            var idPromocao = jogo.Promocoes.Where(x => x.JogoId == jogo.Id).Select(x => x.Id).First();
+            await service.DesativarPromocao(jogo.Id, idPromocao);
+            //Assert
+            Assert.Contains(jogo.Promocoes, p => !p.Ativo);
+        }
+
+        [Fact(DisplayName = "Falha ao desativar promocão - promoção não encontrada")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task DesativarPromocao_PromocaoNaoEncontrada_DeveLancarExcecao()
+        {
+            //Arrange
+            var jogo = _jogosFixture.ObtemJogosParaPromocao();
+            var promocaoRequest = _promocaoFixture.ObtemPromacaoRequest(jogo.Id);
+            var idInexistente = Guid.NewGuid();
+            //Mock
+            var repoMock = new Mock<IJogosRepository>();
+            var service = new JogosService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+            //Act 
+            await service.AdicionarPromocao(promocaoRequest);
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.DesativarPromocao(jogo.Id, idInexistente));
+            //Assert
+            Assert.Equal(MensagensDominio.PromocaoNaoEncontrada, result.Message);
         }
 
     }
