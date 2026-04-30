@@ -9,5 +9,6 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task AtualizarJogo(Guid usuarioId,UpdateJogosRequest updateJogoRequest);
         Task Desativar(Guid jogoId);
         Task Reativar(Guid jogoId);
+        Task<bool> VerificaDuplicidadeNome(string nomeJogo);
     }
 }
