@@ -36,6 +36,7 @@
         public static string JogoInvalido = "O jogo já está desativado.";
         public static string JogoAtivo = "O jogo já está ativo.";
         public static string CrendenciasInvalidas = "Credenciais inválidas.";
-        public static string JogoMesmoNomeExistente = "Já existe um jogo com esse nome.";   
+        public static string JogoMesmoNomeExistente = "Já existe um jogo com esse nome.";  
+        public static string PedidoSemUsuario = "O pedido deve estar associado a um usuário.";
     }
 }
