@@ -187,7 +187,7 @@ namespace FiapCloundGames.API.Domain.Common
         /// <exception cref="DomainException"></exception>
         public static void AssertArgumentValueFormat(decimal value, string message)
         {
-            if (value < 0) throw new DomainException(MensagensDominio.JogoPrecoInvalido);
+            if (value < 0) throw new DomainException(message);
         }
 
         /// <summary>
