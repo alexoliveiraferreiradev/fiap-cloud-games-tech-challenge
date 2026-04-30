@@ -28,7 +28,7 @@ namespace FiapCloundGames.API.Domain.Entities
         public override void ValidarEntidade()
         {
             if (JogoId == Guid.Empty) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            AssertionConcern.AssertArgumentValueFormat(Valor, MensagensDominio.PromocaoValorInvalido);
+            AssertionConcern.AssertArgumentValueFormat(Valor, MensagensDominio.ValorInvalido);
             if (DataFim <= DateTime.UtcNow) throw new DomainException(MensagensDominio.PromocaoDataFimInvalida);
         }
 
