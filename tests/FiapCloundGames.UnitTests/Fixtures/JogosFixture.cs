@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
+using FiapCloundGames.API.Domain.ValueObjects;
 
 namespace FiapCloundGames.UnitTests.Fixtures
 {
@@ -16,7 +17,7 @@ namespace FiapCloundGames.UnitTests.Fixtures
         {
             var nomeJogo = _faker.Random.String(10);
             var descricaoJogo = _faker.Random.String(50);
-            var precoJogo = _faker.Random.Decimal(10, 100);
+            var precoJogo = new Preco(_faker.Random.Decimal(10, 100));
             GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
             return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
         }
@@ -24,13 +25,13 @@ namespace FiapCloundGames.UnitTests.Fixtures
         {
             var nomeJogo = _faker.Random.String(10);
             var descricaoJogo = _faker.Random.String(50);
-            var precoJogo = 150.00m;
+            var precoJogo = new Preco(150.00m);
             GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
             return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
         }
         public Jogos ObtemJogosInativo()
         {
-            var jogos = new Jogos(_faker.Random.String(10), _faker.Random.String(50), _faker.Random.Decimal(10, 100), _faker.PickRandom<GeneroJogo>());
+            var jogos = new Jogos(_faker.Random.String(10), _faker.Random.String(50), new Preco( _faker.Random.Decimal(10, 100)), _faker.PickRandom<GeneroJogo>());
             typeof(Jogos).GetProperty("Ativo").SetValue(jogos, false);
             return jogos;
         }
@@ -39,7 +40,7 @@ namespace FiapCloundGames.UnitTests.Fixtures
         {
             var nomeJogo = string.Empty;
             var descricaoJogo = _faker.Random.String(50);
-            var precoJogo = _faker.Random.Decimal(10, 100);
+            var precoJogo = new  Preco(_faker.Random.Decimal(10, 100));
             GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
             return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
         }
@@ -47,7 +48,7 @@ namespace FiapCloundGames.UnitTests.Fixtures
         {
             var nomeJogo = _faker.Random.String(10);
             var descricaoJogo = string.Empty;
-            var precoJogo = _faker.Random.Decimal(10, 100);
+            var precoJogo = new Preco( _faker.Random.Decimal(10, 100));
             GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
             return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
         }
@@ -55,7 +56,7 @@ namespace FiapCloundGames.UnitTests.Fixtures
         {
             var nomeJogo = _faker.Random.String(21);
             var descricaoJogo = _faker.Random.String(50);
-            var precoJogo = _faker.Random.Decimal(10, 100);
+            var precoJogo = new Preco( _faker.Random.Decimal(10, 100));
             GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
             return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
         }
@@ -63,7 +64,7 @@ namespace FiapCloundGames.UnitTests.Fixtures
         {
             var nomeJogo = _faker.Random.String(10);
             var descricaoJogo = _faker.Random.String(101);
-            var precoJogo = _faker.Random.Decimal(10, 100);
+            var precoJogo = new Preco(_faker.Random.Decimal(10, 100));
             GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
             return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
         }
@@ -71,7 +72,7 @@ namespace FiapCloundGames.UnitTests.Fixtures
         {
             var nomeJogo = _faker.Random.String(10);
             var descricaoJogo = _faker.Random.String(100);
-            var precoJogo = _faker.Random.Decimal(-1, 0);
+            var precoJogo = new Preco(_faker.Random.Decimal(-1, 0));
             GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
             return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
         }
@@ -79,7 +80,7 @@ namespace FiapCloundGames.UnitTests.Fixtures
         {
             var nomeJogo = _faker.Random.String(10);
             var descricaoJogo = _faker.Random.String(100);
-            var precoJogo = _faker.Random.Decimal(10, 100);
+            var precoJogo = new Preco( _faker.Random.Decimal(10, 100));
             var generoJogo = (GeneroJogo)100;
             return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
         }
