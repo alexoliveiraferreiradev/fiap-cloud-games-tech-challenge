@@ -295,7 +295,7 @@ namespace FiapCloundGames.UnitTests.Entities
             //Act
             jogo.AdicionarPromocao(100,DateTime.UtcNow.AddMonths(2));
             //Assert
-            Assert.NotEqual(precoBase, jogo.Preco);
+            Assert.Contains(jogo.Promocoes,p=>p.Valor == 100);
         }
     }
 }
