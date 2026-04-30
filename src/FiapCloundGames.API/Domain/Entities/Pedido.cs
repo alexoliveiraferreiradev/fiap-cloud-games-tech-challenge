@@ -51,7 +51,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         private void CalcularValorTotal()
         {
-            ValorTotal = _jogos.Sum(j => j.PrecoNoMomento);
+            ValorTotal = _jogos.Sum(j => j.PrecoNoMomento.Valor);
         }
     }
 }
