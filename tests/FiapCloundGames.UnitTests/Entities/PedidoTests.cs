@@ -49,6 +49,20 @@ namespace FiapCloundGames.UnitTests.Entities
             //Assert
             Assert.Equal(PedidoStatus.Finalizado, pedido.Status);
         }
+
+
+        [Fact(DisplayName = "Falha ao finalizar pedido - deve ter jogos no pedido")]
+        [Trait("Categoria", "Pedido")]
+        public void FinalizarPedido_PedidoInvalido_SemJogo_DeveLancarExcecao()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var pedido = new Pedido(usuario.Id);       
+            //Act 
+            pedido.FinalizarPedido();
+            //Assert
+            Assert.Equal(PedidoStatus.Finalizado, pedido.Status);
+        }
     }
 
 }
