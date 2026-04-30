@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using FiapCloundGames.API.Application.Dtos.Jogos;
+using FiapCloundGames.API.Application.Dtos.Promocao;
 using FiapCloundGames.API.Application.Services;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
@@ -298,5 +299,25 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             repoMock.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
         }
+
+
+        [Fact(DisplayName = "Adicionar promocão - deve adicionar promoção com sucesso")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task AdicionarPromocao_JogoValido_DeveAdicionarPromocaoComSucesso()
+        {
+            //Arrange
+            var jogo = _jogosFixture.ObtemJogosParaPromocao();
+            var criaPromocaoRequest = new CriaPromocaoRequest(jogo.Id, 90.00m, DateTime.UtcNow.AddDays(10));
+            //Mock
+            var repoMock = new Mock<IJogosRepository>();
+            var service = new JogosService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+            //Act 
+            await service.AdicionarPromocao(criaPromocaoRequest);
+            //Assert
+            Assert.Contains(jogo.Promocoes, p => p.Ativo);            
+        }
+
     }
 }
