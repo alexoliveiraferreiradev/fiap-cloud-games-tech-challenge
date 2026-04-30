@@ -72,7 +72,7 @@ namespace FiapCloundGames.API.Domain.Entities
         public void Desativar(MotivoExclusao motivo)
         {
             if (!Ativo) throw new DomainException(MensagensDominio.UsuarioJaDesativado);
-            
+
             Ativo = false;
             DataAlteracao = DateTime.UtcNow;
             MotivoDesativacao = motivo;
@@ -125,6 +125,14 @@ namespace FiapCloundGames.API.Domain.Entities
         {
             AssertionConcern.AssertArgumentNotNull(usuario, MensagensDominio.UsuarioNaoEncontrado);
             typeof(Usuario).GetProperty("Perfil").SetValue(usuario, TipoUsuario.Administrador);
+        }
+
+        public void Reativar()
+        {
+            if (Ativo) throw new DomainException(MensagensDominio.UsuarioInativo);
+            Ativo = true;
+            DataAlteracao = DateTime.UtcNow;
+            MotivoDesativacao = null;
         }
     }
 }
