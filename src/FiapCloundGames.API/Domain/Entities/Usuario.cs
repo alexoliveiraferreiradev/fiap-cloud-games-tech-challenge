@@ -129,7 +129,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public void Reativar()
         {
-            if (Ativo) throw new DomainException(MensagensDominio.UsuarioInativo);
+            if (Ativo) throw new DomainException(MensagensDominio.UsuarioAtivo);
             Ativo = true;
             DataAlteracao = DateTime.UtcNow;
             MotivoDesativacao = null;
