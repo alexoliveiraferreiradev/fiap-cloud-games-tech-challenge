@@ -8,8 +8,9 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
     {
         Task<Usuario> CadastrarAdministrador(CriaUsuarioRequest request, bool hasPermision, string token);
         Task<Usuario> CadastrarJogador(CriaUsuarioRequest request);
-        Task AtualizarUsuario(Guid usuarioId, UpdateUsuarioRequest updateUsuarioRequest);
-        Task DesativarUsuario(DeleteUsuarioRequest deleteUsuarioRequest);
+        Task Atualizar(Guid usuarioId, UpdateUsuarioRequest updateUsuarioRequest);
+        Task Desativar(DeleteUsuarioRequest deleteUsuarioRequest);
+        Task Reativar(Guid usuarioId);
         Task<Usuario> Autenticar(LoginRequest loginRequest);
 
     }
