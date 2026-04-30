@@ -13,14 +13,17 @@ namespace FiapCloundGames.API.Domain.Entities
             Ativo = true;
             DataInicio = DateTime.UtcNow;
             DataFim = dataFim;
+            DataCadastro = DateTime.UtcNow; 
             ValidarEntidade();
         }
         protected Promocao() { }
         public Guid JogoId { get; private set; }
         public decimal Valor { get; private set; }
         public bool Ativo { get; private set; }
+        public DateTime DataCadastro { get; private set; }
         public DateTime DataInicio { get; private set; }
         public DateTime DataFim { get; private set; }
+        public DateTime DataAlteracao { get; private set; }
 
         public override void ValidarEntidade()
         {
@@ -36,6 +39,7 @@ namespace FiapCloundGames.API.Domain.Entities
         {
             if (!EstaValida()) throw new DomainException(MensagensDominio.PromocaoInativa);
              Ativo = false;
+            DataAlteracao = DateTime.UtcNow;    
         }
 
         public void AtualizarPrecoPromocional(decimal novoValor)
