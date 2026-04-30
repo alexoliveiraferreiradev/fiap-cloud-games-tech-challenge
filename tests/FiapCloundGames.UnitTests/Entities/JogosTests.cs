@@ -298,6 +298,19 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.Contains(jogo.Promocoes,p=>p.Valor == 100);
         }
 
+        [Fact(DisplayName = "Falha ao adicionar promoção - valor promoção maior ou igual que o valor base")]
+        [Trait("Categoria","Jogos Tests")]
+        public void AdicionaPromocaoJogo_ValorInvalido_DeveLancarExcecao()
+        {
+            //Arrange
+            var jogo = _jogoFixture.ObtemJogosParaPromocao();
+            var precoBase = jogo.Preco;
+            //Act
+            var result = Assert.Throws<DomainException>(() => jogo.AdicionarPromocao(150, DateTime.UtcNow.AddMonths(2)));
+            //Assert
+            Assert.Contains(MensagensDominio.PromocaoValorMaior, result.Message);
+        }
+
 
         [Fact(DisplayName = "Desativar promoção - deve desativar uma promoção com sucesso")]
         [Trait("Categoria","Jogos Tests")]
@@ -312,6 +325,19 @@ namespace FiapCloundGames.UnitTests.Entities
             jogo.DesativarPromocao(promocao.Id);
             //Assert
             Assert.Contains(jogo.Promocoes,p=>!p.Ativo);
+        }
+
+        [Fact(DisplayName = "Desativar promoção - falha ao tentar desativar em lista vazia")]
+        [Trait("Categoria","Jogos Tests")]
+        public void DesativarPromocaoJogo_ListaVazia_DeveDesativarPromocaoComSucesso()
+        {
+            //Arrange
+            var jogo = _jogoFixture.ObtemJogosParaPromocao();
+            var idInexistente = Guid.NewGuid();
+            //Act            
+            var result = Assert.Throws<DomainException>(() => jogo.DesativarPromocao(idInexistente));
+            //Assert
+            Assert.Equal(MensagensDominio.PromocaoNaoEncontrada, result.Message);
         }
     }
 }
