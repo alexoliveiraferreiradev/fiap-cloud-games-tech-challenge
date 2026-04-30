@@ -46,6 +46,9 @@
         #region Pedido
         public static string PedidoSemUsuario = "O pedido deve estar associado a um usuário.";
         public static string PedidoSemJogos = "O pedido deve conter pelo menos um jogo para ser finalizado.";
+        public static string PedidoNaoRascunhos = "Apenas pedidos em rascunho podem ser finalizados.";
+        public static string PedidoJogoNaoRascunhos = "Não é possível adicionar itens a um pedido que não esteja em rascunho.";
+        public static string PedidoJogoJaAdicionado = "Este jogo já foi adicionado ao pedido.";
         #endregion
     }
 }
