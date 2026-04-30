@@ -3,6 +3,7 @@ using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
+using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.UnitTests.Fixtures;
 
 namespace FiapCloundGames.UnitTests.Entities
@@ -28,7 +29,7 @@ namespace FiapCloundGames.UnitTests.Entities
             //Arrange
             var nomeJogo = "Jogo Teste";
             var descricaoJogo = _faker.Random.String(100);
-            decimal precoNoMomento = _faker.Random.Decimal(1, 100);
+            var precoNoMomento = new Preco(_faker.Random.Decimal(1, 100));
             //Act 
             var jogo = new Jogos(nomeJogo, descricaoJogo, precoNoMomento, GeneroJogo.Acao);
             //Assert
@@ -114,7 +115,7 @@ namespace FiapCloundGames.UnitTests.Entities
             //Act
             var descricaoNoLimite = _faker.Random.String(100);
             //Arrange
-            var jogo = new Jogos("Nome", descricaoNoLimite, 10.0m, GeneroJogo.Acao);
+            var jogo = new Jogos("Nome", descricaoNoLimite, new Preco(10.0m), GeneroJogo.Acao);
             //Assert
             Assert.Equal(100, jogo.Descricao.Length);
         }
@@ -177,7 +178,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var jogo = _jogoFixture.ObtemJogosComSucesso();
             var novoNome = "Novo Nome";
             var novaDescricao = "Nova Descrição";
-            var novoPreco = 20.0m;
+            var novoPreco = new Preco(20.0m);
             GeneroJogo novoGenero = GeneroJogo.Aventura;
             //Act
             jogo.Atualizar(novoNome, novaDescricao, novoPreco, novoGenero);
@@ -197,7 +198,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var jogo = _jogoFixture.ObtemJogosInativo();
             var novoNome = "Novo Nome";
             var novaDescricao = "Nova Descrição";
-            var novoPreco = 20.0m;
+            var novoPreco = new Preco(20.0m);
             GeneroJogo novoGenero = GeneroJogo.Aventura;
             //Act
             var result = Assert.Throws<DomainException>(() => jogo.Atualizar(novoNome, novaDescricao, novoPreco, novoGenero));
@@ -214,7 +215,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var jogo = _jogoFixture.ObtemJogosInativo();
             var novoNome = "N";
             var novaDescricao = "Nova Descrição";
-            var novoPreco = 20.0m;
+            var novoPreco = new Preco(20.0m);
             GeneroJogo novoGenero = GeneroJogo.Aventura;
             //Act
             var result = Assert.Throws<DomainException>(() => jogo.Atualizar(novoNome, novaDescricao, novoPreco, novoGenero));
@@ -230,7 +231,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var jogo = _jogoFixture.ObtemJogosInativo();
             var novoNome = string.Empty;
             var novaDescricao = "Nova Descrição";
-            var novoPreco = 20.0m;
+            var novoPreco = new Preco(20.0m);
             GeneroJogo novoGenero = GeneroJogo.Aventura;
             //Act
             var result = Assert.Throws<DomainException>(() => jogo.Atualizar(novoNome, novaDescricao, novoPreco, novoGenero));
@@ -246,7 +247,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var jogo = _jogoFixture.ObtemJogosInativo();
             var novoNome = "Read Dead 2";
             var novaDescricao = "N";
-            var novoPreco = 20.0m;
+            var novoPreco = new Preco(20.0m);
             GeneroJogo novoGenero = GeneroJogo.Aventura;
             //Act
             var result = Assert.Throws<DomainException>(() => jogo.Atualizar(novoNome, novaDescricao, novoPreco, novoGenero));
@@ -261,7 +262,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var jogo = _jogoFixture.ObtemJogosInativo();
             var novoNome = "Read Dead 2";
             var novaDescricao = string.Empty;
-            var novoPreco = 20.0m;
+            var novoPreco = new Preco(20.0m);
             GeneroJogo novoGenero = GeneroJogo.Aventura;
             //Act
             var result = Assert.Throws<DomainException>(() => jogo.Atualizar(novoNome, novaDescricao, novoPreco, novoGenero));
@@ -277,7 +278,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var jogo = _jogoFixture.ObtemJogosInativo();
             var novoNome = "Read Dead 2";
             var novaDescricao = _faker.Random.String(20);
-            var novoPreco = _faker.Random.Decimal(-1, 0);
+            var novoPreco = new Preco(_faker.Random.Decimal(-1, 0));
             GeneroJogo novoGenero = GeneroJogo.Aventura;
             //Act
             var result = Assert.Throws<DomainException>(() => jogo.Atualizar(novoNome, novaDescricao, novoPreco, novoGenero));
@@ -286,20 +287,20 @@ namespace FiapCloundGames.UnitTests.Entities
         }
 
         [Fact(DisplayName = "Adiciona promoção - deve adicionar promoção com sucesso")]
-        [Trait("Categoria","Jogos Tests")]
+        [Trait("Categoria", "Jogos Tests")]
         public void AdicionaPromocaoJogo_JogoValido_DeveAdicionarPromocaoComSucesso()
         {
             //Arrange
             var jogo = _jogoFixture.ObtemJogosParaPromocao();
             var precoBase = jogo.Preco;
             //Act
-            jogo.AdicionarPromocao(100,DateTime.UtcNow.AddMonths(2));
+            jogo.AdicionarPromocao(100, DateTime.UtcNow.AddMonths(2));
             //Assert
-            Assert.Contains(jogo.Promocoes,p=>p.Valor == 100);
+            Assert.Contains(jogo.Promocoes, p => p.Valor == 100);
         }
 
         [Fact(DisplayName = "Falha ao adicionar promoção - valor promoção maior ou igual que o valor base")]
-        [Trait("Categoria","Jogos Tests")]
+        [Trait("Categoria", "Jogos Tests")]
         public void AdicionaPromocaoJogo_ValorInvalido_DeveLancarExcecao()
         {
             //Arrange
@@ -313,7 +314,7 @@ namespace FiapCloundGames.UnitTests.Entities
 
 
         [Fact(DisplayName = "Desativar promoção - deve desativar uma promoção com sucesso")]
-        [Trait("Categoria","Jogos Tests")]
+        [Trait("Categoria", "Jogos Tests")]
         public void DesativarPromocaoJogo_JogoValido_DeveDesativarPromocaoComSucesso()
         {
             //Arrange
@@ -324,11 +325,11 @@ namespace FiapCloundGames.UnitTests.Entities
             var promocao = jogo.Promocoes.FirstOrDefault(x => x.JogoId == jogo.Id);
             jogo.DesativarPromocao(promocao.Id);
             //Assert
-            Assert.Contains(jogo.Promocoes,p=>!p.Ativo);
+            Assert.Contains(jogo.Promocoes, p => !p.Ativo);
         }
 
         [Fact(DisplayName = "Desativar promoção - falha ao tentar desativar em lista vazia")]
-        [Trait("Categoria","Jogos Tests")]
+        [Trait("Categoria", "Jogos Tests")]
         public void DesativarPromocaoJogo_ListaVazia_DeveDesativarPromocaoComSucesso()
         {
             //Arrange
