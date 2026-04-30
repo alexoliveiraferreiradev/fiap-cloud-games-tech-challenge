@@ -2,6 +2,7 @@
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
+using FiapCloundGames.API.Domain.ValueObjects;
 
 namespace FiapCloundGames.API.Domain.Entities
 {
@@ -32,11 +33,10 @@ namespace FiapCloundGames.API.Domain.Entities
             if (UsuarioId == Guid.Empty) throw new DomainException(MensagensDominio.PedidoSemUsuario);
         }
 
-        public void AdicionarItem(Guid jogoId, decimal preco)
+        public void AdicionarItem(Guid jogoId, Preco preco)
         {
             if (Status != PedidoStatus.Rascunho) throw new DomainException(MensagensDominio.PedidoJogoNaoRascunhos);
             if (jogoId == Guid.Empty) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            if (preco < 0) throw new DomainException(MensagensDominio.ValorInvalido);
             if (_jogos.Any(j => j.JogoId == jogoId)) throw new DomainException(MensagensDominio.PedidoJogoJaAdicionado);
 
             _jogos.Add(new PedidoJogo(jogoId, preco));
