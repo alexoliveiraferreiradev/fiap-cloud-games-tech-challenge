@@ -23,6 +23,7 @@ namespace FiapCloundGames.API.Domain.Entities
         public bool Ativo { get; private set; }
         public DateTime DataCadastro { get; private set; }
         public DateTime DataAlteracao { get; private set; }
+        public MotivoExclusao? MotivoDesativacao { get; private set; }
 
         private string confirmacaoSenha = string.Empty;
 
@@ -68,15 +69,13 @@ namespace FiapCloundGames.API.Domain.Entities
             AssertionConcern.AssertArgumentEmailFormat(Email, MensagensDominio.UsuarioEmailInvalido);
         }
 
-        public void Deletar(string emailUsuario, string senhaUsuario)
+        public void Desativar(MotivoExclusao motivo)
         {
             if (!Ativo) throw new DomainException(MensagensDominio.UsuarioJaExcluido);
-            if (string.IsNullOrEmpty(emailUsuario)) throw new DomainException(MensagensDominio.UsuarioEmailObrigatorio);
-            if (Email != emailUsuario) throw new DomainException(MensagensDominio.UsuarioEmailInvalido);
-            if (string.IsNullOrEmpty(senhaUsuario)) throw new DomainException(MensagensDominio.UsuarioSenhaObrigatoria);
-            if (Senha != senhaUsuario) throw new DomainException(MensagensDominio.UsuarioSenhaFraca);
+            
             Ativo = false;
             DataAlteracao = DateTime.UtcNow;
+            MotivoDesativacao = motivo;
         }
 
         public void Atualizar(string novoNome, string novoEmail, string novaSenha, string novaReSenha)
