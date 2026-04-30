@@ -13,6 +13,7 @@ namespace FiapCloundGames.API.Domain.Entities
             Ativo = true;
             DataInicio = DateTime.UtcNow;
             DataFim = dataFim;
+            ValidarEntidade();
         }
         protected Promocao() { }
         public Guid JogoId { get; private set; }
