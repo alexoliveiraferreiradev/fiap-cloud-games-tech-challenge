@@ -136,12 +136,11 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
         [Fact(DisplayName = "Atualizar jogo - preço inválido")]
         [Trait("Categoria", "JogosService Tests")]
-        public async Task AdicionarJogo_PrecoInvalido_DeveLancarExcecao()
+        public void AdicionarJogo_PrecoInvalido_DeveLancarExcecao()
         {
             //Arrange
-            var request = new CriarJogoRequest("Read Dead 2", "Jogo de tiro", new Preco(-1), GeneroJogo.FPS);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
+            var result = Assert.Throws<DomainException>(() => new Preco(-1));
             //Assert
             Assert.Equal(MensagensDominio.ValorInvalido, result.Message);
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
