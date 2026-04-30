@@ -95,5 +95,10 @@ namespace FiapCloundGames.API.Domain.Entities
             AssertionConcern.AssertArgumentLength(novoNome, 3, 20, MensagensDominio.JogoTamanhoNomeInvalido);
             Nome = novoNome;
         }
+
+        public void AdicionarPromocao()
+        {
+
+        }
     }
 }
