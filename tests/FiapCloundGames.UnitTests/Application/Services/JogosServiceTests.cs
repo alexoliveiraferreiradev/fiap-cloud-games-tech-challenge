@@ -156,11 +156,11 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             repoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
             //Act 
-            await service.AtualizarJogo(jogo.Id,request);
+            await service.AtualizarJogo(jogo.Id, request);
             //Assert
             Assert.Equal(jogo.Nome, request.novoNome);
             Assert.Equal(jogo.Descricao, request.novaDescricao);
-            Assert.Equal(jogo.Preco,request.novoPreco);
+            Assert.Equal(jogo.Preco, request.novoPreco);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Once);
         }
 
@@ -169,7 +169,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task AtualizarJogo_JogoNaoEncontrado_DeveLancarExcecao()
         {
             //Arrange
-            var jogoId = Guid.NewGuid();    
+            var jogoId = Guid.NewGuid();
             var request = new UpdateJogosRequest("Read Dead 2", "Jogo de tiro", 10.00m, GeneroJogo.Aventura);
             //Mock
             var repoMock = new Mock<IJogosRepository>();
@@ -183,6 +183,47 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             repoMock.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
         }
+
+
+        [Fact(DisplayName = "Desativar jogo - deve desativar com sucesso")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task DesativarJogo_JogoValido_DeveDesativarComSucesso()
+        {
+            //Arrange
+            var jogo = _jogosFixture.ObtemJogosComSucesso();
+            //Mock
+            var repoMock = new Mock<IJogosRepository>();
+            var service = new JogosService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+            //Act 
+            await service.Desativar(jogo.Id);
+            //Assert
+            Assert.False(jogo.Ativo);
+
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Once);
+        }
+
+
+        [Fact(DisplayName = "Falha ao desativar jogo - jogo inativo")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task DesativarJogo_JogoInativo_DeveLancarExcecao()
+        {
+            //Arrange
+            var jogo = _jogosFixture.ObtemJogosInativo();
+            //Mock
+            var repoMock = new Mock<IJogosRepository>();
+            var service = new JogosService(repoMock.Object);
+
+            repoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+            //Act 
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.Desativar(jogo.Id));
+            //Assert
+            Assert.Equal(MensagensDominio.JogoInvalido, result.Message);
+
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
+        }
+
 
     }
 }
