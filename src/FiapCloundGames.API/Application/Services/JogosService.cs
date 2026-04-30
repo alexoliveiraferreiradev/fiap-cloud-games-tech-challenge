@@ -74,6 +74,7 @@ namespace FiapCloundGames.API.Application.Services
             var promocao = jogo.Promocoes.FirstOrDefault(x => x.Id == promocaoId);
             if (promocao == null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);
             promocao.Desativar();
+            await _jogoRepository.Atualizar(jogo);
         }
 
     }
