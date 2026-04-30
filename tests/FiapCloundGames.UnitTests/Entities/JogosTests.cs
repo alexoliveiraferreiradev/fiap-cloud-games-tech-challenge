@@ -290,10 +290,10 @@ namespace FiapCloundGames.UnitTests.Entities
         public void AdicionaPromocaoJogo_JogoValido_DeveAdicionarPromocaoComSucesso()
         {
             //Arrange
-            var jogo = _jogoFixture.ObtemJogosComSucesso();
+            var jogo = _jogoFixture.ObtemJogosParaPromocao();
             var precoBase = jogo.Preco;
             //Act
-            jogo.AdicionarPromocao();
+            jogo.AdicionarPromocao(100,DateTime.UtcNow.AddMonths(2));
             //Assert
             Assert.NotEqual(precoBase, jogo.Preco);
         }
