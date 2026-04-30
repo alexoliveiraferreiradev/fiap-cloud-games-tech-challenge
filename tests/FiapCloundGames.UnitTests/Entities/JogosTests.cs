@@ -275,15 +275,10 @@ namespace FiapCloundGames.UnitTests.Entities
         public void AtualizarJogo_NovaPrecoJogoInvalido_DeveLancarExcecao()
         {
             //Arrange
-            var jogo = _jogoFixture.ObtemJogosInativo();
-            var novoNome = "Read Dead 2";
-            var novaDescricao = _faker.Random.String(20);
-            var novoPreco = new Preco(_faker.Random.Decimal(-1, 0));
-            GeneroJogo novoGenero = GeneroJogo.Aventura;
             //Act
-            var result = Assert.Throws<DomainException>(() => jogo.Atualizar(novoNome, novaDescricao, novoPreco, novoGenero));
+            var result = Assert.Throws<DomainException>(()=> new Preco(_faker.Random.Decimal(-1, 0))) ;
             //Assert
-            Assert.Equal(MensagensDominio.JogoInvalido, result.Message);
+            Assert.Equal(MensagensDominio.ValorInvalido, result.Message);
         }
 
         [Fact(DisplayName = "Adiciona promoção - deve adicionar promoção com sucesso")]
