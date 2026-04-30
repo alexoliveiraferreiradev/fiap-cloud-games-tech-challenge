@@ -355,8 +355,10 @@ namespace FiapCloundGames.UnitTests.Application.Services
             await service.AdicionarPromocao(promocaoRequest);
             var idPromocao = jogo.Promocoes.Where(x => x.JogoId == jogo.Id).Select(x => x.Id).First();
             await service.DesativarPromocao(jogo.Id, idPromocao);
+
             //Assert
-            Assert.Contains(jogo.Promocoes, p => !p.Ativo);
+            var promocaoDesativada = jogo.Promocoes.First(p => p.Id == idPromocao);
+            Assert.False(promocaoDesativada.Ativo);
         }
 
         [Fact(DisplayName = "Falha ao desativar promocão - promoção não encontrada")]
