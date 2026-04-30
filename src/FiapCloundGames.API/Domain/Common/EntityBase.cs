@@ -7,5 +7,7 @@
         {
             Id = Guid.NewGuid();
         }
+
+        public virtual void ValidarEntidade() { }
     }
 }
