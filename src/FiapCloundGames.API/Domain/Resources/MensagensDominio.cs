@@ -37,7 +37,6 @@
         public static string JogoDescricaoObrigatoria = "A descrição do jogo é obrigatória.";
         public static string JogoGeneroObrigatorio = "O gênero do jogo é inválido.";
         public static string JogoNaoEncontrado = "O jogo não foi encontrado.";
-        public static string JogoPrecoInvalido = "O preço do jogo deve ser um valor positivo."; 
         public static string JogoInvalido = "O jogo já está desativado.";
         public static string JogoAtivo = "O jogo já está ativo.";
         public static string JogoMesmoNomeExistente = "Já existe um jogo com esse nome.";
@@ -52,7 +51,6 @@
         #endregion
 
         #region Promoção
-        public static string PromocaoValorInvalido = "O valor da promoção deve ser um valor positivo.";
         public static string PromocaoDataFimInvalida = "A data de término deve ser no futuro.";
         public static string PromocaoNaoEncontrada = "Promoção não encontrada para este jogo.";
         public static string PromocaoValorMaior = "O valor promocional deve ser menor que o preço base.";
