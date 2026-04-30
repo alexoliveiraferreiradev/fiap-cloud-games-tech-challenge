@@ -38,5 +38,6 @@
         public static string CrendenciasInvalidas = "Credenciais inválidas.";
         public static string JogoMesmoNomeExistente = "Já existe um jogo com esse nome.";  
         public static string PedidoSemUsuario = "O pedido deve estar associado a um usuário.";
+        public static string PedidoSemJogos = "O pedido deve conter pelo menos um jogo para ser finalizado.";
     }
 }
