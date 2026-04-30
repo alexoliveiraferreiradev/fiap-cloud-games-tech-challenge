@@ -2,5 +2,5 @@
 
 namespace FiapCloundGames.API.Application.Dtos.Usuario
 {
-    public record DeleteUsuarioRequest(Guid id, Motivo motivoDelecao);
+    public record DeleteUsuarioRequest(Guid id, MotivoExclusao motivoDelecao);
 }
