@@ -604,7 +604,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             repoMock.Setup(r => r.ObterPorId(deleteUsuarioRequest.id)).ReturnsAsync(usuario);
             //Act
-            await service.DesativarUsuario(deleteUsuarioRequest);
+            await service.Desativar(deleteUsuarioRequest);
             //Assert
             Assert.False(usuario.Ativo);
 
@@ -625,7 +625,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             repoMock.Setup(r =>  r.ObterPorId(deleteUsuarioRequest.id)).ReturnsAsync((Usuario)null);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.DesativarUsuario(deleteUsuarioRequest));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.Desativar(deleteUsuarioRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
@@ -649,6 +649,24 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await service.Autenticar(loginRequest);
             //Assert
             Assert.NotNull(result);
+        }
+
+
+        [Fact(DisplayName = "Reativar usuário - usuário reativado com sucesso")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task ReativarUsuario_UsuarioInativo_DeveReativarComSucesso()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemUsuarioInativo();
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var hasherMock = new Mock<IPasswordHasher>();
+            var service = new UsuarioService(repoMock.Object,hasherMock.Object);    
+            repoMock.Setup( r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            //Act
+            await service.Reativar(usuario.Id);
+            //Assert
+            Assert.True(usuario.Ativo);
         }
 
     }
