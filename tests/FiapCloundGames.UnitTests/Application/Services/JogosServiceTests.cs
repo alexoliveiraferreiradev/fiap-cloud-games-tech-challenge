@@ -336,5 +336,21 @@ namespace FiapCloundGames.UnitTests.Application.Services
             _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.AtMostOnce);
         }
 
+        [Fact(DisplayName = "Obtém catálogo de jogos com sucesso")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task ObtemCatalagoJogos_DeveObterComSucesso()
+        {
+            //Arrange
+            var listaJogosAtivos = new List<Jogos>();
+            var jogoAtivo = _jogosFixture.ObtemJogosParaPromocao();
+            listaJogosAtivos.Add(jogoAtivo);
+
+            _mockJogo.Setup(r => r.ObtemJogosAtivos()).ReturnsAsync(listaJogosAtivos);
+            //Act 
+            var respone = await _jogosService.ObtemCatalagoJogos();
+            //Assert
+            Assert.Contains(respone, r => r.Id == jogoAtivo.Id);
+        }
+
     }
 }
