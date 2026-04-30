@@ -13,7 +13,6 @@
         public static string UsuarioSenhaConfirmacaoDiferente = "A senha e a confirmação de senha devem ser iguais.";        
         public static string UsuarioEmailInvalido = "O email do usuário é inválido.";
         public static string UsuarioInativo = "O usuário deve estar ativo";
-        public static string UsuarioJaExcluido = "O usuário já foi excluído.";
         public static string UsuarioJaDesativado = "O usuário já foi desativado.";
         public static string UsuarioEmailAntigoObrigatorio = "O email antigo do usuário é obrigatório.";
         public static string UsuarioEmailAntigoInvalido = "O email antigo do usuário é inválido.";

@@ -71,7 +71,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public void Desativar(MotivoExclusao motivo)
         {
-            if (!Ativo) throw new DomainException(MensagensDominio.UsuarioJaExcluido);
+            if (!Ativo) throw new DomainException(MensagensDominio.UsuarioJaDesativado);
             
             Ativo = false;
             DataAlteracao = DateTime.UtcNow;
