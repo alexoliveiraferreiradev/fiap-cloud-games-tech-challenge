@@ -58,5 +58,7 @@
         public static string PromocaoValorMaior = "O valor promocional deve ser menor que o preço base.";
         public static string PromocaoInativa = "A promoção já está desativada.";
         #endregion
+
+        public static string ValorInvalido = "O valor deve ser positivo.";
     }
 }
