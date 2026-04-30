@@ -46,6 +46,7 @@ namespace FiapCloundGames.API.Domain.Entities
         {
             AssertionConcern.AssertArgumentValueFormat(novoValor, MensagensDominio.PromocaoValorInvalido);
             Valor = novoValor;
+            DataAlteracao = DateTime.UtcNow;
         }
 
     }
