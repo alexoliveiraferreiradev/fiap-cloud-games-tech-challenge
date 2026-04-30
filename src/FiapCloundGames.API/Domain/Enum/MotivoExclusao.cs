@@ -2,7 +2,7 @@
 
 namespace FiapCloundGames.API.Domain.Enum
 {
-    public enum Motivo
+    public enum MotivoExclusao
     {
         [Description("Solicitado pelo usuário")]
         SolicitacaoDoUsuario = 1,
