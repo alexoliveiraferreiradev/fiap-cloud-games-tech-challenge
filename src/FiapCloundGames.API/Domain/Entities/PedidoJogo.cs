@@ -6,25 +6,22 @@ namespace FiapCloundGames.API.Domain.Entities
     public class PedidoJogo
     {
         public Guid JogoId { get; set; }
-        public string NomeJogo { get; set; }
         public decimal PrecoNoMomento { get; set; }
 
         protected PedidoJogo()
         {
         }
 
-        public PedidoJogo(Guid jogoId, string nomeJogo, decimal precoNoMomento)
+        public PedidoJogo(Guid jogoId, decimal precoNoMomento)
         {
-            ValidaEntidades(jogoId, nomeJogo, precoNoMomento);
+            ValidaEntidades(jogoId, precoNoMomento);
             JogoId = jogoId;
-            NomeJogo = nomeJogo;   
             PrecoNoMomento = precoNoMomento;
         }
 
-        private void ValidaEntidades(Guid jogoId, string nomeJogo, decimal precoNoMomento)
+        private void ValidaEntidades(Guid jogoId, decimal precoNoMomento)
         {
             AssertionConcern.AssertArgumentNotNull(jogoId, MensagensDominio.JogoNaoEncontrado);
-            AssertionConcern.AssertArgumentEmpty(nomeJogo, MensagensDominio.JogoNomeObrigatorio);  
             AssertionConcern.AssertArgumentValueFormat(precoNoMomento, MensagensDominio.JogoPrecoInvalido);
         }
     }
