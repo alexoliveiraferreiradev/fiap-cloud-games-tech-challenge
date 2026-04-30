@@ -95,12 +95,6 @@ namespace FiapCloundGames.API.Domain.Entities
             NomeUsuario = nomeNovo;
         }
 
-        public void Desativar()
-        {
-            AssertionConcern.AssertStateFalse(Ativo, MensagensDominio.UsuarioJaDesativado);
-            Ativo = false;
-            DataAlteracao = DateTime.UtcNow;
-        }
 
         public void AtualizarEmail(string novoEmail)
         {
