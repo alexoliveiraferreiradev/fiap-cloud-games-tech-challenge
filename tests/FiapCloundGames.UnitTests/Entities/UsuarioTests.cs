@@ -324,6 +324,32 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.Equal(MensagensDominio.UsuarioPerfilRebaixarInvalido, result.Message);
         }
 
-        
+        [Fact(DisplayName = "Sucesso ao desativar usuário - deve desativar com sucesso")]
+        [Trait("Categoria", "Usuario Tests")]
+        public void DesativarUsuario_UsuarioAtivo_DeveDesativarComSucesso()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            //Act
+            usuario.Desativar(MotivoExclusao.Outros);
+            //Assert
+            Assert.False(usuario.Ativo);            
+        }
+
+
+        [Fact(DisplayName = "Falha ao desativar usuário - usuário é inativo")]
+        [Trait("Categoria", "Usuario Tests")]
+        public void DesativarUsuario_UsuarioInativo_DeveLancarExcecao()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemUsuarioInativo();
+            //Act
+            var result = Assert.Throws<DomainException>(() => usuario.Desativar(MotivoExclusao.Outros));
+            //Assert
+            Assert.Equal(MensagensDominio.UsuarioJaDesativado, result.Message);
+        }
+
+
+
     }
 }
