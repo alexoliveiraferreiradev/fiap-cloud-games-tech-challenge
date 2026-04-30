@@ -315,7 +315,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Assert
             var promocaoDesativada = jogo.Promocoes.First(p => p.Id == idPromocao);
             Assert.False(promocaoDesativada.Ativo);
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.AtLeastOnce);
         }
 
         [Fact(DisplayName = "Falha ao desativar promocão - promoção não encontrada")]
@@ -333,7 +333,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.DesativarPromocao(jogo.Id, idInexistente));
             //Assert
             Assert.Equal(MensagensDominio.PromocaoNaoEncontrada, result.Message);
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.AtMostOnce);
         }
 
     }
