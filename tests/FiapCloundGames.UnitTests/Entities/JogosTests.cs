@@ -297,5 +297,21 @@ namespace FiapCloundGames.UnitTests.Entities
             //Assert
             Assert.Contains(jogo.Promocoes,p=>p.Valor == 100);
         }
+
+
+        [Fact(DisplayName = "Desativar promoção - deve desativar uma promoção com sucesso")]
+        [Trait("Categoria","Jogos Tests")]
+        public void DesativarPromocaoJogo_JogoValido_DeveDesativarPromocaoComSucesso()
+        {
+            //Arrange
+            var jogo = _jogoFixture.ObtemJogosParaPromocao();
+            var precoBase = jogo.Preco;
+            //Act
+            jogo.AdicionarPromocao(100.00m, DateTime.UtcNow.AddDays(10));
+            var promocao = jogo.Promocoes.FirstOrDefault(x => x.JogoId == jogo.Id);
+            jogo.DesativarPromocao(promocao.Id);
+            //Assert
+            Assert.Contains(jogo.Promocoes,p=>!p.Ativo);
+        }
     }
 }
