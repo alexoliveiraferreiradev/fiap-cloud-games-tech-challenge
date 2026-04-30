@@ -11,32 +11,33 @@ namespace FiapCloundGames.API.Application.Services
     {
         private readonly IJogosRepository _jogoRepository;
         public JogosService(IJogosRepository jogoRepository) {
-            _jogoRepository = jogoRepository;   
+            _jogoRepository = jogoRepository;
         }
         public async Task<Jogos> CriaJogo(CriarJogoRequest request)
         {
             var jogos = new Jogos(request.Nome, request.Descricao, request.Preco, request.Genero);
-            await Adicionar(jogos);
-            return jogos;   
+            if (await VerificaDuplicidadeNome(request.Nome))
+                await Adicionar(jogos);
+            return jogos;
         }
 
         private async Task Adicionar(Jogos jogos)
         {
-            await _jogoRepository.Adicionar(jogos); 
+            await _jogoRepository.Adicionar(jogos);
         }
 
         public async Task AtualizarJogo(Guid id, UpdateJogosRequest updateJogosRequest)
         {
-            var jogo = await _jogoRepository.ObterPorId(id);            
-            if(jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            jogo.Atualizar(updateJogosRequest.novoNome,updateJogosRequest.novaDescricao, updateJogosRequest.novoPreco, updateJogosRequest.novoGenero);
-            await _jogoRepository.Atualizar(jogo);  
+            var jogo = await _jogoRepository.ObterPorId(id);
+            if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+            jogo.Atualizar(updateJogosRequest.novoNome, updateJogosRequest.novaDescricao, updateJogosRequest.novoPreco, updateJogosRequest.novoGenero);
+            await _jogoRepository.Atualizar(jogo);
         }
 
         public async Task Desativar(Guid jogoId)
         {
-            var jogo = await _jogoRepository.ObterPorId(jogoId);     
-            if(jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+            var jogo = await _jogoRepository.ObterPorId(jogoId);
+            if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
             jogo.Desativar();
             await _jogoRepository.Atualizar(jogo);
         }
@@ -44,9 +45,18 @@ namespace FiapCloundGames.API.Application.Services
         public async Task Reativar(Guid jogoId)
         {
             var jogo = await _jogoRepository.ObterPorId(jogoId);
-            if(jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+            if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
             jogo.Reativar();
             await _jogoRepository.Atualizar(jogo);
         }
+
+        public async Task<bool> VerificaDuplicidadeNome(string nomeJogo)
+        {
+            var jogo = await _jogoRepository.ObtemPorNome(nomeJogo);
+            if (jogo != null) throw new DomainException(MensagensDominio.JogoMesmoNomeExistente);
+
+            return true;
+        }
+
     }
 }
