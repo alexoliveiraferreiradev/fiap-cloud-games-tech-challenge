@@ -15,11 +15,15 @@ namespace FiapCloundGames.UnitTests.Application.Services
     public class JogosServiceTests
     {
         private readonly Faker _faker;
+        private readonly Mock<IJogosRepository> _mockJogo;
+        private readonly JogosService _jogosService;
         private readonly JogosFixture _jogosFixture;
         private readonly PromocaoFixture _promocaoFixture;
         public JogosServiceTests()
         {
             _faker = new Faker();
+            _mockJogo = new Mock<IJogosRepository>();
+            _jogosService = new JogosService(_mockJogo.Object);
             _jogosFixture = new JogosFixture();
             _promocaoFixture = new PromocaoFixture();
         }
@@ -31,15 +35,13 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Arrange
             var request = new CriarJogoRequest("Halo", "Jogo de tiro", 150.00m, GeneroJogo.FPS);
             //Mock
-            var repoMock = new Mock<IJogosRepository>();
-            var service = new JogosService(repoMock.Object);
             //Act 
-            var result = await service.CriaJogo(request);
+            var result = await _jogosService.CriaJogo(request);
             //Assert
             Assert.NotNull(result);
             Assert.Equal(request.Nome, result.Nome);
 
-            repoMock.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Once);
+            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Once);
         }
 
 
