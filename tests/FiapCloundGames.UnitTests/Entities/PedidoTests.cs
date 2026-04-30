@@ -1,5 +1,6 @@
 ﻿using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
+using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.UnitTests.Fixtures;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var pedido = new Pedido(usuario.Id);
 
             //Act 
-            pedido.AdicionarItem(Guid.NewGuid(),150.00m);
+            pedido.AdicionarItem(Guid.NewGuid(), new Preco(150.00m));
             pedido.FinalizarPedido();
             //Assert
             Assert.Equal(PedidoStatus.Finalizado, pedido.Status);
