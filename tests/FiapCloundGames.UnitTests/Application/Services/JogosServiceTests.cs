@@ -333,6 +333,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.DesativarPromocao(jogo.Id, idInexistente));
             //Assert
             Assert.Equal(MensagensDominio.PromocaoNaoEncontrada, result.Message);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
         }
 
     }
