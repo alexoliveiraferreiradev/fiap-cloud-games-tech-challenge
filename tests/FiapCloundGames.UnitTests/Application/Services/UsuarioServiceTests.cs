@@ -669,5 +669,22 @@ namespace FiapCloundGames.UnitTests.Application.Services
             Assert.True(usuario.Ativo);
         }
 
+        [Fact(DisplayName = "Falha ao reativar usuário - usuário já está ativo")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task ReativarUsuario_UsuarioAtivo_DeveLancarExcecao()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var hasherMock = new Mock<IPasswordHasher>();
+            var service = new UsuarioService(repoMock.Object,hasherMock.Object);    
+            repoMock.Setup( r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            //Act
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.Reativar(usuario.Id));
+            //Assert
+            Assert.Equal(MensagensDominio.UsuarioAtivo, result.Message);
+        }
+
     }
 }
