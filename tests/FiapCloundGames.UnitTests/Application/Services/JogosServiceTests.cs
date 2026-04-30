@@ -295,6 +295,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.AdicionarPromocao(criaPromocaoRequest));
             //Assert
             Assert.Equal(MensagensDominio.JogoNaoEncontrado, result.Message);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
         }
 
         [Fact(DisplayName = "Desativar promocão - deve desativar com sucesso")]
