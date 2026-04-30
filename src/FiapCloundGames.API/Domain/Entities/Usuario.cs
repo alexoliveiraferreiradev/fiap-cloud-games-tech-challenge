@@ -126,5 +126,13 @@ namespace FiapCloundGames.API.Domain.Entities
             AssertionConcern.AssertArgumentNotNull(usuario, MensagensDominio.UsuarioNaoEncontrado);
             typeof(Usuario).GetProperty("Perfil").SetValue(usuario, TipoUsuario.Administrador);
         }
+
+        public void Reativar()
+        {
+            AssertionConcern.AssertStateTrue(!Ativo, MensagensDominio.UsuarioJaAtivo);
+            Ativo = true;
+            DataAlteracao = DateTime.UtcNow;
+            MotivoDesativacao = null;   
+        }
     }
 }
