@@ -51,7 +51,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public void Reativar()
         {
-            AssertionConcern.AssertStateFalse(Ativo, MensagensDominio.JogoInvalido);
+            if (Ativo) throw new DomainException(MensagensDominio.JogoAtivo);
             Ativo = true;
             DataAlteracao = DateTime.UtcNow;
         }
