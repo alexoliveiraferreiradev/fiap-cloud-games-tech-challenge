@@ -98,9 +98,10 @@ namespace FiapCloundGames.API.Domain.Entities
             Nome = novoNome;
         }
 
-        public void AdicionarPromocao()
+        public void AdicionarPromocao(decimal valorPromocao,DateTime dataFim)
         {
-            Preco = 0;
+            var promocao = new Promocao(Id, valorPromocao, dataFim);
+            Preco = valorPromocao;
         }
     }
 }
