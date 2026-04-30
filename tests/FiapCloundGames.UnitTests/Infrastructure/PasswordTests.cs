@@ -8,15 +8,13 @@ namespace FiapCloundGames.UnitTests.Infrastructure
         [Trait("Categoria","Password Tests")]
         public void Hash_DeveGerarStringCriptografada()
         {
-            // Arrange - Classe REAL, sem Mock
+            // Arrange 
             var hasher = new PasswordHasher();
             var senhaPura = "123456";
-
             // Act
             var hash = hasher.HashPassword(senhaPura);
-
             // Assert
-            Assert.StartsWith("$2", hash); // Hashes BCrypt começam com $2a, $2b ou $2y
+            Assert.StartsWith("$2", hash); 
             Assert.True(BCrypt.Net.BCrypt.Verify(senhaPura, hash));
         }
 
@@ -30,7 +28,6 @@ namespace FiapCloundGames.UnitTests.Infrastructure
             var hashGerado = hasher.HashPassword(senhaPura);    
             // Act
             var result = hasher.VerifyPassword(senhaPura, hashGerado);
-
             // Assert
             Assert.True(result, "O VerifyPassword deveria ter validado a senha correta.");
         }
