@@ -1,4 +1,5 @@
 ﻿using FiapCloundGames.API.Application.Dtos.Jogos;
+using FiapCloundGames.API.Application.Dtos.Promocao;
 using FiapCloundGames.API.Domain.Entities;
 
 namespace FiapCloundGames.API.Application.Services.Interfaces
@@ -10,5 +11,6 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task Desativar(Guid jogoId);
         Task Reativar(Guid jogoId);
         Task<bool> VerificaDuplicidadeNome(string nomeJogo);
+        Task AdicionarPromocao(CriaPromocaoRequest criaPromocaoRequest);
     }
 }
