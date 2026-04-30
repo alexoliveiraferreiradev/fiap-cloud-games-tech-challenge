@@ -110,11 +110,11 @@ namespace FiapCloundGames.API.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task DesativarUsuario(Guid usuarioId)
+        public async Task DesativarUsuario(DeleteUsuarioRequest deletaUsuarioRequest)
         {
-            var usuario = await _usuarioRepository.ObterPorId(usuarioId);
+            var usuario = await _usuarioRepository.ObterPorId(deletaUsuarioRequest.id);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
-            usuario.Desativar();
+            usuario.Desativar(deletaUsuarioRequest.motivoDelecao);
             await _usuarioRepository.Atualizar(usuario);
         }
 
