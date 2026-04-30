@@ -13,5 +13,6 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task<bool> VerificaDuplicidadeNome(string nomeJogo);
         Task AdicionarPromocao(CriaPromocaoRequest criaPromocaoRequest);
         Task DesativarPromocao(Guid jogoId,Guid promocaoId);
+        Task<IEnumerable<JogoResponse>> ObtemCatalagoJogos();
     }
 }
