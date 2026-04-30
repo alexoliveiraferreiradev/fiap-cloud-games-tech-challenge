@@ -35,13 +35,15 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task Desativar(Guid jogoId)
         {
-            var jogo = await _jogoRepository.ObterPorId(jogoId);            
+            var jogo = await _jogoRepository.ObterPorId(jogoId);     
+            if(jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
             jogo.Desativar();
         }
 
-        public Task Reativar(Guid jogoId)
+        public async Task Reativar(Guid jogoId)
         {
-            throw new NotImplementedException();
+            var jogo = await _jogoRepository.ObterPorId(jogoId);
+            jogo.Reativar();    
         }
     }
 }
