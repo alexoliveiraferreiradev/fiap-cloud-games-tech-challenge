@@ -22,7 +22,7 @@ namespace FiapCloundGames.API.Domain.Entities
         private void ValidaEntidades(Guid jogoId, decimal precoNoMomento)
         {
             AssertionConcern.AssertArgumentNotNull(jogoId, MensagensDominio.JogoNaoEncontrado);
-            AssertionConcern.AssertArgumentValueFormat(precoNoMomento, MensagensDominio.JogoPrecoInvalido);
+            AssertionConcern.AssertArgumentValueFormat(precoNoMomento, MensagensDominio.ValorInvalido);
         }
     }
 }
