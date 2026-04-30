@@ -32,10 +32,26 @@ namespace FiapCloundGames.API.Domain.Entities
             if (UsuarioId == Guid.Empty) throw new DomainException(MensagensDominio.PedidoSemUsuario);
         }
 
+        public void AdicionarItem(Guid jogoId, decimal preco)
+        {
+            if (Status != PedidoStatus.Rascunho) throw new DomainException(MensagensDominio.PedidoJogoNaoRascunhos);
+            if (jogoId == Guid.Empty) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+            if (preco < 0) throw new DomainException(MensagensDominio.JogoPrecoInvalido);
+            if (_jogos.Any(j => j.JogoId == jogoId)) throw new DomainException(MensagensDominio.PedidoJogoJaAdicionado);
+
+            _jogos.Add(new PedidoJogo(jogoId, preco));
+        }
+
         public void FinalizarPedido()
-        {        
-            
+        {
+            if (Status != PedidoStatus.Rascunho) throw new DomainException(MensagensDominio.PedidoNaoRascunhos);
+            if (_jogos.Any()) throw new DomainException(MensagensDominio.PedidoSemJogos);
             Status = PedidoStatus.Finalizado;
+        }
+
+        private void CalcularValorTotal()
+        {
+            ValorTotal = _jogos.Sum(j => j.PrecoNoMomento);
         }
     }
 }
