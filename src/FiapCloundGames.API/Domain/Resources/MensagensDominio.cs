@@ -2,6 +2,7 @@
 {
     public static class MensagensDominio
     {
+        #region Usuario
         public static string UsuarioNomeObrigatorio = "O nome do usuário é obrigatório.";
         public static string UsuarioNomeAntigoObrigatorio = "O nome antigo do usuário é obrigatório.";
         public static string UsuarioNomeNovoObrigatorio = "O novo nome do usuário é obrigatório.";        
@@ -26,6 +27,10 @@
         public static string PermissaoNegadaCriarAdministrador = "Permissão negada para criar um administrador.";
         public static string UsuarioNaoEncontrado = "O usuário não foi encontrado.";
         public static string UsuarioPerfilRebaixarInvalido = "O perfil do usuário não pode ser rebaixado, pois ele não é um administrador.";
+        public static string CrendenciasInvalidas = "Credenciais inválidas.";
+        #endregion
+
+        #region Jogos
         public static string JogoNomeObrigatorio = "O nome do jogo é obrigatório.";
         public static string JogoTamanhoNomeInvalido = "O nome do jogo deve conter entre 3 e 20 caracteres.";
         public static string JogoDescricaoTamanhoInvalido = "A descrição do jogo deve conter entre 5 e 100 caracteres.";
@@ -35,9 +40,12 @@
         public static string JogoPrecoInvalido = "O preço do jogo deve ser um valor positivo."; 
         public static string JogoInvalido = "O jogo já está desativado.";
         public static string JogoAtivo = "O jogo já está ativo.";
-        public static string CrendenciasInvalidas = "Credenciais inválidas.";
-        public static string JogoMesmoNomeExistente = "Já existe um jogo com esse nome.";  
+        public static string JogoMesmoNomeExistente = "Já existe um jogo com esse nome.";
+        #endregion
+
+        #region Pedido
         public static string PedidoSemUsuario = "O pedido deve estar associado a um usuário.";
         public static string PedidoSemJogos = "O pedido deve conter pelo menos um jogo para ser finalizado.";
+        #endregion
     }
 }
