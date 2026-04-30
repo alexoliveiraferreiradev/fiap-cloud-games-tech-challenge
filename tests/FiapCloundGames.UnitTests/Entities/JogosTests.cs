@@ -285,9 +285,11 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.Equal(MensagensDominio.JogoInvalido, result.Message);
         }
 
-
-
-
-
+        [Fact(DisplayName = "Adiciona promoção - deve adicionar promoção com sucesso")]
+        [Trait("Categoria","Jogos Tests")]
+        public void AdicionaPromocaoJogo_JogoValido_DeveAdicionarPromocaoComSucesso()
+        {
+            
+        }
     }
 }
