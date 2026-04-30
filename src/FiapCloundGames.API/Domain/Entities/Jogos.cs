@@ -100,8 +100,14 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public void AdicionarPromocao(decimal valorPromocao,DateTime dataFim)
         {
-            var promocao = new Promocao(Id, valorPromocao, dataFim);
-            Preco = valorPromocao;
+            if(valorPromocao >= Preco) throw new DomainException(MensagensDominio.PromocaoValorMaior);
+            foreach (var p in _promocoes.Where(x => x.Ativo)) p.Desativar();
+            _promocoes.Add(new Promocao(Id, valorPromocao, dataFim));
+            ObterPrecoAtual();
+        }
+        public decimal ObterPrecoAtual() {
+            var promoAtiva = _promocoes.FirstOrDefault(p => p.EstaValida());
+            return promoAtiva != null ? promoAtiva.Valor : Preco;
         }
     }
 }
