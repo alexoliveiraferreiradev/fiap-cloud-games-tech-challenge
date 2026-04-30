@@ -469,7 +469,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             hashMock.Setup(h => h.HashPassword(updataRequest.senhaUsuario)).Returns(updataRequest.senhaUsuario);
             repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             //Act
-            await service.Atualizar(usuario.Id, updataRequest);
+            await service.AtualizarUsuario(usuario.Id, updataRequest);
             //Assert
             Assert.Equal(updataRequest.nomeUsuario, usuario.NomeUsuario);
             Assert.Equal(updataRequest.emailUsuario, usuario.Email);
@@ -493,7 +493,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.Atualizar(usuario.Id, updataRequest));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioEmailNovoObrigatorio, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
@@ -517,7 +517,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.Atualizar(usuario.Id, updataRequest));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioEmailNovoInvalido, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
@@ -537,7 +537,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.Atualizar(usuario.Id, updataRequest));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaNovaObrigatoria, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
@@ -558,7 +558,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.Atualizar(usuario.Id, updataRequest));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaConfirmacaoDiferente, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
@@ -584,7 +584,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             hashMock.Setup(h => h.HashPassword(novaSenha)).Returns(novaSenha);
             repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.Atualizar(usuario.Id, updataRequest));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaNovaFraca, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
@@ -604,7 +604,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             repoMock.Setup(r => r.ObterPorId(deleteUsuarioRequest.id)).ReturnsAsync(usuario);
             //Act
-            await service.Desativar(deleteUsuarioRequest);
+            await service.DesativarUsuario(deleteUsuarioRequest);
             //Assert
             Assert.False(usuario.Ativo);
 
@@ -625,7 +625,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             repoMock.Setup(r =>  r.ObterPorId(deleteUsuarioRequest.id)).ReturnsAsync((Usuario)null);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.Desativar(deleteUsuarioRequest));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.DesativarUsuario(deleteUsuarioRequest));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);

@@ -14,7 +14,6 @@
         public static string UsuarioEmailInvalido = "O email do usuário é inválido.";
         public static string UsuarioInativo = "O usuário deve estar ativo";
         public static string UsuarioJaDesativado = "O usuário já foi desativado.";
-        public static string UsuarioJaAtivo = "O usuário já está ativo.";
         public static string UsuarioEmailAntigoObrigatorio = "O email antigo do usuário é obrigatório.";
         public static string UsuarioEmailAntigoInvalido = "O email antigo do usuário é inválido.";
         public static string UsuarioEmailNovoObrigatorio = "O novo email do usuário é obrigatório.";

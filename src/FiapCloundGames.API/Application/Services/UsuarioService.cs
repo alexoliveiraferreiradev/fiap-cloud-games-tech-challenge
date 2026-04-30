@@ -75,7 +75,7 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> CadastrarJogador(CriaUsuarioRequest request)
         {
-            ValidaSenhas(request.Senha, request.reSenha);
+            ValidaSenhas(request.Senha,request.reSenha);
             var senhaCifrada = _passwordHasher.HashPassword(request.Senha);
             var confirmacaoSenha = senhaCifrada;
             var usuario = new Usuario(request.Nome, request.Email, senhaCifrada, confirmacaoSenha);
@@ -88,7 +88,7 @@ namespace FiapCloundGames.API.Application.Services
             AssertionConcern.AssertArgumentEquals(senhaRequest, confirmacaoSenhaRequest, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
         }
 
-        public async Task Atualizar(Guid id, UpdateUsuarioRequest request)
+        public async Task AtualizarUsuario(Guid id, UpdateUsuarioRequest request)
         {
             ValidaSenhas(request.senhaUsuario, request.reSenhaUsuario);
             var usuario = await _usuarioRepository.ObterPorId(id);
@@ -110,7 +110,7 @@ namespace FiapCloundGames.API.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task Desativar(DeleteUsuarioRequest deletaUsuarioRequest)
+        public async Task DesativarUsuario(DeleteUsuarioRequest deletaUsuarioRequest)
         {
             var usuario = await _usuarioRepository.ObterPorId(deletaUsuarioRequest.id);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
@@ -128,14 +128,5 @@ namespace FiapCloundGames.API.Application.Services
             return usuario;
         }
 
-        public async Task Reativar(Guid usuarioId)
-        {
-            var usuario = await _usuarioRepository.ObterPorId(usuarioId);
-            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
-            if (usuario.Ativo) throw new DomainException(MensagensDominio.UsuarioJaAtivo);
-            usuario.Reativar();
-            await _usuarioRepository.Atualizar(usuario);
-
-        }
     }
 }
