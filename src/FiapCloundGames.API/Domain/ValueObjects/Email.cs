@@ -3,19 +3,19 @@ using FiapCloundGames.API.Domain.Resources;
 
 namespace FiapCloundGames.API.Domain.ValueObjects
 {
-    public class EmailUsuario : ValueObject
+    public class Email : ValueObject
     {
-        public string Email { get;  }
+        public string Valor { get;  }
 
-        public EmailUsuario(string emailUsuario)
+        public Email(string emailUsuario)
         {
             AssertionConcern.AssertArgumentEmpty(emailUsuario, MensagensDominio.UsuarioEmailObrigatorio);
             AssertionConcern.AssertArgumentEmailFormat(emailUsuario, MensagensDominio.EmailInvalido);
-            Email = emailUsuario;   
+            Valor = emailUsuario;   
         }
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Email;
+            yield return Valor;
         }
     }
 }
