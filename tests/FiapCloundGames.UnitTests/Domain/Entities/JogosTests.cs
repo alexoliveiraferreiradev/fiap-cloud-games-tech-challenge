@@ -180,12 +180,13 @@ namespace FiapCloundGames.UnitTests.Domain.Entities
             var precoBase = jogo.PrecoBase;
             var valorPromocaoVO = new Preco(100.00m);
             var novoValorPromocaoVO = new Preco(75.00m);
+            var novaData = DateTime.UtcNow.AddMonths(2);
             var periodoVO = new Periodo(DateTime.UtcNow.AddMonths(2));
             var novaPromocao = new Promocao(jogo.Id, novoValorPromocaoVO, periodoVO);
             //Act
             jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
             var promocao = jogo.Promocoes.First();
-            jogo.AlteraValorPromocao(promocao.Id, novaPromocao);
+            jogo.AlteraValorPromocao(promocao.Id, novoValorPromocaoVO, novaData);
             //Assert
             Assert.NotEqual(novoValorPromocaoVO, valorPromocaoVO);
         }
