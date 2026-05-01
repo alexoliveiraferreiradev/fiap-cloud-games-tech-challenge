@@ -22,5 +22,10 @@ namespace FiapCloundGames.API.Domain.Entities
             DataAquisicao = DateTime.UtcNow;
             Ativo = true;
         }
+
+        protected override void ValidarEntidade()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
