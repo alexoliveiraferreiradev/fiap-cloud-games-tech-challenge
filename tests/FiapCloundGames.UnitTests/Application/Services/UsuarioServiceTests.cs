@@ -472,7 +472,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             await service.AtualizarUsuario(usuario.Id, updataRequest);
             //Assert
-            Assert.Equal(updataRequest.nomeUsuario, usuario.NomeUsuario);
+            Assert.Equal(updataRequest.nomeUsuario, usuario.NomeUsuario.Valor);
             Assert.Equal(updataRequest.emailUsuario, usuario.EmailUsuario.Valor);
             Assert.Equal(updataRequest.senhaUsuario, usuario.Senha);
 
