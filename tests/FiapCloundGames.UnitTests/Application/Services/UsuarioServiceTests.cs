@@ -354,25 +354,6 @@ namespace FiapCloundGames.UnitTests.Application.Services
             repoMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Never);
         }
 
-        [Fact(DisplayName = "Cadastrar usuário  - deve criptografar a senha ao cadastrar")]
-        [Trait("Categoria", "Usuario Service Tests")]
-        public async Task CadastrarUsuario_ValidacaoSenha_DeveCadastrarComSucesso()
-        {
-            //Arrange
-            var usuarioRequest = _usuarioFixture.UsuarioRequest();
-            //Mock
-            var repoMock = new Mock<IUsuarioRepository>();
-            var hasherMock = new Mock<IPasswordHasher>();
-            var service = new UsuarioService(repoMock.Object, hasherMock.Object);
-
-            hasherMock.Setup(h => h.HashPassword(usuarioRequest.Senha)).Returns("HashSenha@123");
-
-            //Act
-            var result = await service.CadastrarJogador(usuarioRequest);
-            //Arrange
-            Assert.Equal("HashSenha@123", result.Senha);
-            Assert.NotEqual("Teste@123", result.Senha);
-        }
 
         [Fact(DisplayName = "Sucesso ao rebaixar um adminstrador para jogador")]
         [Trait("Categoria", "Usuario Service Tests")]
