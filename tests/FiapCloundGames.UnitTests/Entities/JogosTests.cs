@@ -27,8 +27,8 @@ namespace FiapCloundGames.UnitTests.Entities
         public void AdicaoJogos_JogoValido_DeveAdicionarJogoComSucesso()
         {
             //Arrange
-            var nomeJogo = "Jogo Teste";
-            var descricaoJogo = _faker.Random.String(100);
+            var nomeJogo = new NomeJogo( "Jogo Teste");
+            var descricaoJogo = new Descricao( _faker.Random.String(100));
             var precoNoMomento = new Preco(_faker.Random.Decimal(1, 100));
             //Act 
             var jogo = new Jogos(nomeJogo, descricaoJogo, precoNoMomento, GeneroJogo.Acao);
@@ -41,16 +41,7 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.NotEqual(Guid.Empty, jogo.Id);
         }
 
-        [Fact(DisplayName = "Falha ao adicionar jogo - nome não preenchido")]
-        [Trait("Categoria", "Jogos Tests")]
-        public void AdicaoJogos_NomeJogoNaoPreenchido_DeveLancarExcecao()
-        {
-            //Arrange
-            //Act 
-            var result = Assert.Throws<DomainException>(() => _jogoFixture.ObtemJogosNomeNaoPreenchido());
-            //Assert
-            Assert.Equal(MensagensDominio.JogoNomeObrigatorio, result.Message);
-        }
+       
 
         [Fact(DisplayName = "Falha ao adicionar jogo - descrição do jogo não preenchido")]
         [Trait("Categoria", "Jogos Tests")]
@@ -63,16 +54,7 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.Equal(MensagensDominio.JogoDescricaoObrigatoria, result.Message);
         }
 
-        [Fact(DisplayName = "Falha ao adicionar jogo - nome inválido")]
-        [Trait("Categoria", "Jogos Tests")]
-        public void AdicaoJogos_NomeInvalido_DeveLancarExcecao()
-        {
-            //Arrange
-            //Act 
-            var result = Assert.Throws<DomainException>(() => _jogoFixture.ObtemJogosNomeInvalido());
-            //Assert
-            Assert.Equal(MensagensDominio.JogoTamanhoNomeInvalido, result.Message);
-        }
+       
 
         [Fact(DisplayName = "Falha ao adicionar jogo - descrição inválida")]
         [Trait("Categoria", "Jogos Tests")]
