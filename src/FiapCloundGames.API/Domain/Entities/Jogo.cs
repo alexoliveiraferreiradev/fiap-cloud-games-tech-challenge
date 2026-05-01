@@ -92,7 +92,7 @@ namespace FiapCloundGames.API.Domain.Entities
             Nome = novoNome;
         }
 
-        public void AdicionarPromocao(Preco valorPromocao, DateTime dataFim)
+        public void AdicionarPromocao(Preco valorPromocao, Periodo dataFim)
         {
             if (valorPromocao.Valor >= PrecoBase.Valor) throw new DomainException(MensagensDominio.PromocaoValorMaior);
             foreach (var p in _promocoes.Where(x => x.Ativo)) p.Desativar();
