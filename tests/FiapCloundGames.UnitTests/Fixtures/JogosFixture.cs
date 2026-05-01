@@ -36,14 +36,7 @@ namespace FiapCloundGames.UnitTests.Fixtures
             return jogos;
         }
 
-        public Jogos ObtemJogosNomeNaoPreenchido()
-        {
-            var nomeJogo = string.Empty;
-            var descricaoJogo = _faker.Random.String(50);
-            var precoJogo = new  Preco(_faker.Random.Decimal(10, 100));
-            GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
-            return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
-        }
+       
         public Jogos ObtemJogosDescricaoNaoPreenchido()
         {
             var nomeJogo = _faker.Random.String(10);
