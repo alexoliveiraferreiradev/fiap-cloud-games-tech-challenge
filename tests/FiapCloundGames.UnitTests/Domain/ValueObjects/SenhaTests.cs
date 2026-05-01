@@ -23,7 +23,7 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
         }
 
         [Fact(DisplayName = "Sucesso ao criar senha - senha válida")]
-        [Trait("Categoria", "Usuario Tests")]
+        [Trait("Categoria", "Senha Tests")]
         public void CriaSenha_SenhaValida_DeveCriarComSucesso()
         {
             //Arrange
