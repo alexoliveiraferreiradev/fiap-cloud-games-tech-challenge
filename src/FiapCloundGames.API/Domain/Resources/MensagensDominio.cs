@@ -39,6 +39,7 @@
         public static string JogoInvalido = "O jogo está desativado.";
         public static string JogoAtivo = "O jogo já está ativo.";
         public static string JogoMesmoNomeExistente = "Já existe um jogo com esse nome.";
+        public static string JogoSemPromocoes = "Não há promoções para este jogo.";
         #endregion
 
         #region Pedido
