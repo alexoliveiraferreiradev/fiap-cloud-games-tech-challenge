@@ -68,13 +68,13 @@ namespace FiapCloundGames.API.Domain.Entities
             MotivoDesativacao = motivo;
         }
 
-        public void Atualizar(Nome novoNome, Email novoEmail, Senha novaSenha, string novaReSenha)
+        public void Atualizar(Nome novoNome, Email novoEmail, Senha novaSenha)
         {
             AssertionConcern.AssertStateFalse(Ativo, MensagensDominio.UsuarioInativo);
 
             AtualizarNomeUsuario(novoNome);
             AtualizarEmail(novoEmail);
-            AlterarSenha(novaSenha, novaReSenha);
+            AlterarSenha(novaSenha);
         }
 
         public void AtualizarNomeUsuario(Nome nomeNovo)
@@ -90,10 +90,9 @@ namespace FiapCloundGames.API.Domain.Entities
             EmailUsuario = novoEmail;
         }
 
-        public void AlterarSenha(Senha novaSenha, string confirmacaoSenhaNova)
+        public void AlterarSenha(Senha novaSenha)
         {
             if (Senha == novaSenha) return;
-            AssertionConcern.AssertArgumentEquals(novaSenha.Hash, confirmacaoSenhaNova, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
             Senha = novaSenha;
         }
 
