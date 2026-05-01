@@ -1,4 +1,4 @@
 ﻿namespace FiapCloundGames.API.Application.Dtos.Promocao
 {
-    public record UpdatePromocaoRequest(decimal novoValorPromocao, DateTime novaDataFim);
+    public record UpdatePromocaoRequest(Guid jogoId,decimal novoValorPromocao, DateTime novaDataFim);
 }
