@@ -39,7 +39,7 @@ namespace FiapCloundGames.API.Application.Services
             var usuario = new Usuario(nomeUsuarioValueObject, emailUsuarioValueObject, request.Senha, request.reSenha);
             if (!ValidaPermissoesAdministrador(hasPermision, token)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
             usuario.PromoverPerfil(usuario);
-            await Adicionar(usuario);
+            await Atualizar(usuario);
             return usuario;
         }
 
