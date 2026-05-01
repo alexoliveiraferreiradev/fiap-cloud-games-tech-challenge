@@ -322,6 +322,30 @@ namespace FiapCloundGames.UnitTests.Application.Services
             _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.AtLeastOnce);
         }
 
+        [Fact(DisplayName = "Falha ao alterar promocão - promoção não encotrada")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task AlteraValorPromocao_PromocaoNaoEncontrada_DeveLancarExcecao()
+        {
+            //Arrange         
+            var jogo = _jogosFixture.ObtemJogosParaPromocao();
+            var dataFim = DateTime.UtcNow.AddDays(11);
+
+            var criaPromocaoRequest = new CriaPromocaoRequest(jogo.Id, 90.00m, DateTime.UtcNow.AddDays(10));
+            var updatePromocaoRequest = new UpdatePromocaoRequest(jogo.Id,70.00m, dataFim);
+
+            _mockJogo.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+            await _jogosService.AdicionarPromocao(criaPromocaoRequest);
+
+            var promocaoExistente = jogo.Promocoes.First();
+            //Mock           
+            _mockJogo.Setup(r => r.ObterPromocaoPorId(promocaoExistente.Id)).ReturnsAsync(promocaoExistente);
+            //Act 
+            await _jogosService.AtualizaValorPromocao(promocaoExistente.Id,updatePromocaoRequest);            
+            //Assert
+            Assert.NotEqual(updatePromocaoRequest.novoValorPromocao, criaPromocaoRequest.valorPromocao);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.AtLeastOnce);
+        }
+
         [Fact(DisplayName = "Desativar promocão - deve desativar com sucesso")]
         [Trait("Categoria", "JogosService Tests")]
         public async Task DesativarPromocao_JogoValido_DeveDesativarComSucesso()
