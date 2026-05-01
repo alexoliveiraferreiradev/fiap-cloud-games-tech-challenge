@@ -11,14 +11,19 @@ namespace FiapCloundGames.API.Application.Services
     {
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IJogosRepository _jogoRepository;
-        public PedidoService(IPedidoRepository pedidoRepository, IJogosRepository jogosRepository)
+        private readonly IUsuarioRepository _usuarioRepository;
+        public PedidoService(IPedidoRepository pedidoRepository, IJogosRepository jogosRepository,
+            IUsuarioRepository usuarioRepository)
         {
             _pedidoRepository = pedidoRepository;
             _jogoRepository = jogosRepository;
+            _usuarioRepository = usuarioRepository; 
         }
         public async Task<Pedido> RealizarPedido(Guid usuarioId, List<Guid> jogosIds)
         {
-            var pedido = new Pedido(usuarioId);
+            var usuario = await _usuarioRepository.ObterPorId(usuarioId);
+            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
+            var pedido = new Pedido(usuario.Id);
             foreach (var jogoId in jogosIds)
             {
                 var jogo = await _jogoRepository.ObterPorId(jogoId);
