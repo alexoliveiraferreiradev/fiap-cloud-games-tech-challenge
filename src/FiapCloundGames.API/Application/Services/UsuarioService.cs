@@ -93,8 +93,11 @@ namespace FiapCloundGames.API.Application.Services
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
 
             var novaSenhaCriptografa = _passwordHasher.HashPassword(request.senhaUsuario);
-            var confirmacaoSenha = novaSenhaCriptografa;
-            usuario.Atualizar(request.nomeUsuario, request.emailUsuario, novaSenhaCriptografa, confirmacaoSenha);
+            var novoUsuarioVO = new Nome(request.nomeUsuario);
+            var novoEmailUsuarioVO = new Email(request.emailUsuario);
+            var novaSenhaUsuarioVO = new Senha(novaSenhaCriptografa);
+
+            usuario.Atualizar(novoUsuarioVO, novoEmailUsuarioVO, novaSenhaUsuarioVO);
             await _usuarioRepository.Atualizar(usuario);
         }
 
@@ -121,7 +124,7 @@ namespace FiapCloundGames.API.Application.Services
             var usuario = await _usuarioRepository.ObterPorEmail(request.emailUsuario);
             if (usuario == null) throw new DomainException(MensagensDominio.CrendenciasInvalidas);
             if (!usuario.Ativo) throw new DomainException(MensagensDominio.UsuarioInativo);
-            bool senhaValida = _passwordHasher.VerifyPassword(request.senhaUsuario, usuario.Senha);
+            bool senhaValida = _passwordHasher.VerifyPassword(request.senhaUsuario, usuario.Senha.Hash);
             if (!senhaValida) throw new DomainException(MensagensDominio.CrendenciasInvalidas);
             return usuario;
         }
