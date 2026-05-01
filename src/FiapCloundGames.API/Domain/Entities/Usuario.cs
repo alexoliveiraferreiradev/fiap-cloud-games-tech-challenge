@@ -12,7 +12,7 @@ namespace FiapCloundGames.API.Domain.Entities
         {
 
         }
-        public string NomeUsuario { get; private set; }
+        public Nome NomeUsuario { get; private set; }
 
         public Email EmailUsuario { get; private set; }
 
@@ -26,7 +26,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         private string confirmacaoSenha = string.Empty;
 
-        public Usuario(string nomeUsuario, Email emailUsuario, string senhaUsuario,
+        public Usuario(Nome nomeUsuario, Email emailUsuario, string senhaUsuario,
             string confirmacaoSenhaUsuario)
         {
             NomeUsuario = nomeUsuario;
@@ -56,10 +56,8 @@ namespace FiapCloundGames.API.Domain.Entities
 
         protected override void ValidarEntidade()
         {
-            AssertionConcern.AssertArgumentEmpty(NomeUsuario, MensagensDominio.UsuarioNomeObrigatorio);
             AssertionConcern.AssertArgumentEmpty(Senha, MensagensDominio.UsuarioSenhaObrigatoria);
-            AssertionConcern.AssertArgumentEmpty(confirmacaoSenha, MensagensDominio.UsuarioConfirmacaoSenhaObrigatoria);
-            AssertionConcern.AssertArgumentLength(NomeUsuario, 3, 20, MensagensDominio.UsuarioTamanhoNomeInvalido);
+            AssertionConcern.AssertArgumentEmpty(confirmacaoSenha, MensagensDominio.UsuarioConfirmacaoSenhaObrigatoria);         
             AssertionConcern.AssertArgumentPasswordStrenght(Senha, MensagensDominio.UsuarioSenhaFraca);
             AssertionConcern.AssertArgumentEquals(Senha, confirmacaoSenha, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
         }
@@ -73,7 +71,7 @@ namespace FiapCloundGames.API.Domain.Entities
             MotivoDesativacao = motivo;
         }
 
-        public void Atualizar(string novoNome, Email novoEmail, string novaSenha, string novaReSenha)
+        public void Atualizar(Nome novoNome, Email novoEmail, string novaSenha, string novaReSenha)
         {
             AssertionConcern.AssertStateFalse(Ativo, MensagensDominio.UsuarioInativo);
 
@@ -82,11 +80,11 @@ namespace FiapCloundGames.API.Domain.Entities
             AtualizarSenha(novaSenha, novaReSenha);
         }
 
-        public void AtualizarNomeUsuario(string nomeNovo)
+        public void AtualizarNomeUsuario(Nome nomeNovo)
         {
-            AssertionConcern.AssertArgumentEmpty(nomeNovo, MensagensDominio.UsuarioNomeNovoObrigatorio);
+            AssertionConcern.AssertArgumentEmpty(nomeNovo.Valor, MensagensDominio.UsuarioNomeNovoObrigatorio);
             if (NomeUsuario == nomeNovo) return;
-            AssertionConcern.AssertArgumentLength(nomeNovo, 3, 20, MensagensDominio.UsuarioTamanhoNomeInvalido);
+            AssertionConcern.AssertArgumentLength(nomeNovo.Valor, 3, 20, MensagensDominio.UsuarioTamanhoNomeInvalido);
             NomeUsuario = nomeNovo;
         }
 
