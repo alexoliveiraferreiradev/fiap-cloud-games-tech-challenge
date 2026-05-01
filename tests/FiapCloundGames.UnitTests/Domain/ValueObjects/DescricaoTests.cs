@@ -1,7 +1,10 @@
 ﻿using Bogus;
+using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
+using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
+using FiapCloundGames.UnitTests.Fixtures;
 
 namespace FiapCloundGames.UnitTests.Domain.ValueObjects
 {
@@ -13,7 +16,7 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
             _faker = new Faker();   
         }
         [Fact(DisplayName = "Sucesso ao criar descricao jogo - descrição no limite")]
-        [Trait("Categoria", "Jogos Tests")]
+        [Trait("Categoria", "Descricao Tests")]
         public void CriaDescricao_DescricaoNoLimite_DevePassar()
         {
             //Act
@@ -24,6 +27,18 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
             var jogo = new Jogos(nomeJogoVO, descricaoNoLimiteVO, precoVO, GeneroJogo.Acao);
             //Assert
             Assert.Equal(100, jogo.Descricao.Valor.Length);
+        }
+
+        [Fact(DisplayName = "Falha ao criar descrição jogo - descrição do jogo inválida deve lançar exceção")]
+        [Trait("Categoria", "Descricao Tests")]
+        public void CriaDescricaoJogo_DescricaoJogoInvalido_DeveLancarExcecao()
+        {
+            //Arrange
+            var novaDescricao = "N";
+            //Act
+            var result = Assert.Throws<DomainException>(() => new Descricao(novaDescricao));
+            //Assert
+            Assert.Equal(MensagensDominio.JogoDescricaoTamanhoInvalido, result.Message);
         }
     }
 }
