@@ -316,7 +316,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock           
             _mockJogo.Setup(r => r.ObterPromocaoPorId(promocaoExistente.Id)).ReturnsAsync(promocaoExistente);
             //Act 
-            await _jogosService.AtualizaValorPromocao(promocaoExistente.Id,updatePromocaoRequest);            
+            await _jogosService.AtualizaPromocao(promocaoExistente.Id,updatePromocaoRequest);            
             //Assert
             Assert.NotEqual(updatePromocaoRequest.novoValorPromocao, criaPromocaoRequest.valorPromocao);
             _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.AtLeastOnce);
@@ -340,7 +340,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock           
             _mockJogo.Setup(r => r.ObterPromocaoPorId(promocaoExistente.Id)).ReturnsAsync(promocaoExistente);
             //Act 
-            await _jogosService.AtualizaValorPromocao(promocaoExistente.Id,updatePromocaoRequest);            
+            await _jogosService.AtualizaPromocao(promocaoExistente.Id,updatePromocaoRequest);            
             //Assert
             Assert.NotEqual(updatePromocaoRequest.novoValorPromocao, criaPromocaoRequest.valorPromocao);
             _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.AtLeastOnce);

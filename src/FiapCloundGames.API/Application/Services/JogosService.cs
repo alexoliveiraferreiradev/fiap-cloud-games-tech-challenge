@@ -78,7 +78,7 @@ namespace FiapCloundGames.API.Application.Services
             await _jogoRepository.Atualizar(jogo);
         }
 
-        public async Task AtualizaValorPromocao(Guid promocaoId,UpdatePromocaoRequest promocaoRequest)
+        public async Task AtualizaPromocao(Guid promocaoId,UpdatePromocaoRequest promocaoRequest)
         {            
             var jogo = await _jogoRepository.ObterPorId(promocaoRequest.jogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
@@ -87,7 +87,7 @@ namespace FiapCloundGames.API.Application.Services
             if (!jogo.Promocoes.Any()) throw new DomainException(MensagensDominio.JogoSemPromocoes);
             var promocao = await _jogoRepository.ObterPromocaoPorId(promocaoId);
             if (promocao == null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);                        
-            jogo.AlteraValorPromocao(promocao.Id, new Preco(promocaoRequest.novoValorPromocao), promocaoRequest.novaDataFim);
+            jogo.AlteraPromocao(promocao.Id, new Preco(promocaoRequest.novoValorPromocao), promocaoRequest.novaDataFim);
             await _jogoRepository.Atualizar(jogo);
         }
 
