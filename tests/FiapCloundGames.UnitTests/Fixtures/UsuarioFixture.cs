@@ -11,11 +11,13 @@ namespace FiapCloundGames.UnitTests.Fixtures
         private readonly Faker _faker;
         private Email _emailUsuario;
         private Nome _nomeUsuario;
+        private Senha _senhaUsuario;
         public UsuarioFixture()
         {
             _faker = new Faker();
             _emailUsuario = new Email(_faker.Internet.Email());
             _nomeUsuario = new Nome(_faker.Internet.UserName());
+            _senhaUsuario = new Senha("Teste@123");
         }
 
         public CriaUsuarioRequest UsuarioRequest()
@@ -40,43 +42,19 @@ namespace FiapCloundGames.UnitTests.Fixtures
 
         public Usuario ObtemJogadorComSucesso()
         {
-            var senhaUsuario = "Teste@123";
-            var confirmacaoSenhaUsuario = senhaUsuario;
-            return new Usuario(_nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
-        }
-
-
-        public Usuario ObtemUsuarioComSenhaInvalida()
-        {
-            var senhaUsuario = "123";
-            var confirmacaoSenhaUsuario = senhaUsuario;
-            return new Usuario(_nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
-        }
-        public Usuario ObtemUsuarioComSenhaNaoPreenchida()
-        {
-            var senhaUsuario = string.Empty;
-            var confirmacaoSenhaUsuario = senhaUsuario;
-            return new Usuario(_nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
-        }
-
-        public Usuario ObtemUsuarioComConfirmacaoDeSenhaDiferente()
-        {
-            var senhaUsuario = "Teste@123";
-            var confirmacaoSenhaUsuario = senhaUsuario + "123";
-            return new Usuario(_nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
+            return new Usuario(_nomeUsuario, _emailUsuario, _senhaUsuario);
         }
 
         public Usuario ObtemAdminComSucesso()
         {
-            var usuario = new Usuario(_emailUsuario, "Teste@123");
+            var usuario = new Usuario(_emailUsuario, _senhaUsuario);
             typeof(Usuario).GetProperty("Perfil").SetValue(usuario, TipoUsuario.Administrador);
             return usuario;
         }
 
         public Usuario ObtemUsuarioInativo()
-        {
-            
-            var usuario = new Usuario(_emailUsuario, "Teste@123");
+        {            
+            var usuario = new Usuario(_emailUsuario, _senhaUsuario);
             typeof(Usuario).GetProperty("Ativo").SetValue(usuario, false);
             return usuario;
         }
