@@ -73,7 +73,8 @@ namespace FiapCloundGames.API.Application.Services
             var jogo = await _jogoRepository.ObterPorId(promocaoRequest.jogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
             var valorPromocaoVO = new Preco(promocaoRequest.valorPromocao);
-            jogo.AdicionarPromocao(valorPromocaoVO, promocaoRequest.dataFim);
+            var periodoVO = new Periodo(promocaoRequest.dataFim);
+            jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
             await _jogoRepository.Atualizar(jogo);
         }
 
