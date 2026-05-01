@@ -36,8 +36,11 @@ namespace FiapCloundGames.API.Application.Services
         {
             var jogo = await _jogoRepository.ObterPorId(id);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            var preco = new Preco(updateJogosRequest.novoPreco);
-            jogo.Atualizar(updateJogosRequest.novoNome, updateJogosRequest.novaDescricao, preco, updateJogosRequest.novoGenero);
+            var precoVO = new Preco(updateJogosRequest.novoPreco);
+            var nomeJogoVO = new NomeJogo(updateJogosRequest.novoNome);
+            var descricaoJogoVO = new Descricao(updateJogosRequest.novaDescricao);
+
+            jogo.Atualizar(nomeJogoVO, descricaoJogoVO, precoVO, updateJogosRequest.novoGenero);
             await _jogoRepository.Atualizar(jogo);
         }
 
