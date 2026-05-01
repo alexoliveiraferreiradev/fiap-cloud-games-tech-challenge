@@ -106,7 +106,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var novaSenha = "NovaSenha@123";
             //Act
-            usuario.AtualizarSenha(novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha);
+            usuario.AlterarSenha(novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha);
             //Assert
             Assert.Equal(novaSenha, usuario.Senha);
 
@@ -126,7 +126,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var novaSenha = senhaInvalida;
             //Act
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarSenha( novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha));
+            var result = Assert.Throws<DomainException>(() => usuario.AlterarSenha( novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaNovaFraca, result.Message);
         }
@@ -139,7 +139,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var novaSenha = string.Empty;
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarSenha(novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha));
+            var result = Assert.Throws<DomainException>(() => usuario.AlterarSenha(novaSenha: novaSenha, confirmacaoSenhaNova: novaSenha));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaNovaObrigatoria, result.Message);
         }
@@ -153,7 +153,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var novaSenha = "NovaSenha@123";
             var confirmacaoNovaSenha = "Teste123";
             //Act
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarSenha(novaSenha: novaSenha, confirmacaoSenhaNova: confirmacaoNovaSenha));
+            var result = Assert.Throws<DomainException>(() => usuario.AlterarSenha(novaSenha: novaSenha, confirmacaoSenhaNova: confirmacaoNovaSenha));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaConfirmacaoDiferente, result.Message);
 
