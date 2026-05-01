@@ -46,35 +46,24 @@ namespace FiapCloundGames.UnitTests.Fixtures
         }
 
 
-        public Usuario ObtemUsuarioComNomeInvalido(string nomeInvalido)
-        {
-            var nomeUsuario = nomeInvalido;
-            var senhaUsuario = "Teste@123";
-            var confirmacaoSenhaUsuario = senhaUsuario;
-            return new Usuario(nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
-        }
-
         public Usuario ObtemUsuarioComSenhaInvalida()
         {
-            var nomeUsuario = _faker.Internet.UserName();
             var senhaUsuario = "123";
             var confirmacaoSenhaUsuario = senhaUsuario;
-            return new Usuario(nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
+            return new Usuario(_nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
         }
         public Usuario ObtemUsuarioComSenhaNaoPreenchida()
         {
-            var nomeUsuario = _faker.Internet.UserName();
             var senhaUsuario = string.Empty;
             var confirmacaoSenhaUsuario = senhaUsuario;
-            return new Usuario(nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
+            return new Usuario(_nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
         }
 
         public Usuario ObtemUsuarioComConfirmacaoDeSenhaDiferente()
         {
-            var nomeUsuario = _faker.Internet.UserName();
             var senhaUsuario = "Teste@123";
             var confirmacaoSenhaUsuario = senhaUsuario + "123";
-            return new Usuario(nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
+            return new Usuario(_nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
         }
 
         public Usuario ObtemAdminComSucesso()
