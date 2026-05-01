@@ -1,12 +1,13 @@
 ﻿using FiapCloundGames.API.Domain.Common;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Resources;
+using FiapCloundGames.API.Domain.ValueObjects;
 
 namespace FiapCloundGames.API.Domain.Entities
 {
     public class Promocao : EntityBase
     {
-        public Promocao(Guid jogoId, decimal valorPromocao, DateTime dataFim)
+        public Promocao(Guid jogoId, Preco valorPromocao, DateTime dataFim)
         {
             JogoId = jogoId;
             Valor = valorPromocao;
@@ -18,7 +19,7 @@ namespace FiapCloundGames.API.Domain.Entities
         }
         protected Promocao() { }
         public Guid JogoId { get; private set; }
-        public decimal Valor { get; private set; }
+        public Preco Valor { get; private set; }
         public bool Ativo { get; private set; }
         public DateTime DataCadastro { get; private set; }
         public DateTime DataInicio { get; private set; }
@@ -28,7 +29,6 @@ namespace FiapCloundGames.API.Domain.Entities
         protected override void ValidarEntidade()
         {
             if (JogoId == Guid.Empty) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            AssertionConcern.AssertArgumentValueFormat(Valor, MensagensDominio.ValorInvalido);
             if (DataFim <= DateTime.UtcNow) throw new DomainException(MensagensDominio.PromocaoDataFimInvalida);
         }
 
@@ -42,9 +42,8 @@ namespace FiapCloundGames.API.Domain.Entities
             DataAlteracao = DateTime.UtcNow;    
         }
 
-        public void AtualizarPrecoPromocional(decimal novoValor)
-        {
-            AssertionConcern.AssertArgumentValueFormat(novoValor, MensagensDominio.ValorInvalido);
+        public void AtualizarPrecoPromocional(Preco novoValor)
+        {            
             Valor = novoValor;
             DataAlteracao = DateTime.UtcNow;
         }
