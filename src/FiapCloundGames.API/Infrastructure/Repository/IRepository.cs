@@ -2,7 +2,7 @@
 
 namespace FiapCloundGames.API.Infrastructure.Repository
 {
-    public interface IRepository<T> where T : AgreggateRoot
+    public interface IRepository<T> where T : AggregateRoot
     {
         Task Adicionar(T entity);   
         Task Atualizar(T entity);   
