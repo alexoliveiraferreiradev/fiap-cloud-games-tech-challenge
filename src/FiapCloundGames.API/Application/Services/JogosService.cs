@@ -4,6 +4,7 @@ using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Resources;
+using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.API.Infrastructure.Repository;
 
 namespace FiapCloundGames.API.Application.Services
@@ -17,7 +18,8 @@ namespace FiapCloundGames.API.Application.Services
         }
         public async Task<Jogos> CriaJogo(CriarJogoRequest request)
         {
-            var jogos = new Jogos(request.Nome, request.Descricao, request.Preco, request.Genero);
+            var preco = new Preco(request.preco);
+            var jogos = new Jogos(request.Nome, request.Descricao, preco, request.Genero);
             if (await VerificaDuplicidadeNome(request.Nome))
                 await Adicionar(jogos);
             return jogos;
@@ -32,7 +34,8 @@ namespace FiapCloundGames.API.Application.Services
         {
             var jogo = await _jogoRepository.ObterPorId(id);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            jogo.Atualizar(updateJogosRequest.novoNome, updateJogosRequest.novaDescricao, updateJogosRequest.novoPreco, updateJogosRequest.novoGenero);
+            var preco = new Preco(updateJogosRequest.novoPreco);
+            jogo.Atualizar(updateJogosRequest.novoNome, updateJogosRequest.novaDescricao, preco, updateJogosRequest.novoGenero);
             await _jogoRepository.Atualizar(jogo);
         }
 
