@@ -198,11 +198,11 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var novoEmail = new Email( _faker.Internet.Email());
+            var novoEmail =  _faker.Internet.Email();
             //Act
             usuario.AtualizarEmail(novoEmail: novoEmail);
             //Assert
-            Assert.Equal(novoEmail, usuario.EmailUsuario);
+            Assert.Equal(novoEmail, usuario.EmailUsuario.Valor);
         }
 
         [Fact(DisplayName = "Falha ao atualizar o usuário - email não preenchido")]
