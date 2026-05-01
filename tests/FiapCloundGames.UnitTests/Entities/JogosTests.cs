@@ -147,10 +147,11 @@ namespace FiapCloundGames.UnitTests.Entities
             //Arrange
             var jogo = _jogoFixture.ObtemJogosParaPromocao();
             var precoBase = jogo.PrecoBase;
+            var valorPromocaoVO = new Preco(100.00m);
             //Act
-            jogo.AdicionarPromocao(100, DateTime.UtcNow.AddMonths(2));
+            jogo.AdicionarPromocao(valorPromocaoVO, DateTime.UtcNow.AddMonths(2));
             //Assert
-            Assert.Contains(jogo.Promocoes, p => p.ValorPromocao == 100);
+            Assert.Contains(jogo.Promocoes, p => p.ValorPromocao.Valor == 100);
         }
 
         [Fact(DisplayName = "Falha ao adicionar promoção - valor promoção maior ou igual que o valor base")]
