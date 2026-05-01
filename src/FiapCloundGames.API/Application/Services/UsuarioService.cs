@@ -34,8 +34,9 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> CadastrarAdministrador(CriaUsuarioRequest request, bool hasPermision, string token)
         {
-            var emailUsuario = new Email(request.Email);
-            var usuario = new Usuario(request.Nome, emailUsuario, request.Senha, request.reSenha);
+            var emailUsuarioValueObject = new Email(request.Email);
+            var nomeUsuarioValueObject = new Nome(request.Nome);
+            var usuario = new Usuario(nomeUsuarioValueObject, emailUsuarioValueObject, request.Senha, request.reSenha);
             if (!ValidaPermissoesAdministrador(hasPermision, token)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
             usuario.PromoverPerfil(usuario);
             await Adicionar(usuario);
@@ -80,8 +81,11 @@ namespace FiapCloundGames.API.Application.Services
             ValidaSenhas(request.Senha, request.reSenha);
             var senhaCifrada = _passwordHasher.HashPassword(request.Senha);
             var confirmacaoSenha = senhaCifrada;
-            var emailUsuario = new Email(request.Email);
-            var usuario = new Usuario(request.Nome, emailUsuario, senhaCifrada, confirmacaoSenha);
+
+            var nomeVO = new Nome(request.Nome);
+            var emailVO = new Email(request.Email); 
+
+            var usuario = new Usuario(nomeVO, emailVO, senhaCifrada, confirmacaoSenha);
             await Adicionar(usuario);
             return usuario;
         }
@@ -99,8 +103,7 @@ namespace FiapCloundGames.API.Application.Services
 
             var novaSenhaCriptografa = _passwordHasher.HashPassword(request.senhaUsuario);
             var confirmacaoSenha = novaSenhaCriptografa;
-            var emailUsuario = new Email(request.emailUsuario);
-            usuario.Atualizar(request.nomeUsuario, emailUsuario, novaSenhaCriptografa, confirmacaoSenha);
+            usuario.Atualizar(request.nomeUsuario, request.emailUsuario, novaSenhaCriptografa, confirmacaoSenha);
             await Atualizar(usuario);
         }
 
