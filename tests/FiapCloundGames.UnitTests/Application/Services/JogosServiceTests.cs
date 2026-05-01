@@ -298,7 +298,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         }
 
 
-        [Fact(DisplayName = "Sucesso ao alterar valor promocão - valor promoção alterado")]
+        [Fact(DisplayName = "Sucesso ao alterar promocão - promoção alterado")]
         [Trait("Categoria", "JogosService Tests")]
         public async Task AlteraValorPromocao_PromocaoValida_DeveAlterarComSucesso()
         {
@@ -307,7 +307,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var dataFim = DateTime.UtcNow.AddDays(11);
 
             var criaPromocaoRequest = new CriaPromocaoRequest(jogo.Id, 90.00m, DateTime.UtcNow.AddDays(10));
-            var updatePromocaoRequest = new UpdatePromocaoRequest(jogo.Id,70.00m, dataFim);
+            var updatePromocaoRequest = new UpdatePromocaoRequest(jogo.Id, 70.00m, dataFim);
 
             _mockJogo.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
             await _jogosService.AdicionarPromocao(criaPromocaoRequest);
@@ -316,13 +316,13 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock           
             _mockJogo.Setup(r => r.ObterPromocaoPorId(promocaoExistente.Id)).ReturnsAsync(promocaoExistente);
             //Act 
-            await _jogosService.AtualizaPromocao(promocaoExistente.Id,updatePromocaoRequest);            
+            await _jogosService.AtualizaPromocao(promocaoExistente.Id, updatePromocaoRequest);
             //Assert
             Assert.NotEqual(updatePromocaoRequest.novoValorPromocao, criaPromocaoRequest.valorPromocao);
             _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.AtLeastOnce);
         }
 
-        [Fact(DisplayName = "Falha ao alterar promocão - promoção não encotrada")]
+        [Fact(DisplayName = "Falha ao alterar promocão - promoção não encontrada")]
         [Trait("Categoria", "JogosService Tests")]
         public async Task AlteraValorPromocao_PromocaoNaoEncontrada_DeveLancarExcecao()
         {
@@ -331,19 +331,38 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var dataFim = DateTime.UtcNow.AddDays(11);
 
             var criaPromocaoRequest = new CriaPromocaoRequest(jogo.Id, 90.00m, DateTime.UtcNow.AddDays(10));
-            var updatePromocaoRequest = new UpdatePromocaoRequest(jogo.Id,70.00m, dataFim);
+            var updatePromocaoRequest = new UpdatePromocaoRequest(jogo.Id, 70.00m, dataFim);
 
             _mockJogo.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
             await _jogosService.AdicionarPromocao(criaPromocaoRequest);
 
             var promocaoExistente = jogo.Promocoes.First();
             //Mock           
-            _mockJogo.Setup(r => r.ObterPromocaoPorId(promocaoExistente.Id)).ReturnsAsync(promocaoExistente);
+            _mockJogo.Setup(r => r.ObterPromocaoPorId(promocaoExistente.Id)).ReturnsAsync((Promocao)null);
             //Act 
-            await _jogosService.AtualizaPromocao(promocaoExistente.Id,updatePromocaoRequest);            
+             var result = await Assert.ThrowsAsync<DomainException>(async ()=> await _jogosService.AtualizaPromocao(promocaoExistente.Id, updatePromocaoRequest));
             //Assert
-            Assert.NotEqual(updatePromocaoRequest.novoValorPromocao, criaPromocaoRequest.valorPromocao);
+            Assert.Equal(MensagensDominio.PromocaoNaoEncontrada, result.Message);
             _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.AtLeastOnce);
+        }
+
+        [Fact(DisplayName = "Falha ao alterar promocão - jogo sem promoções")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task AlteraValorPromocao_JogoSemPromocoes_DeveLancarExcecao()
+        {
+            //Arrange         
+            var jogo = _jogosFixture.ObtemJogosParaPromocao();
+            var dataFim = DateTime.UtcNow.AddDays(11);
+            var criaPromocaoRequest = new CriaPromocaoRequest(jogo.Id, 90.00m, DateTime.UtcNow.AddDays(10));
+            var updatePromocaoRequest = new UpdatePromocaoRequest(jogo.Id, 70.00m, dataFim);
+            var promocaoExistenteId = Guid.NewGuid();
+            //Mock                      
+            _mockJogo.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+            //Act 
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.AtualizaPromocao(promocaoExistenteId, updatePromocaoRequest));
+            //Assert
+            Assert.Equal(MensagensDominio.JogoSemPromocoes, result.Message);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Never);
         }
 
         [Fact(DisplayName = "Desativar promocão - deve desativar com sucesso")]
