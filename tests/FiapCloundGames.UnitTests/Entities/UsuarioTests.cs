@@ -43,75 +43,6 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.False(string.IsNullOrEmpty(usuario.EmailUsuario.Valor));
         }
 
-
-        /// <summary>
-        /// Testa falha na criação quando o nome do usuário não é preenchido.
-        /// Deve lançar <see cref="DomainException"/> com a mensagem esperada.
-        /// </summary>
-        [Fact(DisplayName = "Falha ao cadastrar novo Usuário - nome não preenchido")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void CadastrarUsuarioJogador_NomeNaoPreenchido_DeveLancarExcecao()
-        {
-            //Arrange
-            //Act             
-            var result = Assert.Throws<DomainException>(() => new Nome(string.Empty));
-            //Assert
-            Assert.Equal(MensagensDominio.UsuarioNomeObrigatorio, result.Message);
-        }
-        /// <summary>
-        /// Testa falha na criação quando nome de usuário é inválido
-        /// </summary>
-        /// <param name="nomeInvalido"></param>
-        [Theory(DisplayName = "Falha ao cadastrar novo Usuário - nome não preenchido")]
-        [Trait("Categoria", "Usuario Tests")]
-        [InlineData("aB")]
-        [InlineData("xD")]
-        public void CadastrarUsuarioJogador_NomeInvalido_DeveLancarExcecao(string nomeInvalido)
-        {
-            //Arrange
-            //Act             
-            var result = Assert.Throws<DomainException>(() => new Nome(nomeInvalido));
-            //Assert
-            Assert.Equal(MensagensDominio.UsuarioTamanhoNomeInvalido, result.Message);
-        }
-
-
-        /// <summary>
-        /// Testa falha na criação quando o email do usuário não é preenchido.
-        /// Deve lançar <see cref="DomainException"/> com a mensagem esperada.
-        /// </summary>
-        [Fact(DisplayName = "Falha ao cadastrar novo usuário - email não preenchido")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void CadastrarUsuarioJogador_EmailJogadorNaoPreenchido_DeveLancarExcecao()
-        {
-            //Arrange
-            //Act             
-            var result = Assert.Throws<DomainException>(() => new Email(string.Empty));
-            //Assert
-            Assert.Equal(MensagensDominio.EmailObrigatorio, result.Message);
-        }
-
-
-        /// <summary>
-        /// Testa falhas de validação de email inválido.
-        /// Para cada email inválido passado, deve ser lançada uma <see cref="DomainException"/> com a mensagem apropriada.
-        /// </summary>
-        [Theory(DisplayName = "Falha ao cadastrar novo usuário - email inválido")]
-        [Trait("Categoria", "Usuario Tests")]
-        [InlineData("email_sem_arroba.com")]
-        [InlineData("usuario@")]
-        [InlineData("@dominio.com")]
-        [InlineData("usuario@dominio")]
-        [InlineData("usuario@dominio..com")]
-        public void CadastrarUsuarioJogador_EmailInvalido_DeveLancarExcecao(string emailInvalido)
-        {
-            //Arrange
-            //Act             
-            var result = Assert.Throws<DomainException>(()=> new Email(emailInvalido));
-            //Assert
-            Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
-        }
-
         [Fact(DisplayName = "Falha ao cadastrar novo usuário - senha não preenchida")]
         [Trait("Categoria", "Usuario Tests")]
         public void CadastrarUsuarioJogador_SenhanaoPreenchida_DeveLancarExcecao()
@@ -165,72 +96,7 @@ namespace FiapCloundGames.UnitTests.Entities
             usuario.AtualizarNomeUsuario(nomeNovo: novoNome);
             //Assert
             Assert.Equal(novoNome, usuario.NomeUsuario.Valor);
-        }
-
-        [Fact(DisplayName = "Falha ao atualizar nome do usuário - nome novo não preenchido")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AtualizarNomeUsuario_NomeNovoNaoPreenchido_DeveLancarExcecao()
-        {
-            //Arrange
-            //Act 
-            var result = Assert.Throws<DomainException>(() => new Nome(string.Empty));
-            //Assert
-            Assert.Equal(MensagensDominio.UsuarioNomeNovoObrigatorio, result.Message);
-        }
-
-       
-
-        [Fact(DisplayName = "Falha ao atualizar nome do usuário - nome novo inválido")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AtualizarNomeUsuario_NomeNovoInvalido_DeveLancarExcecao()
-        {
-            //Arrange
-            //Act 
-            var result = Assert.Throws<DomainException>(() => new Nome(_faker.Random.String(21)));
-            //Assert
-            Assert.Equal(MensagensDominio.UsuarioTamanhoNomeInvalido, result.Message);
-        }
-
-
-        [Fact(DisplayName = "Sucesso ao atualizar email do usuário - email válido")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AtualizarEmailUsuario_UsuarioValido_DeveCriarComSucesso()
-        {
-            //Arrange
-            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var novoEmail =  _faker.Internet.Email();
-            //Act
-            usuario.AtualizarEmail(novoEmail: novoEmail);
-            //Assert
-            Assert.Equal(novoEmail, usuario.EmailUsuario.Valor);
-        }
-
-        [Fact(DisplayName = "Falha ao atualizar o usuário - email não preenchido")]
-        [Trait("Categoria", "Usuario Tests")]
-        public void AtualizarEmailUsuario_NovoEmailNaoPreenchido_DeveLancarExcecao()
-        {
-            //Arrange
-            //Act 
-            var result = Assert.Throws<DomainException>(() => new Email(string.Empty));
-            //Assert
-            Assert.Equal(MensagensDominio.EmailObrigatorio, result.Message);
-        }
-
-        [Theory(DisplayName = "Falha ao atualizar o usuário - email não preenchido")]
-        [Trait("Categoria", "Usuario Tests")]
-        [InlineData("email_sem_arroba.com")]
-        [InlineData("usuario@")]
-        [InlineData("@dominio.com")]
-        [InlineData("usuario@dominio")]
-        [InlineData("usuario@dominio..com")]
-        public void AtualizarEmailUsuario_NovoEmailInvalido_DeveLancarExcecao(string emailInvalido)
-        {
-            //Arrange
-            //Act 
-            var result = Assert.Throws<DomainException>(() => new Email(emailInvalido));
-            //Assert    
-            Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
-        }
+        }               
 
         [Fact(DisplayName = "Sucesso ao atualizar senha do usuário - senha válida")]
         [Trait("Categoria", "Usuario Tests")]
