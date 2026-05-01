@@ -90,8 +90,8 @@ namespace FiapCloundGames.API.Application.Services
             return jogos.Select(j => new JogoResponse
             {
                 Id = j.Id,
-                Nome = j.Nome,
-                Descricao = j.Descricao,
+                Nome = j.Nome.Valor,
+                Descricao = j.Descricao.Valor,
                 PrecoOriginal = j.Preco.Valor,
                 PrecoAtual = j.ObterPrecoAtual()
             });
