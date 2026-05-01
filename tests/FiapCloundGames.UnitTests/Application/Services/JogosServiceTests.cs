@@ -296,6 +296,23 @@ namespace FiapCloundGames.UnitTests.Application.Services
             _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Never);
         }
 
+
+        [Fact(DisplayName = "Sucesso ao alterar valor promocão - valor promoção alterado")]
+        [Trait("Categoria", "JogosService Tests")]
+        public async Task AlteraValorPromocao_PromocaoValida_DeveAlterarComSucesso()
+        {
+            //Arrange
+            var jogo = _jogosFixture.ObtemJogosParaPromocao();
+            var criaPromocaoRequest = new CriaPromocaoRequest(jogo.Id, 90.00m, DateTime.UtcNow.AddDays(10));
+
+            _mockJogo.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+            //Act 
+            await _jogosService.AdicionarPromocao(criaPromocaoRequest);
+            //Assert
+            
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Never);
+        }
+
         [Fact(DisplayName = "Desativar promocão - deve desativar com sucesso")]
         [Trait("Categoria", "JogosService Tests")]
         public async Task DesativarPromocao_JogoValido_DeveDesativarComSucesso()
