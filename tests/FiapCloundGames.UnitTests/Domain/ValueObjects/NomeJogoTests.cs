@@ -14,7 +14,7 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
         }
 
         [Fact(DisplayName = "Sucesso ao criar nome jogo - deve criar com sucesso")]
-        [Trait("Categoria", "Jogos Tests")]
+        [Trait("Categoria", "Nome Jogos Tests")]
         public void CriaNome_NomeValido_DeveCriarNomeComSucesso()
         {
             //Arrange
@@ -26,7 +26,7 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
         }
 
         [Fact(DisplayName = "Falha ao criar nome do jogo - nome não preenchido")]
-        [Trait("Categoria", "Jogos Tests")]
+        [Trait("Categoria", "Nome Jogos Tests")]
         public void CriaNome_NomeNaoPreenchido_DeveLancarExcecao()
         {
             //Arrange
@@ -37,7 +37,7 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
         }
 
         [Fact(DisplayName = "Falha ao criar nome do jogo - nome inválido")]
-        [Trait("Categoria", "Jogos Tests")]
+        [Trait("Categoria", "Nome Jogos Tests")]
         public void CriaNome_NomeInvalido_DeveLancarExcecao()
         {
             //Arrange
