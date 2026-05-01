@@ -4,6 +4,7 @@ using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
+using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.UnitTests.Fixtures;
 using Moq;
 using System.ComponentModel.DataAnnotations;
@@ -39,7 +40,7 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.NotNull(usuario);
             Assert.Equal(TipoUsuario.Jogador, usuario.Perfil);
             Assert.False(string.IsNullOrEmpty(usuario.NomeUsuario));
-            Assert.False(string.IsNullOrEmpty(usuario.Email));
+            Assert.False(string.IsNullOrEmpty(usuario.EmailUsuario.Email));
         }
 
 
@@ -106,9 +107,9 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             //Act             
-            var result = Assert.Throws<DomainException>(() => _usuarioFixture.ObtemUsuarioEmailInvalido(emailInvalido));
+            var result = Assert.Throws<DomainException>(()=> new EmailUsuario(emailInvalido));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioEmailInvalido, result.Message);
+            Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
         }
 
         [Fact(DisplayName = "Falha ao cadastrar novo usuário - senha não preenchida")]
@@ -201,11 +202,11 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var novoEmail = _faker.Internet.Email();
+            var novoEmail = new EmailUsuario( _faker.Internet.Email());
             //Act
             usuario.AtualizarEmail(novoEmail: novoEmail);
             //Assert
-            Assert.Equal(novoEmail, usuario.Email);
+            Assert.Equal(novoEmail, usuario.EmailUsuario);
         }
 
         [Fact(DisplayName = "Falha ao atualizar o usuário - email não preenchido")]
@@ -213,12 +214,10 @@ namespace FiapCloundGames.UnitTests.Entities
         public void AtualizarEmailUsuario_NovoEmailNaoPreenchido_DeveLancarExcecao()
         {
             //Arrange
-            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var novoEmail = string.Empty;
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarEmail( novoEmail: novoEmail));
+            var result = Assert.Throws<DomainException>(() => new EmailUsuario(string.Empty));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioEmailNovoObrigatorio, result.Message);
+            Assert.Equal(MensagensDominio.EmailObrigatorio, result.Message);
         }
 
         [Theory(DisplayName = "Falha ao atualizar o usuário - email não preenchido")]
@@ -231,12 +230,10 @@ namespace FiapCloundGames.UnitTests.Entities
         public void AtualizarEmailUsuario_NovoEmailInvalido_DeveLancarExcecao(string emailInvalido)
         {
             //Arrange
-            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var novoEmail = emailInvalido;
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarEmail(novoEmail: novoEmail));
+            var result = Assert.Throws<DomainException>(() => new EmailUsuario(emailInvalido));
             //Assert    
-            Assert.Equal(MensagensDominio.UsuarioEmailNovoInvalido, result.Message);
+            Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
         }
 
         [Fact(DisplayName = "Sucesso ao atualizar senha do usuário - senha válida")]
