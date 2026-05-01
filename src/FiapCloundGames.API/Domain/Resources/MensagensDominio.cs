@@ -36,7 +36,7 @@
         public static string JogoDescricaoObrigatoria = "A descrição do jogo é obrigatória.";
         public static string JogoGeneroObrigatorio = "O gênero do jogo é inválido.";
         public static string JogoNaoEncontrado = "O jogo não foi encontrado.";
-        public static string JogoInvalido = "O jogo já está desativado.";
+        public static string JogoInvalido = "O jogo está desativado.";
         public static string JogoAtivo = "O jogo já está ativo.";
         public static string JogoMesmoNomeExistente = "Já existe um jogo com esse nome.";
         #endregion
