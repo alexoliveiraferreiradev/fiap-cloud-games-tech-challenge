@@ -99,10 +99,10 @@ namespace FiapCloundGames.API.Domain.Entities
             _promocoes.Add(new Promocao(Id, valorPromocao, dataFim));
             DataAlteracao = DateTime.UtcNow;
         }
-        public decimal ObterPrecoAtual()
+        public Preco ObterPrecoAtual()
         {
             var promoAtiva = _promocoes.FirstOrDefault(p => p.EstaValida());
-            return promoAtiva != null ? promoAtiva.ValorPromocao.Valor : PrecoBase.Valor;
+            return promoAtiva != null ? promoAtiva.ValorPromocao : PrecoBase;
         }
         public void DesativarPromocao(Guid promocaoId)
         {
