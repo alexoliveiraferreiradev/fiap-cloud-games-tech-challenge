@@ -34,7 +34,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task AdicionarJogo_JogoValido_DeveAdicionarJogoComSucesso()
         {
             //Arrange
-            var request = new CriarJogoRequest("Halo", "Jogo de tiro", new Preco(150.00m), GeneroJogo.FPS);
+            var request = new CriarJogoRequest("Halo", "Jogo de tiro", 150.00m, GeneroJogo.FPS);
             //Mock
             //Act 
             var result = await _jogosService.CriaJogo(request);
@@ -51,7 +51,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task AdicionarJogo_NomeNaoPreenchido_DeveLancarExcecao()
         {
             //Arrange
-            var request = new CriarJogoRequest(string.Empty, "Jogo de tiro", new Preco(150.00m), GeneroJogo.FPS);
+            var request = new CriarJogoRequest(string.Empty, "Jogo de tiro", 150.00m, GeneroJogo.FPS);
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
             //Assert
@@ -65,7 +65,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task AdicionarJogo_NomeInvalido_DeveLancarExcecao()
         {
             //Arrange
-            var request = new CriarJogoRequest(_faker.Random.String(21), "Jogo de tiro", new Preco(150.00m), GeneroJogo.FPS);
+            var request = new CriarJogoRequest(_faker.Random.String(21), "Jogo de tiro", 150.00m, GeneroJogo.FPS);
             //Mock
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
@@ -79,7 +79,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task AdicionarJogo_NomeDuplicado_DeveLancarExcecao()
         {
             //Arrange
-            var request = new CriarJogoRequest("Read Dead 2", "Melhor jogo do mundo", new Preco(150.00m), GeneroJogo.Aventura);
+            var request = new CriarJogoRequest("Read Dead 2", "Melhor jogo do mundo", 150.00m, GeneroJogo.Aventura);
             var jogoExistente = _jogosFixture.ObtemJogosComSucesso();
 
             _mockJogo.Setup(r => r.ObtemPorNome(request.Nome)).ReturnsAsync(jogoExistente);
@@ -95,7 +95,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task AdicionarJogo_DescricaoNaoPreenchida_DeveLancarExcecao()
         {
             //Arrange
-            var request = new CriarJogoRequest("Read Dead 2", string.Empty, new Preco(150.00m), GeneroJogo.FPS);
+            var request = new CriarJogoRequest("Read Dead 2", string.Empty, 150.00m, GeneroJogo.FPS);
 
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
@@ -110,7 +110,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task AdicionarJogo_DescricaoInvalida_DeveLancarExcecao()
         {
             //Arrange
-            var request = new CriarJogoRequest("Read Dead 2", _faker.Random.String(101), new Preco(150.00m), GeneroJogo.FPS);
+            var request = new CriarJogoRequest("Read Dead 2", _faker.Random.String(101), 150.00m, GeneroJogo.FPS);
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
             //Assert
@@ -124,7 +124,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task AdicionarJogo_GeneroInvalido_DeveLancarExcecao()
         {
             //Arrange
-            var request = new CriarJogoRequest("Read Dead 2", "Jogo de tiro", new Preco(150.00m), (GeneroJogo)999);
+            var request = new CriarJogoRequest("Read Dead 2", "Jogo de tiro", 150.00m, (GeneroJogo)999);
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
             //Assert
@@ -153,7 +153,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange
             var jogo = _jogosFixture.ObtemJogosComSucesso();
-            var request = new UpdateJogosRequest("Read Dead 2", "Jogo de tiro", new Preco(10.00m), GeneroJogo.Aventura);
+            var request = new UpdateJogosRequest("Read Dead 2", "Jogo de tiro", 10.00m, GeneroJogo.Aventura);
 
             _mockJogo.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
             //Act 
@@ -161,7 +161,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Assert
             Assert.Equal(jogo.Nome, request.novoNome);
             Assert.Equal(jogo.Descricao, request.novaDescricao);
-            Assert.Equal(jogo.Preco, request.novoPreco);
+            Assert.Equal(jogo.Preco.Valor, request.novoPreco);
             _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Once);
         }
 
@@ -171,7 +171,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange
             var jogoId = Guid.NewGuid();
-            var request = new UpdateJogosRequest("Read Dead 2", "Jogo de tiro", new Preco(10.00m), GeneroJogo.Aventura);
+            var request = new UpdateJogosRequest("Read Dead 2", "Jogo de tiro", 10.00m, GeneroJogo.Aventura);
 
             _mockJogo.Setup(r => r.ObterPorId(jogoId)).ReturnsAsync((Jogos)null);
             //Act 
