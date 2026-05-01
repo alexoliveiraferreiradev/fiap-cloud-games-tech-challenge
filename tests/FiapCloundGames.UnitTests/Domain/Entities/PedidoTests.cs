@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FiapCloundGames.UnitTests.Entities
+namespace FiapCloundGames.UnitTests.Domain.Entities
 {
     public class PedidoTests
     {

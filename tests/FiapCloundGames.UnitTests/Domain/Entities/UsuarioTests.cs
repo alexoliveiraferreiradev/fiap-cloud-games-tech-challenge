@@ -5,7 +5,7 @@ using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.UnitTests.Fixtures;
 
-namespace FiapCloundGames.UnitTests.Entities
+namespace FiapCloundGames.UnitTests.Domain.Entities
 {
     /// <summary>
     /// Conjunto de testes unitários para a entidade `Usuario`.

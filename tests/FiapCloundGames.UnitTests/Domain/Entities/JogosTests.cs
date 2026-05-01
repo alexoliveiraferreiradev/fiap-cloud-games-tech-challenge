@@ -6,7 +6,7 @@ using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.UnitTests.Fixtures;
 
-namespace FiapCloundGames.UnitTests.Entities
+namespace FiapCloundGames.UnitTests.Domain.Entities
 {
     public class JogosTests
     {
