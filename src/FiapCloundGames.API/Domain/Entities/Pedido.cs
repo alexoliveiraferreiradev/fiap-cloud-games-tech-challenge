@@ -49,6 +49,7 @@ namespace FiapCloundGames.API.Domain.Entities
             if (Status != PedidoStatus.Rascunho) throw new DomainException(MensagensDominio.PedidoNaoRascunhos);
             if (!_jogos.Any()) throw new DomainException(MensagensDominio.PedidoSemJogos);
             Status = PedidoStatus.Finalizado;
+            CalcularValorTotal();
             DataAlteracao = DateTime.UtcNow;
         }
 
