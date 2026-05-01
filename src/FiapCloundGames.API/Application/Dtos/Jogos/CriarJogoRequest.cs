@@ -3,5 +3,5 @@ using FiapCloundGames.API.Domain.ValueObjects;
 
 namespace FiapCloundGames.API.Application.Dtos.Jogos
 {
-    public record CriarJogoRequest(string Nome, string Descricao, Preco Preco, GeneroJogo Genero);
+    public record CriarJogoRequest(string Nome, string Descricao, decimal preco, GeneroJogo Genero);
 }
