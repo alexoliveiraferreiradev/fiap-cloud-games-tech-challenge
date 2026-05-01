@@ -100,7 +100,7 @@ namespace FiapCloundGames.API.Domain.Entities
         public decimal ObterPrecoAtual()
         {
             var promoAtiva = _promocoes.FirstOrDefault(p => p.EstaValida());
-            return promoAtiva != null ? promoAtiva.Valor : PrecoBase.Valor;
+            return promoAtiva != null ? promoAtiva.ValorPromocao : PrecoBase.Valor;
         }
         public void DesativarPromocao(Guid promocaoId)
         {

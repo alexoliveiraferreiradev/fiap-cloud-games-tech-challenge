@@ -10,7 +10,7 @@ namespace FiapCloundGames.API.Domain.Entities
         public Promocao(Guid jogoId, Preco valorPromocao, DateTime dataFim)
         {
             JogoId = jogoId;
-            Valor = valorPromocao;
+            ValorPromocao = valorPromocao;
             Ativo = true;
             DataInicio = DateTime.UtcNow;
             DataFim = dataFim;
@@ -19,7 +19,7 @@ namespace FiapCloundGames.API.Domain.Entities
         }
         protected Promocao() { }
         public Guid JogoId { get; private set; }
-        public Preco Valor { get; private set; }
+        public Preco ValorPromocao { get; private set; }
         public bool Ativo { get; private set; }
         public DateTime DataCadastro { get; private set; }
         public DateTime DataInicio { get; private set; }
@@ -44,7 +44,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public void AtualizarPrecoPromocional(Preco novoValor)
         {            
-            Valor = novoValor;
+            ValorPromocao = novoValor;
             DataAlteracao = DateTime.UtcNow;
         }
 

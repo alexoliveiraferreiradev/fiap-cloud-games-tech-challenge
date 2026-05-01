@@ -150,7 +150,7 @@ namespace FiapCloundGames.UnitTests.Entities
             //Act
             jogo.AdicionarPromocao(100, DateTime.UtcNow.AddMonths(2));
             //Assert
-            Assert.Contains(jogo.Promocoes, p => p.Valor == 100);
+            Assert.Contains(jogo.Promocoes, p => p.ValorPromocao == 100);
         }
 
         [Fact(DisplayName = "Falha ao adicionar promoção - valor promoção maior ou igual que o valor base")]
