@@ -39,7 +39,7 @@ namespace FiapCloundGames.UnitTests.Entities
             //Assert
             Assert.NotNull(usuario);
             Assert.Equal(TipoUsuario.Jogador, usuario.Perfil);
-            Assert.False(string.IsNullOrEmpty(usuario.NomeUsuario));
+            Assert.False(string.IsNullOrEmpty(usuario.NomeUsuario.Valor));
             Assert.False(string.IsNullOrEmpty(usuario.EmailUsuario.Valor));
         }
 
@@ -160,7 +160,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var novoNome = _faker.Internet.UserName();
+            var novoNome = new Nome( _faker.Internet.UserName());
             //Act
             usuario.AtualizarNomeUsuario(nomeNovo: novoNome);
             //Assert
@@ -172,10 +172,8 @@ namespace FiapCloundGames.UnitTests.Entities
         public void AtualizarNomeUsuario_NomeNovoNaoPreenchido_DeveLancarExcecao()
         {
             //Arrange
-            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var novoNome = string.Empty;
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarNomeUsuario(nomeNovo: novoNome));
+            var result = Assert.Throws<DomainException>(() => new Nome(string.Empty));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNomeNovoObrigatorio, result.Message);
         }
@@ -187,10 +185,8 @@ namespace FiapCloundGames.UnitTests.Entities
         public void AtualizarNomeUsuario_NomeNovoInvalido_DeveLancarExcecao()
         {
             //Arrange
-            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var novoNome = _faker.Random.String(21);
             //Act 
-            var result = Assert.Throws<DomainException>(() => usuario.AtualizarNomeUsuario(nomeNovo: novoNome));
+            var result = Assert.Throws<DomainException>(() => new Nome(_faker.Random.String(21)));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioTamanhoNomeInvalido, result.Message);
         }
