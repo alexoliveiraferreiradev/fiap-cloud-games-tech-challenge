@@ -9,11 +9,11 @@ namespace FiapCloundGames.UnitTests.Fixtures
     public class UsuarioFixture
     {
         private readonly Faker _faker;
-        private EmailUsuario _emailUsuario;
+        private Email _emailUsuario;
         public UsuarioFixture()
         {
             _faker = new Faker();
-            _emailUsuario = new EmailUsuario(_faker.Internet.Email());
+            _emailUsuario = new Email(_faker.Internet.Email());
         }
 
         public CriaUsuarioRequest UsuarioRequest()

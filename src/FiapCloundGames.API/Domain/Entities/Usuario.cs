@@ -14,7 +14,7 @@ namespace FiapCloundGames.API.Domain.Entities
         }
         public string NomeUsuario { get; private set; }
 
-        public EmailUsuario EmailUsuario { get; private set; }
+        public Email EmailUsuario { get; private set; }
 
         public string Senha { get; private set; }
 
@@ -26,7 +26,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         private string confirmacaoSenha = string.Empty;
 
-        public Usuario(string nomeUsuario, EmailUsuario emailUsuario, string senhaUsuario,
+        public Usuario(string nomeUsuario, Email emailUsuario, string senhaUsuario,
             string confirmacaoSenhaUsuario)
         {
             NomeUsuario = nomeUsuario;
@@ -40,7 +40,7 @@ namespace FiapCloundGames.API.Domain.Entities
             ValidarEntidade();
         }
 
-        public Usuario(EmailUsuario emailUsuario, string senhaUsuario)
+        public Usuario(Email emailUsuario, string senhaUsuario)
         {
             EmailUsuario = emailUsuario;
             Senha = senhaUsuario;
@@ -73,7 +73,7 @@ namespace FiapCloundGames.API.Domain.Entities
             MotivoDesativacao = motivo;
         }
 
-        public void Atualizar(string novoNome, EmailUsuario novoEmail, string novaSenha, string novaReSenha)
+        public void Atualizar(string novoNome, Email novoEmail, string novaSenha, string novaReSenha)
         {
             AssertionConcern.AssertStateFalse(Ativo, MensagensDominio.UsuarioInativo);
 
@@ -91,7 +91,7 @@ namespace FiapCloundGames.API.Domain.Entities
         }
 
 
-        public void AtualizarEmail(EmailUsuario novoEmail)
+        public void AtualizarEmail(Email novoEmail)
         {            
             if (EmailUsuario == novoEmail) return;            
             EmailUsuario = novoEmail;

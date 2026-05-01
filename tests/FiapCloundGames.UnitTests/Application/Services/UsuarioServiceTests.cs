@@ -178,7 +178,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             //Act 
-            var result = Assert.Throws<DomainException>(() =>new EmailUsuario(emailInvalido));
+            var result = Assert.Throws<DomainException>(() =>new Email(emailInvalido));
             //Assert
             Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
         }
@@ -222,7 +222,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await service.CadastrarJogador(usuarioRequest);
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(usuarioRequest.Email, result.EmailUsuario.Email);
+            Assert.Equal(usuarioRequest.Email, result.EmailUsuario.Valor);
             Assert.Equal(TipoUsuario.Jogador, result.Perfil);
 
             repoMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Once);
@@ -249,7 +249,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             hashMock.Setup(h => h.HashPassword(usuarioRequest.Senha)).Returns(usuarioRequest.Senha);
             //Act
-            var result = Assert.Throws<DomainException>(() => new EmailUsuario(emailInvalido));
+            var result = Assert.Throws<DomainException>(() => new Email(emailInvalido));
             //Assert
             Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
         }
@@ -473,7 +473,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             await service.AtualizarUsuario(usuario.Id, updataRequest);
             //Assert
             Assert.Equal(updataRequest.nomeUsuario, usuario.NomeUsuario);
-            Assert.Equal(updataRequest.emailUsuario, usuario.EmailUsuario.Email);
+            Assert.Equal(updataRequest.emailUsuario, usuario.EmailUsuario.Valor);
             Assert.Equal(updataRequest.senhaUsuario, usuario.Senha);
 
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);

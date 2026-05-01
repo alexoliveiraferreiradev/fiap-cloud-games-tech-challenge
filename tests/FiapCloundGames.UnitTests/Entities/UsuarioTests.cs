@@ -40,7 +40,7 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.NotNull(usuario);
             Assert.Equal(TipoUsuario.Jogador, usuario.Perfil);
             Assert.False(string.IsNullOrEmpty(usuario.NomeUsuario));
-            Assert.False(string.IsNullOrEmpty(usuario.EmailUsuario.Email));
+            Assert.False(string.IsNullOrEmpty(usuario.EmailUsuario.Valor));
         }
 
 
@@ -86,7 +86,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             //Act             
-            var result = Assert.Throws<DomainException>(() => new EmailUsuario(string.Empty));
+            var result = Assert.Throws<DomainException>(() => new Email(string.Empty));
             //Assert
             Assert.Equal(MensagensDominio.EmailObrigatorio, result.Message);
         }
@@ -107,7 +107,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             //Act             
-            var result = Assert.Throws<DomainException>(()=> new EmailUsuario(emailInvalido));
+            var result = Assert.Throws<DomainException>(()=> new Email(emailInvalido));
             //Assert
             Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
         }
@@ -202,7 +202,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var novoEmail = new EmailUsuario( _faker.Internet.Email());
+            var novoEmail = new Email( _faker.Internet.Email());
             //Act
             usuario.AtualizarEmail(novoEmail: novoEmail);
             //Assert
@@ -215,7 +215,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             //Act 
-            var result = Assert.Throws<DomainException>(() => new EmailUsuario(string.Empty));
+            var result = Assert.Throws<DomainException>(() => new Email(string.Empty));
             //Assert
             Assert.Equal(MensagensDominio.EmailObrigatorio, result.Message);
         }
@@ -231,7 +231,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             //Act 
-            var result = Assert.Throws<DomainException>(() => new EmailUsuario(emailInvalido));
+            var result = Assert.Throws<DomainException>(() => new Email(emailInvalido));
             //Assert    
             Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
         }
