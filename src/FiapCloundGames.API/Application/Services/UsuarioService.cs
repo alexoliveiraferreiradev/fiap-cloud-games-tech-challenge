@@ -21,17 +21,6 @@ namespace FiapCloundGames.API.Application.Services
             _passwordHasher = passwordHasher;
         }
 
-
-        public async Task Adicionar(Usuario entity)
-        {
-            await _usuarioRepository.Adicionar(entity);
-        }
-
-        public async Task Atualizar(Usuario entity)
-        {
-            await _usuarioRepository.Atualizar(entity);
-        }
-
         public async Task<Usuario> CadastrarAdministrador(CriaUsuarioRequest request, bool hasPermision, string token)
         {
             var emailUsuarioValueObject = new Email(request.Email);
@@ -39,7 +28,7 @@ namespace FiapCloundGames.API.Application.Services
             var usuario = new Usuario(nomeUsuarioValueObject, emailUsuarioValueObject, request.Senha, request.reSenha);
             if (!ValidaPermissoesAdministrador(hasPermision, token)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
             usuario.PromoverPerfil(usuario);
-            await Atualizar(usuario);
+            await _usuarioRepository.Atualizar(usuario);
             return usuario;
         }
 
@@ -86,7 +75,7 @@ namespace FiapCloundGames.API.Application.Services
             var emailVO = new Email(request.Email); 
 
             var usuario = new Usuario(nomeVO, emailVO, senhaCifrada, confirmacaoSenha);
-            await Adicionar(usuario);
+            await _usuarioRepository.Adicionar(usuario);
             return usuario;
         }
 
@@ -104,7 +93,7 @@ namespace FiapCloundGames.API.Application.Services
             var novaSenhaCriptografa = _passwordHasher.HashPassword(request.senhaUsuario);
             var confirmacaoSenha = novaSenhaCriptografa;
             usuario.Atualizar(request.nomeUsuario, request.emailUsuario, novaSenhaCriptografa, confirmacaoSenha);
-            await Atualizar(usuario);
+            await _usuarioRepository.Atualizar(usuario);
         }
 
         public async Task<Usuario> ObterPorId(Guid id)
