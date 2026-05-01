@@ -54,7 +54,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             //Act             
-            var result = Assert.Throws<DomainException>(() => _usuarioFixture.ObtemUsuarioComNomeNaoPreenchido());
+            var result = Assert.Throws<DomainException>(() => new Nome(string.Empty));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNomeObrigatorio, result.Message);
         }
@@ -160,11 +160,11 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var novoNome = new Nome( _faker.Internet.UserName());
+            var novoNome =  _faker.Internet.UserName();
             //Act
             usuario.AtualizarNomeUsuario(nomeNovo: novoNome);
             //Assert
-            Assert.Equal(novoNome, usuario.NomeUsuario);
+            Assert.Equal(novoNome, usuario.NomeUsuario.Valor);
         }
 
         [Fact(DisplayName = "Falha ao atualizar nome do usuário - nome novo não preenchido")]
