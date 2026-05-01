@@ -40,7 +40,7 @@ namespace FiapCloundGames.API.Domain.Entities
             DataAlteracao = DateTime.UtcNow;
         }
 
-        public void AtualizarPrecoPromocional(Promocao novaPromocao)
+        public void AtualizarPromocao(Promocao novaPromocao)
         {
             if (ValorPromocao == novaPromocao.ValorPromocao) return;
             ValorPromocao = novaPromocao.ValorPromocao;
