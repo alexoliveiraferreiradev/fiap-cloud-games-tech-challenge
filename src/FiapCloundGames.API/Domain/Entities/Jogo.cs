@@ -99,10 +99,10 @@ namespace FiapCloundGames.API.Domain.Entities
             _promocoes.Add(new Promocao(Id, valorPromocao, dataFim));
             DataAlteracao = DateTime.UtcNow;
         }
-        public void AlteraValorPromocao(Guid promocaoId,Preco novoPrecoPromocional)
+        public void AlteraValorPromocao(Guid promocaoId,Promocao novaPromocao)
         {
-            if (novoPrecoPromocional.Valor >= PrecoBase.Valor) throw new DomainException(MensagensDominio.PromocaoValorMaior);
-            foreach (var p in _promocoes.Where(x => x.Id == promocaoId)) p.AtualizarPrecoPromocional(novoPrecoPromocional);
+            if (novaPromocao.ValorPromocao.Valor >= PrecoBase.Valor) throw new DomainException(MensagensDominio.PromocaoValorMaior);
+            foreach (var p in _promocoes.Where(x => x.Id == promocaoId)) p.AtualizarPrecoPromocional(novaPromocao);
         }
         public Preco ObterPrecoAtual()
         {
