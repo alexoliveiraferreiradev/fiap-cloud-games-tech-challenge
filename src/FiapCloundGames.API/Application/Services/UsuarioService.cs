@@ -23,9 +23,11 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> CadastrarAdministrador(CriaUsuarioRequest request, bool hasPermision, string token)
         {
+            ValidaSenhas(request.Senha, request.reSenha);
             var emailUsuarioValueObject = new Email(request.Email);
             var nomeUsuarioValueObject = new Nome(request.Nome);
-            var usuario = new Usuario(nomeUsuarioValueObject, emailUsuarioValueObject, request.Senha, request.reSenha);
+            var senhaUsuarioValueObject = new Senha(request.Senha);
+            var usuario = new Usuario(nomeUsuarioValueObject, emailUsuarioValueObject, senhaUsuarioValueObject);
             if (!ValidaPermissoesAdministrador(hasPermision, token)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
             usuario.PromoverPerfil(usuario);
             await _usuarioRepository.Atualizar(usuario);
@@ -69,12 +71,12 @@ namespace FiapCloundGames.API.Application.Services
         {
             ValidaSenhas(request.Senha, request.reSenha);
             var senhaCifrada = _passwordHasher.HashPassword(request.Senha);
-            var confirmacaoSenha = senhaCifrada;
 
             var nomeVO = new Nome(request.Nome);
-            var emailVO = new Email(request.Email); 
+            var emailVO = new Email(request.Email);
+            var senhaCifradaVO = new Senha(senhaCifrada);
 
-            var usuario = new Usuario(nomeVO, emailVO, senhaCifrada, confirmacaoSenha);
+            var usuario = new Usuario(nomeVO, emailVO, senhaCifradaVO);
             await _usuarioRepository.Adicionar(usuario);
             return usuario;
         }
