@@ -8,6 +8,6 @@
             Id = Guid.NewGuid();
         }
 
-        public virtual void ValidarEntidade() { }
+        protected abstract void ValidarEntidade();
     }
 }
