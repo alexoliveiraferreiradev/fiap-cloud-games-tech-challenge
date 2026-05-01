@@ -157,8 +157,8 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             await _jogosService.AtualizarJogo(jogo.Id, request);
             //Assert
-            Assert.Equal(jogo.Nome, request.novoNome);
-            Assert.Equal(jogo.Descricao, request.novaDescricao);
+            Assert.Equal(jogo.Nome.Valor, request.novoNome);
+            Assert.Equal(jogo.Descricao.Valor, request.novaDescricao);
             Assert.Equal(jogo.Preco.Valor, request.novoPreco);
             _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Once);
         }
