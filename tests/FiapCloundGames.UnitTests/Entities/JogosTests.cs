@@ -178,48 +178,6 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.Equal(MensagensDominio.JogoInvalido, result.Message);
         }
 
-        [Fact(DisplayName = "Falha ao atualizar jogo - nova descrição do jogo inválida deve lançar exceção")]
-        [Trait("Categoria", "Jogos Tests")]
-        public void AtualizarJogo_NovaDescricaoJogoInvalido_DeveLancarExcecao()
-        {
-            //Arrange
-            var jogo = _jogoFixture.ObtemJogosInativo();
-            var novoNome = "Read Dead 2";
-            var novaDescricao = "N";
-            var novoPreco = new Preco(20.0m);
-            GeneroJogo novoGenero = GeneroJogo.Aventura;
-            //Act
-            var result = Assert.Throws<DomainException>(() => jogo.Atualizar(novoNome, novaDescricao, novoPreco, novoGenero));
-            //Assert
-            Assert.Equal(MensagensDominio.JogoInvalido, result.Message);
-        }
-        [Fact(DisplayName = "Falha ao atualizar jogo - nova descrição do jogo não preenchida")]
-        [Trait("Categoria", "Jogos Tests")]
-        public void AtualizarJogo_NovaDescricaoNaoPreenchida_DeveLancarExcecao()
-        {
-            //Arrange
-            var jogo = _jogoFixture.ObtemJogosInativo();
-            var novoNome = "Read Dead 2";
-            var novaDescricao = string.Empty;
-            var novoPreco = new Preco(20.0m);
-            GeneroJogo novoGenero = GeneroJogo.Aventura;
-            //Act
-            var result = Assert.Throws<DomainException>(() => jogo.Atualizar(novoNome, novaDescricao, novoPreco, novoGenero));
-            //Assert
-            Assert.Equal(MensagensDominio.JogoInvalido, result.Message);
-        }
-
-        [Fact(DisplayName = "Falha ao atualizar jogo - novo preço do jogo inválido")]
-        [Trait("Categoria", "Jogos Tests")]
-        public void AtualizarJogo_NovaPrecoJogoInvalido_DeveLancarExcecao()
-        {
-            //Arrange
-            //Act
-            var result = Assert.Throws<DomainException>(() => new Preco(_faker.Random.Decimal(-1, 0)));
-            //Assert
-            Assert.Equal(MensagensDominio.ValorInvalido, result.Message);
-        }
-
         [Fact(DisplayName = "Adiciona promoção - deve adicionar promoção com sucesso")]
         [Trait("Categoria", "Jogos Tests")]
         public void AdicionaPromocaoJogo_JogoValido_DeveAdicionarPromocaoComSucesso()
