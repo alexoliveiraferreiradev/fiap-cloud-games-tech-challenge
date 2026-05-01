@@ -1,5 +1,7 @@
-﻿using FiapCloundGames.API.Domain.Entities;
+﻿using FiapCloundGames.API.Domain.Common.Exceptions;
+using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
+using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.UnitTests.Fixtures;
 using System;
@@ -59,11 +61,11 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var pedido = new Pedido(usuario.Id);       
+            var pedido = new Pedido(usuario.Id);
             //Act 
-            pedido.FinalizarPedido();
+            var result = Assert.Throws<DomainException>(() => pedido.FinalizarPedido());
             //Assert
-            Assert.Equal(PedidoStatus.Finalizado, pedido.Status);
+            Assert.Equal(MensagensDominio.PedidoSemJogos, result.Message);
         }
     }
 
