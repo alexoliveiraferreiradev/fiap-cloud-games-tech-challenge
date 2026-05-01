@@ -95,7 +95,7 @@ namespace FiapCloundGames.API.Application.Services
                 Nome = j.Nome.Valor,
                 Descricao = j.Descricao.Valor,
                 PrecoOriginal = j.PrecoBase.Valor,
-                PrecoAtual = j.ObterPrecoAtual()
+                PrecoAtual = j.ObterPrecoAtual().Valor
             });
         }
 
