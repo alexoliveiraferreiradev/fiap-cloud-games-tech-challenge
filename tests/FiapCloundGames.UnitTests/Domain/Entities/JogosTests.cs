@@ -171,6 +171,44 @@ namespace FiapCloundGames.UnitTests.Domain.Entities
         }
 
 
+        [Fact(DisplayName = "Sucesso ao alterar valor promocao - valor promoção alterado")]
+        [Trait("Categoria", "Jogos Tests")]
+        public void AlteraValorPromocaoJogo_PromocaoValida_DeveAlterarComSucesso()
+        {
+            //Arrange
+            var jogo = _jogoFixture.ObtemJogosParaPromocao();
+            var precoBase = jogo.PrecoBase;
+            var valorPromocaoVO = new Preco(100.00m);
+            var novoValorPromocaoVO = new Preco(75.00m);
+            var periodoVO = new Periodo(DateTime.UtcNow.AddMonths(2));
+            //Act
+            jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
+            var promocao = jogo.Promocoes.First();
+            jogo.AlteraValorPromocao(promocao.Id, novoValorPromocaoVO);
+            //Assert
+            Assert.NotEqual(novoValorPromocaoVO, valorPromocaoVO);
+        }
+
+
+        [Fact(DisplayName = "Falha ao alterar valor promocao - novo valor promoção maior que o valor base")]
+        [Trait("Categoria", "Jogos Tests")]
+        public void AlteraValorPromocaoJogo_NovoValorMaiorQueBase_DeveLancarComExcecao()
+        {
+            //Arrange
+            var jogo = _jogoFixture.ObtemJogosParaPromocao();
+            var precoBase = jogo.PrecoBase;
+            var valorPromocaoVO = new Preco(100.00m);
+            var novoValorPromocaoVO = new Preco(175.00m);
+            var periodoVO = new Periodo(DateTime.UtcNow.AddMonths(2));
+            //Act
+            jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
+            var promocao = jogo.Promocoes.First();
+            var result = Assert.Throws<DomainException>(() => jogo.AlteraValorPromocao(promocao.Id, novoValorPromocaoVO));
+            //Assert
+            Assert.Equal(MensagensDominio.PromocaoValorMaior, result.Message);
+        }
+
+
         [Fact(DisplayName = "Desativar promoção - deve desativar uma promoção com sucesso")]
         [Trait("Categoria", "Jogos Tests")]
         public void DesativarPromocaoJogo_JogoValido_DeveDesativarPromocaoComSucesso()
