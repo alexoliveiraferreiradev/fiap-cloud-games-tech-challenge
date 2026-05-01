@@ -3,7 +3,7 @@ using FiapCloundGames.API.Domain.Resources;
 
 namespace FiapCloundGames.API.Domain.ValueObjects
 {
-    public class Nome : ValueObject
+    public class Nome : ValueObject<Nome>
     {
         public string Valor { get; }
         public Nome(string nomeUsuario)
@@ -12,9 +12,15 @@ namespace FiapCloundGames.API.Domain.ValueObjects
             AssertionConcern.AssertArgumentLength(nomeUsuario, 3, 20, MensagensDominio.UsuarioTamanhoNomeInvalido);
             Valor = nomeUsuario;
         }
-        protected override IEnumerable<object> GetEqualityComponents()
+
+        protected override bool EqualsCore(Nome other)
         {
-            yield return Valor;
+            return Valor == other.Valor;
+        }
+
+        protected override int GetHashCodeCore()
+        {
+            return Valor.GetHashCode();
         }
     }
 }
