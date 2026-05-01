@@ -6,6 +6,7 @@ using FiapCloundGames.API.Domain.Common.Interfaces;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
+using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.API.Infrastructure.Repository;
 using FiapCloundGames.UnitTests.Fixtures;
 using Moq;
@@ -177,9 +178,9 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(usuarioRequest, true, ""));
+            var result = Assert.Throws<DomainException>(() =>new EmailUsuario(emailInvalido));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioEmailInvalido, result.Message);
+            Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
         }
 
         /// <summary>
@@ -221,7 +222,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await service.CadastrarJogador(usuarioRequest);
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(usuarioRequest.Email, result.Email);
+            Assert.Equal(usuarioRequest.Email, result.EmailUsuario.Email);
             Assert.Equal(TipoUsuario.Jogador, result.Perfil);
 
             repoMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Once);
@@ -248,9 +249,9 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             hashMock.Setup(h => h.HashPassword(usuarioRequest.Senha)).Returns(usuarioRequest.Senha);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarJogador(usuarioRequest));
+            var result = Assert.Throws<DomainException>(() => new EmailUsuario(emailInvalido));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioEmailInvalido, result.Message);
+            Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
         }
 
         /// <summary>
@@ -472,7 +473,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             await service.AtualizarUsuario(usuario.Id, updataRequest);
             //Assert
             Assert.Equal(updataRequest.nomeUsuario, usuario.NomeUsuario);
-            Assert.Equal(updataRequest.emailUsuario, usuario.Email);
+            Assert.Equal(updataRequest.emailUsuario, usuario.EmailUsuario.Email);
             Assert.Equal(updataRequest.senhaUsuario, usuario.Senha);
 
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);
