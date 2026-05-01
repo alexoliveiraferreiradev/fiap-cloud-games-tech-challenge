@@ -52,6 +52,7 @@ namespace FiapCloundGames.UnitTests.Entities
             pedido.FinalizarPedido();
             //Assert
             Assert.Equal(PedidoStatus.Finalizado, pedido.Status);
+            Assert.NotEmpty(pedido.Jogos);
         }
 
 
