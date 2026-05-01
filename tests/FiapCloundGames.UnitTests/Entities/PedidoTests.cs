@@ -46,9 +46,9 @@ namespace FiapCloundGames.UnitTests.Entities
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             var pedido = new Pedido(usuario.Id);
-
+            var precoVO = new Preco(150.00m);
             //Act 
-            pedido.AdicionarItem(Guid.NewGuid(), new Preco(150.00m));
+            pedido.AdicionarItem(Guid.NewGuid(), precoVO);
             pedido.FinalizarPedido();
             //Assert
             Assert.Equal(PedidoStatus.Finalizado, pedido.Status);
