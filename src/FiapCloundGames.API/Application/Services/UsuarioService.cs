@@ -6,6 +6,7 @@ using FiapCloundGames.API.Domain.Common.Interfaces;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
+using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.API.Infrastructure.Repository;
 
 namespace FiapCloundGames.API.Application.Services
@@ -33,7 +34,8 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> CadastrarAdministrador(CriaUsuarioRequest request, bool hasPermision, string token)
         {
-            var usuario = new Usuario(request.Nome, request.Email, request.Senha, request.reSenha);
+            var emailUsuario = new EmailUsuario(request.Email);
+            var usuario = new Usuario(request.Nome, emailUsuario, request.Senha, request.reSenha);
             if (!ValidaPermissoesAdministrador(hasPermision, token)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
             usuario.PromoverPerfil(usuario);
             await Adicionar(usuario);
@@ -78,7 +80,8 @@ namespace FiapCloundGames.API.Application.Services
             ValidaSenhas(request.Senha, request.reSenha);
             var senhaCifrada = _passwordHasher.HashPassword(request.Senha);
             var confirmacaoSenha = senhaCifrada;
-            var usuario = new Usuario(request.Nome, request.Email, senhaCifrada, confirmacaoSenha);
+            var emailUsuario = new EmailUsuario(request.Email);
+            var usuario = new Usuario(request.Nome, emailUsuario, senhaCifrada, confirmacaoSenha);
             await Adicionar(usuario);
             return usuario;
         }
@@ -96,7 +99,8 @@ namespace FiapCloundGames.API.Application.Services
 
             var novaSenhaCriptografa = _passwordHasher.HashPassword(request.senhaUsuario);
             var confirmacaoSenha = novaSenhaCriptografa;
-            usuario.Atualizar(request.nomeUsuario, request.emailUsuario, novaSenhaCriptografa, confirmacaoSenha);
+            var emailUsuario = new EmailUsuario(request.emailUsuario);
+            usuario.Atualizar(request.nomeUsuario, emailUsuario, novaSenhaCriptografa, confirmacaoSenha);
             await Atualizar(usuario);
         }
 
