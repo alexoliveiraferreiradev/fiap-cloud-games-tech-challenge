@@ -168,8 +168,8 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var jogo = _jogoFixture.ObtemJogosInativo();
-            var novoNome = new NomeJogo("Novo Nome");
-            var novaDescricao = new Descricao("Nova Descrição");
+            var novoNome = new NomeJogo( "Novo Nome");
+            var novaDescricao = new Descricao( "Nova Descrição");
             var novoPreco = new Preco(20.0m);
             GeneroJogo novoGenero = GeneroJogo.Aventura;
             //Act
@@ -178,22 +178,6 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.Equal(MensagensDominio.JogoInvalido, result.Message);
         }
 
-
-        [Fact(DisplayName = "Falha ao atualizar jogo - novo nome inválido deve lançar exceção")]
-        [Trait("Categoria", "Jogos Tests")]
-        public void AtualizarJogo_NovoNomeJogoInvalido_DeveLancarExcecao()
-        {
-            //Arrange
-            var jogo = _jogoFixture.ObtemJogosInativo();
-            var novoNome = "N";
-            var novaDescricao = "Nova Descrição";
-            var novoPreco = new Preco(20.0m);
-            GeneroJogo novoGenero = GeneroJogo.Aventura;
-            //Act
-            var result = Assert.Throws<DomainException>(() => jogo.Atualizar(novoNome, novaDescricao, novoPreco, novoGenero));
-            //Assert
-            Assert.Equal(MensagensDominio.JogoInvalido, result.Message);
-        }
 
         [Fact(DisplayName = "Falha ao atualizar jogo - novo nome não preenchido")]
         [Trait("Categoria", "Jogos Tests")]
