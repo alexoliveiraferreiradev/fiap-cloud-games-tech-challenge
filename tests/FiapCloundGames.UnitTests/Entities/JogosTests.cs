@@ -27,8 +27,8 @@ namespace FiapCloundGames.UnitTests.Entities
         public void AdicaoJogos_JogoValido_DeveAdicionarJogoComSucesso()
         {
             //Arrange
-            var nomeJogo = new NomeJogo( "Jogo Teste");
-            var descricaoJogo = new Descricao( _faker.Random.String(100));
+            var nomeJogo = new NomeJogo("Jogo Teste");
+            var descricaoJogo = new Descricao(_faker.Random.String(100));
             var precoNoMomento = new Preco(_faker.Random.Decimal(1, 100));
             //Act 
             var jogo = new Jogos(nomeJogo, descricaoJogo, precoNoMomento, GeneroJogo.Acao);
@@ -41,7 +41,7 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.NotEqual(Guid.Empty, jogo.Id);
         }
 
-       
+
 
         [Fact(DisplayName = "Falha ao adicionar jogo - descrição do jogo não preenchido")]
         [Trait("Categoria", "Jogos Tests")]
@@ -54,7 +54,7 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.Equal(MensagensDominio.JogoDescricaoObrigatoria, result.Message);
         }
 
-       
+
 
         [Fact(DisplayName = "Falha ao adicionar jogo - descrição inválida")]
         [Trait("Categoria", "Jogos Tests")]
@@ -90,17 +90,7 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.Equal(MensagensDominio.JogoGeneroObrigatorio, result.Message);
         }
 
-        [Fact(DisplayName = "Falha ao adicionar jogo - descrição no limite máximo")]
-        [Trait("Categoria", "Jogos Tests")]
-        public void AdicaoJogos_DescricaoNoLimite_DevePassar()
-        {
-            //Act
-            var descricaoNoLimite = _faker.Random.String(100);
-            //Arrange
-            var jogo = new Jogos("Nome", descricaoNoLimite, new Preco(10.0m), GeneroJogo.Acao);
-            //Assert
-            Assert.Equal(100, jogo.Descricao.Length);
-        }
+
 
         [Fact(DisplayName = "Desativar jogo - jogo ativo deve desativar jogo com sucesso")]
         [Trait("Categoria", "Jogos Tests")]
@@ -158,8 +148,8 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var jogo = _jogoFixture.ObtemJogosComSucesso();
-            var novoNome = "Novo Nome";
-            var novaDescricao = "Nova Descrição";
+            var novoNome = new NomeJogo("Novo Nome");
+            var novaDescricao = new Descricao("Nova Descrição");
             var novoPreco = new Preco(20.0m);
             GeneroJogo novoGenero = GeneroJogo.Aventura;
             //Act
@@ -258,7 +248,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             //Act
-            var result = Assert.Throws<DomainException>(()=> new Preco(_faker.Random.Decimal(-1, 0))) ;
+            var result = Assert.Throws<DomainException>(() => new Preco(_faker.Random.Decimal(-1, 0)));
             //Assert
             Assert.Equal(MensagensDominio.ValorInvalido, result.Message);
         }
