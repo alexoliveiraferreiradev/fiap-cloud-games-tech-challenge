@@ -176,8 +176,9 @@ namespace FiapCloundGames.UnitTests.Entities
             //Arrange
             var jogo = _jogoFixture.ObtemJogosParaPromocao();
             var precoBase = jogo.PrecoBase;
+            var valorPromocaoVO = new Preco(100.00m);
             //Act
-            jogo.AdicionarPromocao(100.00m, DateTime.UtcNow.AddDays(10));
+            jogo.AdicionarPromocao(valorPromocaoVO, DateTime.UtcNow.AddDays(10));
             var promocao = jogo.Promocoes.FirstOrDefault(x => x.JogoId == jogo.Id);
             jogo.DesativarPromocao(promocao.Id);
             //Assert
