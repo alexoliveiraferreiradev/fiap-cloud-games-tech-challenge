@@ -68,6 +68,40 @@ namespace FiapCloundGames.UnitTests.Entities
             //Assert
             Assert.Equal(MensagensDominio.PedidoSemJogos, result.Message);
         }
+
+        [Fact(DisplayName = "Calcula pedido - deve calcular pedido com sucesso")]
+        [Trait("Categoria", "Pedido")]
+        public void CalculoTotalPedido_CalculoCerto_DeveCalcularComSucesso()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var pedido = new Pedido(usuario.Id);
+            var valorEsperado = 450.00m;
+            //Act 
+            pedido.AdicionarItem(Guid.NewGuid(), new Preco(150.00m));
+            pedido.AdicionarItem(Guid.NewGuid(), new Preco(100.00m));
+            pedido.AdicionarItem(Guid.NewGuid(), new Preco(100.00m));
+            pedido.AdicionarItem(Guid.NewGuid(), new Preco(100.00m));
+            pedido.FinalizarPedido();
+            //Assert
+            Assert.Equal(valorEsperado, pedido.ValorTotal);
+        }
+
+        [Fact(DisplayName = "Falha ao calcular pedido - valor não bate com calculo")]
+        [Trait("Categoria", "Pedido")]
+        public void CalculoTotalPedido_CalculoErrado()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var pedido = new Pedido(usuario.Id);
+            var valorEsperado = 150.00m;
+            //Act 
+            pedido.AdicionarItem(Guid.NewGuid(), new Preco(150.00m));
+            pedido.AdicionarItem(Guid.NewGuid(), new Preco(100.00m));
+            pedido.FinalizarPedido();
+            //Assert
+            Assert.NotEqual(valorEsperado, pedido.ValorTotal);
+        }
     }
 
 }
