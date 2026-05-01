@@ -1,25 +1,33 @@
 ﻿namespace FiapCloundGames.API.Domain.Common
 {
-    public abstract class ValueObject
+    public abstract class ValueObject<T> where T : ValueObject<T>
     {
-        protected abstract IEnumerable<object> GetEqualityComponents();
-
         public override bool Equals(object obj)
         {
-            if (obj == null || obj.GetType() != GetType()) return false;
-            var other = (ValueObject)obj;
-            return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+            var valueObject = obj as T;
+            if (ReferenceEquals(valueObject, null))
+                return false;
+            if (GetType() != obj.GetType())
+                return false;
+            return EqualsCore(valueObject);
         }
-
+        protected abstract bool EqualsCore(T other);
         public override int GetHashCode()
         {
-            return GetEqualityComponents()
-                .Select(x => x != null ? x.GetHashCode() : 0)
-                .Aggregate((x, y) => x ^ y);
+            return GetHashCodeCore();
         }
-
-        // Sobrecarga de operadores para facilitar: precoA == precoB
-        public static bool operator ==(ValueObject left, ValueObject right) => Equals(left, right);
-        public static bool operator !=(ValueObject left, ValueObject right) => !Equals(left, right);
+        protected abstract int GetHashCodeCore();
+        public static bool operator ==(ValueObject<T> a, ValueObject<T> b)
+        {
+            if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
+                return true;
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+                return false;
+            return a.Equals(b);
+        }
+        public static bool operator !=(ValueObject<T> a, ValueObject<T> b)
+        {
+            return !(a == b);
+        }
     }
 }
