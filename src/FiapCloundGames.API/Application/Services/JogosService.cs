@@ -79,13 +79,13 @@ namespace FiapCloundGames.API.Application.Services
         }
 
         public async Task AtualizaValorPromocao(Guid promocaoId,UpdatePromocaoRequest promocaoRequest)
-        {
+        {            
             var jogo = await _jogoRepository.ObterPorId(promocaoRequest.jogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
             var novoPrecoPromocao = new Preco(promocaoRequest.novoValorPromocao);
             var novaDataPromocao = new Periodo(promocaoRequest.novaDataFim);
             if (!jogo.Promocoes.Any()) throw new DomainException(MensagensDominio.JogoSemPromocoes);
-            var promocao = jogo.Promocoes.Where(x=>x.Id == promocaoId).First();
+            var promocao = await _jogoRepository.ObterPromocaoPorId(promocaoId);
             if (promocao == null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);                        
             jogo.AlteraValorPromocao(promocao.Id, new Preco(promocaoRequest.novoValorPromocao), promocaoRequest.novaDataFim);
             await _jogoRepository.Atualizar(jogo);
