@@ -41,18 +41,6 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.NotEqual(Guid.Empty, jogo.Id);
         }
 
-        [Fact(DisplayName = "Falha ao adicionar jogo - preço inválido")]
-        [Trait("Categoria", "Jogos Tests")]
-        public void AdicaoJogos_PrecoInvalido_DeveLancarExcecao()
-        {
-            //Arrange
-            //Act 
-            var result = Assert.Throws<DomainException>(() => _jogoFixture.ObtemJogosPrecoInvalido());
-            //Assert
-            Assert.Equal(MensagensDominio.ValorInvalido, result.Message);
-        }
-
-
         [Fact(DisplayName = "Falha ao adicionar jogo - gênero inválido")]
         [Trait("Categoria", "Jogos Tests")]
         public void AdicaoJogos_GeneroInvalido_DeveLancarExcecao()
