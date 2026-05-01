@@ -6,7 +6,7 @@ using FiapCloundGames.API.Domain.ValueObjects;
 
 namespace FiapCloundGames.API.Domain.Entities
 {
-    public class Jogos : AgreggateRoot
+    public class Jogos : AggregateRoot
     {
         public NomeJogo Nome { get; private set; }
         public Descricao Descricao { get; private set; }
