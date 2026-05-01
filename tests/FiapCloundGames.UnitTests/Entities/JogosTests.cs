@@ -148,8 +148,9 @@ namespace FiapCloundGames.UnitTests.Entities
             var jogo = _jogoFixture.ObtemJogosParaPromocao();
             var precoBase = jogo.PrecoBase;
             var valorPromocaoVO = new Preco(100.00m);
+            var periodoVO = new Periodo(DateTime.UtcNow.AddMonths(2));
             //Act
-            jogo.AdicionarPromocao(valorPromocaoVO, DateTime.UtcNow.AddMonths(2));
+            jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
             //Assert
             Assert.Contains(jogo.Promocoes, p => p.ValorPromocao.Valor == 100);
         }
@@ -162,8 +163,9 @@ namespace FiapCloundGames.UnitTests.Entities
             var jogo = _jogoFixture.ObtemJogosParaPromocao();
             var precoBase = jogo.PrecoBase;
             var valorPromocaoVO = new Preco(200.00m);
+            var periodoVO = new Periodo(DateTime.UtcNow.AddMonths(2));
             //Act
-            var result = Assert.Throws<DomainException>(() => jogo.AdicionarPromocao(valorPromocaoVO, DateTime.UtcNow.AddMonths(2)));
+            var result = Assert.Throws<DomainException>(() => jogo.AdicionarPromocao(valorPromocaoVO, periodoVO));
             //Assert
             Assert.Contains(MensagensDominio.PromocaoValorMaior, result.Message);
         }
