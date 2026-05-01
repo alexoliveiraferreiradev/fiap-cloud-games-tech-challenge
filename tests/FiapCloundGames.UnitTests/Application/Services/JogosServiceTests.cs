@@ -42,7 +42,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             Assert.NotNull(result);
             Assert.Equal(request.Nome, result.Nome.Valor);
 
-            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Once);
+            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Once);
         }
 
 
@@ -55,7 +55,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
             //Assert
-            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
         }
 
 
@@ -69,7 +69,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
             //Assert
-            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
         }
 
         [Fact(DisplayName = "Falha ao adicionar jogo - nome duplicado")]
@@ -85,7 +85,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
             //Assert
             Assert.Equal(MensagensDominio.JogoMesmoNomeExistente, result.Message);
-            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
         }
 
         [Fact(DisplayName = "Falha ao adicionar jogo - descrição não preenchida")]
@@ -99,7 +99,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
             //Assert
             Assert.Equal(MensagensDominio.JogoDescricaoObrigatoria, result.Message);
-            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
         }
 
 
@@ -113,7 +113,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
             //Assert
             Assert.Equal(MensagensDominio.JogoDescricaoTamanhoInvalido, result.Message);
-            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
         }
 
 
@@ -127,7 +127,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
             //Assert
             Assert.Equal(MensagensDominio.JogoGeneroObrigatorio, result.Message);
-            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
         }
 
 
@@ -141,7 +141,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = Assert.Throws<DomainException>(() => new Preco(-1));
             //Assert
             Assert.Equal(MensagensDominio.ValorInvalido, result.Message);
-            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
         }
 
 
@@ -160,7 +160,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             Assert.Equal(jogo.Nome.Valor, request.novoNome);
             Assert.Equal(jogo.Descricao.Valor, request.novaDescricao);
             Assert.Equal(jogo.PrecoBase.Valor, request.novoPreco);
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Once);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Once);
         }
 
         [Fact(DisplayName = "Falha ao atualizar jogo - jogo não encontrado")]
@@ -171,13 +171,13 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var jogoId = Guid.NewGuid();
             var request = new UpdateJogosRequest("Read Dead 2", "Jogo de tiro", 10.00m, GeneroJogo.Aventura);
 
-            _mockJogo.Setup(r => r.ObterPorId(jogoId)).ReturnsAsync((Jogos)null);
+            _mockJogo.Setup(r => r.ObterPorId(jogoId)).ReturnsAsync((Jogo)null);
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.AtualizarJogo(jogoId, request));
             //Assert
             Assert.Equal(MensagensDominio.JogoNaoEncontrado, result.Message);
 
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Never);
         }
 
 
@@ -194,7 +194,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Assert
             Assert.False(jogo.Ativo);
 
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Once);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Once);
         }
 
 
@@ -211,7 +211,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Assert
             Assert.Equal(MensagensDominio.JogoInvalido, result.Message);
 
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Never);
         }
 
 
@@ -222,12 +222,12 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Arrange
             var jogoId = Guid.NewGuid();
 
-            _mockJogo.Setup(r => r.ObterPorId(jogoId)).ReturnsAsync((Jogos)null);
+            _mockJogo.Setup(r => r.ObterPorId(jogoId)).ReturnsAsync((Jogo)null);
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.Desativar(jogoId));
             //Assert
             Assert.Equal(MensagensDominio.JogoNaoEncontrado, result.Message);
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Never);
         }
 
         [Fact(DisplayName = "Reativar jogo - deve reativar jogo com sucesso")]
@@ -243,7 +243,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Assert
             Assert.True(jogo.Ativo);
 
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Once);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Once);
         }
 
 
@@ -260,7 +260,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Assert
             Assert.Equal(MensagensDominio.JogoAtivo, result.Message);
 
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Never);
         }
 
 
@@ -277,7 +277,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             await _jogosService.AdicionarPromocao(criaPromocaoRequest);
             //Assert
             Assert.Contains(jogo.Promocoes, p => p.Ativo);
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Once);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Once);
         }
 
         [Fact(DisplayName = "Falha ao adicionar promocão - jogo não encontrado")]
@@ -288,12 +288,12 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var jogo = _jogosFixture.ObtemJogosParaPromocao();
             var criaPromocaoRequest = new CriaPromocaoRequest(jogo.Id, 90.00m, DateTime.UtcNow.AddDays(10));
 
-            _mockJogo.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync((Jogos)null);
+            _mockJogo.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync((Jogo)null);
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.AdicionarPromocao(criaPromocaoRequest));
             //Assert
             Assert.Equal(MensagensDominio.JogoNaoEncontrado, result.Message);
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.Never);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Never);
         }
 
         [Fact(DisplayName = "Desativar promocão - deve desativar com sucesso")]
@@ -313,7 +313,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Assert
             var promocaoDesativada = jogo.Promocoes.First(p => p.Id == idPromocao);
             Assert.False(promocaoDesativada.Ativo);
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.AtLeastOnce);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.AtLeastOnce);
         }
 
         [Fact(DisplayName = "Falha ao desativar promocão - promoção não encontrada")]
@@ -331,7 +331,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.DesativarPromocao(jogo.Id, idInexistente));
             //Assert
             Assert.Equal(MensagensDominio.PromocaoNaoEncontrada, result.Message);
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogos>()), Times.AtMostOnce);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.AtMostOnce);
         }
 
         [Fact(DisplayName = "Obtém catálogo de jogos com sucesso")]
@@ -339,7 +339,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task ObtemCatalagoJogos_DeveObterComSucesso()
         {
             //Arrange
-            var listaJogosAtivos = new List<Jogos>();
+            var listaJogosAtivos = new List<Jogo>();
             var jogoAtivo = _jogosFixture.ObtemJogosParaPromocao();
             listaJogosAtivos.Add(jogoAtivo);
 

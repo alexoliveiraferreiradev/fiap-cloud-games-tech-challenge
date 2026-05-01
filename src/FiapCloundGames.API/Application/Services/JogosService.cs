@@ -16,18 +16,18 @@ namespace FiapCloundGames.API.Application.Services
         {
             _jogoRepository = jogoRepository;
         }
-        public async Task<Jogos> CriaJogo(CriarJogoRequest request)
+        public async Task<Jogo> CriaJogo(CriarJogoRequest request)
         {
             await VerificaDuplicidadeNome(request.Nome);
             var preco = new Preco(request.preco);
             var nomeJogoVO = new NomeJogo(request.Nome);
             var descricaoVO = new Descricao(request.Descricao);
-            var jogos = new Jogos(nomeJogoVO, descricaoVO, preco, request.Genero);
+            var jogos = new Jogo(nomeJogoVO, descricaoVO, preco, request.Genero);
             await Adicionar(jogos);
             return jogos;
         }
 
-        private async Task Adicionar(Jogos jogos)
+        private async Task Adicionar(Jogo jogos)
         {
             await _jogoRepository.Adicionar(jogos);
         }

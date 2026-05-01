@@ -31,7 +31,7 @@ namespace FiapCloundGames.UnitTests.Entities
             var descricaoJogo = new Descricao(_faker.Random.String(100));
             var precoNoMomento = new Preco(_faker.Random.Decimal(1, 100));
             //Act 
-            var jogo = new Jogos(nomeJogo, descricaoJogo, precoNoMomento, GeneroJogo.Acao);
+            var jogo = new Jogo(nomeJogo, descricaoJogo, precoNoMomento, GeneroJogo.Acao);
             //Assert
             Assert.Equal(nomeJogo, jogo.Nome);
             Assert.Equal(descricaoJogo, jogo.Descricao);

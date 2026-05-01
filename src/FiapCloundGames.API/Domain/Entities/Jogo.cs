@@ -6,7 +6,7 @@ using FiapCloundGames.API.Domain.ValueObjects;
 
 namespace FiapCloundGames.API.Domain.Entities
 {
-    public class Jogos : AggregateRoot
+    public class Jogo : AggregateRoot
     {
         public NomeJogo Nome { get; private set; }
         public Descricao Descricao { get; private set; }
@@ -18,30 +18,31 @@ namespace FiapCloundGames.API.Domain.Entities
         private List<Promocao> _promocoes = new List<Promocao>();
         public IReadOnlyCollection<Promocao> Promocoes => _promocoes;
 
-        protected Jogos()
+        protected Jogo()
         {
         }
 
 
-        public Jogos(NomeJogo nomeJogo, Descricao descricaoJogo, Preco precoJogo, GeneroJogo generoJogo)
+        public Jogo(NomeJogo nomeJogo, Descricao descricaoJogo, Preco precoJogo, GeneroJogo generoJogo)
         {
             Nome = nomeJogo;
             Descricao = descricaoJogo;
             PrecoBase = precoJogo;
             Genero = generoJogo;
+            Ativo = true;
+            DataCadastro = DateTime.UtcNow;
+            DataAlteracao = DataCadastro;
             ValidarEntidade();
         }
 
         protected override void ValidarEntidade()
         {
-            AssertionConcern.AssertArgumentRange((int)Genero, 1, 15, MensagensDominio.JogoGeneroObrigatorio);
-            Ativo = true;
-            DataCadastro = DateTime.UtcNow;
+            AssertionConcern.AssertArgumentRange((int)Genero, 1, 15, MensagensDominio.JogoGeneroObrigatorio);           
         }
 
         public void Desativar()
         {
-            AssertionConcern.AssertStateFalse(Ativo, MensagensDominio.JogoInvalido);
+            if (!Ativo) throw new DomainException(MensagensDominio.JogoInvalido);
             Ativo = false;
             DataAlteracao = DateTime.UtcNow;
         }
@@ -55,7 +56,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public void Atualizar(NomeJogo novoNome, Descricao novaDescricao, Preco novoPreco, GeneroJogo novoGenero)
         {
-            AssertionConcern.AssertStateFalse(Ativo, MensagensDominio.JogoInvalido);
+            if (!Ativo) throw new DomainException(MensagensDominio.JogoInvalido);
 
             AtualizarNome(novoNome);
             AtualizarDescricao(novaDescricao);
@@ -96,6 +97,7 @@ namespace FiapCloundGames.API.Domain.Entities
             if (valorPromocao.Valor >= PrecoBase.Valor) throw new DomainException(MensagensDominio.PromocaoValorMaior);
             foreach (var p in _promocoes.Where(x => x.Ativo)) p.Desativar();
             _promocoes.Add(new Promocao(Id, valorPromocao, dataFim));
+            DataAlteracao = DateTime.UtcNow;
         }
         public decimal ObterPrecoAtual()
         {
@@ -106,8 +108,8 @@ namespace FiapCloundGames.API.Domain.Entities
         {
             var promocao = _promocoes.FirstOrDefault(x => x.Id == promocaoId);
             if (promocao == null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);
-            promocao.Desativar();   
-
+            promocao.Desativar();
+            DataAlteracao = DateTime.UtcNow;
         }
     }
 }

@@ -2,10 +2,10 @@
 
 namespace FiapCloundGames.API.Infrastructure.Repository
 {
-    public interface IJogosRepository : IRepository<Jogos>
+    public interface IJogosRepository : IRepository<Jogo>
     {
-        Task<Jogos> ObtemPorNome(string nomeJogo);
-        Task<IEnumerable<Jogos>> ObtemJogosAtivos();
+        Task<Jogo> ObtemPorNome(string nomeJogo);
+        Task<IEnumerable<Jogo>> ObtemJogosAtivos();
         
     }
 }
