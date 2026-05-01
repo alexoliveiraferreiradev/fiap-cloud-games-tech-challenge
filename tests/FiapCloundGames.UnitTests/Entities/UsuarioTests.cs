@@ -86,9 +86,9 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             //Act             
-            var result = Assert.Throws<DomainException>(() => _usuarioFixture.ObtemUsuarioComEmailNaoPreenchido());
+            var result = Assert.Throws<DomainException>(() => new EmailUsuario(string.Empty));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioEmailObrigatorio, result.Message);
+            Assert.Equal(MensagensDominio.EmailObrigatorio, result.Message);
         }
 
 
