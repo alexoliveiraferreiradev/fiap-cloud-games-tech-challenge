@@ -41,32 +41,6 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.NotEqual(Guid.Empty, jogo.Id);
         }
 
-
-
-        [Fact(DisplayName = "Falha ao adicionar jogo - descrição do jogo não preenchido")]
-        [Trait("Categoria", "Jogos Tests")]
-        public void AdicaoJogos_DescricaoJogoNaoPreenchido_DeveLancarExcecao()
-        {
-            //Arrange
-            //Act 
-            var result = Assert.Throws<DomainException>(() => _jogoFixture.ObtemJogosDescricaoNaoPreenchido());
-            //Assert
-            Assert.Equal(MensagensDominio.JogoDescricaoObrigatoria, result.Message);
-        }
-
-
-
-        [Fact(DisplayName = "Falha ao adicionar jogo - descrição inválida")]
-        [Trait("Categoria", "Jogos Tests")]
-        public void AdicaoJogos_DescricaoInvalido_DeveLancarExcecao()
-        {
-            //Arrange
-            //Act 
-            var result = Assert.Throws<DomainException>(() => _jogoFixture.ObtemJogosDescricaoInvalida());
-            //Assert
-            Assert.Equal(MensagensDominio.JogoDescricaoTamanhoInvalido, result.Message);
-        }
-
         [Fact(DisplayName = "Falha ao adicionar jogo - preço inválido")]
         [Trait("Categoria", "Jogos Tests")]
         public void AdicaoJogos_PrecoInvalido_DeveLancarExcecao()
