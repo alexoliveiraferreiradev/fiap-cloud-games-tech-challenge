@@ -8,8 +8,8 @@ namespace FiapCloundGames.API.Domain.Entities
 {
     public class Jogos : AgreggateRoot
     {
-        public string Nome { get; private set; }
-        public string Descricao { get; private set; }
+        public NomeJogo Nome { get; private set; }
+        public Descricao Descricao { get; private set; }
         public Preco Preco { get; private set; }
         public bool Ativo { get; private set; }
         public DateTime DataCadastro { get; private set; }
@@ -23,7 +23,7 @@ namespace FiapCloundGames.API.Domain.Entities
         }
 
 
-        public Jogos(string nomeJogo, string descricaoJogo, Preco precoJogo, GeneroJogo generoJogo)
+        public Jogos(NomeJogo nomeJogo, Descricao descricaoJogo, Preco precoJogo, GeneroJogo generoJogo)
         {
             Nome = nomeJogo;
             Descricao = descricaoJogo;
@@ -53,7 +53,7 @@ namespace FiapCloundGames.API.Domain.Entities
             DataAlteracao = DateTime.UtcNow;
         }
 
-        public void Atualizar(string novoNome, string novaDescricao, Preco novoPreco, GeneroJogo novoGenero)
+        public void Atualizar(NomeJogo novoNome, Descricao novaDescricao, Preco novoPreco, GeneroJogo novoGenero)
         {
             AssertionConcern.AssertStateFalse(Ativo, MensagensDominio.JogoInvalido);
 
@@ -77,19 +77,17 @@ namespace FiapCloundGames.API.Domain.Entities
             Preco = novoPreco;
         }
 
-        private void AtualizarDescricao(string novaDescricao)
+        private void AtualizarDescricao(Descricao novaDescricao)
         {
-            AssertionConcern.AssertArgumentEmpty(novaDescricao, MensagensDominio.JogoDescricaoObrigatoria);
+            AssertionConcern.AssertArgumentNotNull(novaDescricao, MensagensDominio.JogoDescricaoObrigatoria);
             if (Descricao == novaDescricao) return;
-            AssertionConcern.AssertArgumentLength(novaDescricao, 5, 100, MensagensDominio.JogoDescricaoTamanhoInvalido);
             Descricao = novaDescricao;
         }
 
-        private void AtualizarNome(string novoNome)
+        private void AtualizarNome(NomeJogo novoNome)
         {
-            AssertionConcern.AssertArgumentEmpty(novoNome, MensagensDominio.JogoNomeObrigatorio);
+            AssertionConcern.AssertArgumentNotNull(novoNome, MensagensDominio.JogoNomeObrigatorio);
             if (Nome == novoNome) return;
-            AssertionConcern.AssertArgumentLength(novoNome, 3, 20, MensagensDominio.JogoTamanhoNomeInvalido);
             Nome = novoNome;
         }
 
