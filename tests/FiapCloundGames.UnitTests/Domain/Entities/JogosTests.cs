@@ -201,12 +201,12 @@ namespace FiapCloundGames.UnitTests.Domain.Entities
             var precoBase = jogo.PrecoBase;
             var valorPromocaoVO = new Preco(100.00m);
             var novoValorPromocaoVO = new Preco(175.00m);
+            var novaData = DateTime.UtcNow.AddMonths(2);
             var periodoVO = new Periodo(DateTime.UtcNow.AddMonths(2));
-            var novaPromocao = new Promocao(jogo.Id, novoValorPromocaoVO, periodoVO);
             //Act
             jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
             var promocao = jogo.Promocoes.First();
-            var result = Assert.Throws<DomainException>(() => jogo.AlteraValorPromocao(promocao.Id, novaPromocao));
+            var result = Assert.Throws<DomainException>(() => jogo.AlteraValorPromocao(promocao.Id, novoValorPromocaoVO, novaData));
             //Assert
             Assert.Equal(MensagensDominio.PromocaoValorMaior, result.Message);
         }
