@@ -16,7 +16,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public Email EmailUsuario { get; private set; }
 
-        public string Senha { get; private set; }
+        public Senha Senha { get; private set; }
 
         public TipoUsuario Perfil { get; private set; }
         public bool Ativo { get; private set; }
@@ -26,7 +26,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         private string confirmacaoSenha = string.Empty;
 
-        public Usuario(Nome nomeUsuario, Email emailUsuario, string senhaUsuario,
+        public Usuario(Nome nomeUsuario, Email emailUsuario, Senha senhaUsuario,
             string confirmacaoSenhaUsuario)
         {
             NomeUsuario = nomeUsuario;
@@ -40,7 +40,7 @@ namespace FiapCloundGames.API.Domain.Entities
             ValidarEntidade();
         }
 
-        public Usuario(Email emailUsuario, string senhaUsuario)
+        public Usuario(Email emailUsuario, Senha senhaUsuario)
         {
             EmailUsuario = emailUsuario;
             Senha = senhaUsuario;
@@ -49,17 +49,18 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public void ValidarDadosEntradas()
         {
-            AssertionConcern.AssertArgumentEmpty(Senha, MensagensDominio.UsuarioSenhaObrigatoria);
-            AssertionConcern.AssertArgumentPasswordStrenght(Senha, MensagensDominio.UsuarioSenhaFraca);
+            AssertionConcern.AssertArgumentNotNull(EmailUsuario, MensagensDominio.UsuarioEmailObrigatorio);
+            AssertionConcern.AssertArgumentNotNull(Senha, MensagensDominio.UsuarioSenhaObrigatoria);
             Ativo = true;
         }
 
         protected override void ValidarEntidade()
         {
-            AssertionConcern.AssertArgumentEmpty(Senha, MensagensDominio.UsuarioSenhaObrigatoria);
-            AssertionConcern.AssertArgumentEmpty(confirmacaoSenha, MensagensDominio.UsuarioConfirmacaoSenhaObrigatoria);         
-            AssertionConcern.AssertArgumentPasswordStrenght(Senha, MensagensDominio.UsuarioSenhaFraca);
-            AssertionConcern.AssertArgumentEquals(Senha, confirmacaoSenha, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
+            AssertionConcern.AssertArgumentNotNull(NomeUsuario, MensagensDominio.UsuarioNomeObrigatorio);
+            AssertionConcern.AssertArgumentNotNull(EmailUsuario, MensagensDominio.UsuarioEmailObrigatorio);
+            AssertionConcern.AssertArgumentNotNull(Senha, MensagensDominio.UsuarioSenhaObrigatoria);
+            AssertionConcern.AssertArgumentEmpty(confirmacaoSenha, MensagensDominio.UsuarioConfirmacaoSenhaObrigatoria);    
+            AssertionConcern.AssertArgumentEquals(Senha.Hash, confirmacaoSenha, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
         }
 
         public void Desativar(MotivoExclusao motivo)
@@ -71,36 +72,32 @@ namespace FiapCloundGames.API.Domain.Entities
             MotivoDesativacao = motivo;
         }
 
-        public void Atualizar(string novoNome, string novoEmail, string novaSenha, string novaReSenha)
+        public void Atualizar(Nome novoNome, Email novoEmail, Senha novaSenha, string novaReSenha)
         {
             AssertionConcern.AssertStateFalse(Ativo, MensagensDominio.UsuarioInativo);
 
             AtualizarNomeUsuario(novoNome);
             AtualizarEmail(novoEmail);
-            AtualizarSenha(novaSenha, novaReSenha);
+            AlterarSenha(novaSenha, novaReSenha);
         }
 
-        public void AtualizarNomeUsuario(string nomeNovo)
+        public void AtualizarNomeUsuario(Nome nomeNovo)
         {
-            var novoNomeVO = new Nome(nomeNovo);            
-            if (NomeUsuario == novoNomeVO) return;            
-            NomeUsuario = novoNomeVO;
+            if (NomeUsuario == nomeNovo) return;            
+            NomeUsuario = nomeNovo;
         }
 
 
-        public void AtualizarEmail(string novoEmail)
-        {
-            var novoEmailVO = new Email(novoEmail);
-            if (EmailUsuario == novoEmailVO) return;            
-            EmailUsuario = novoEmailVO;
+        public void AtualizarEmail(Email novoEmail)
+        {         
+            if (EmailUsuario == novoEmail) return;            
+            EmailUsuario = novoEmail;
         }
 
-        public void AtualizarSenha(string novaSenha, string confirmacaoSenhaNova)
+        public void AlterarSenha(Senha novaSenha, string confirmacaoSenhaNova)
         {
-            AssertionConcern.AssertArgumentEmpty(novaSenha, MensagensDominio.UsuarioSenhaNovaObrigatoria);
             if (Senha == novaSenha) return;
-            AssertionConcern.AssertArgumentPasswordStrenght(novaSenha, MensagensDominio.UsuarioSenhaNovaFraca);
-            AssertionConcern.AssertArgumentEquals(novaSenha, confirmacaoSenhaNova, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
+            AssertionConcern.AssertArgumentEquals(novaSenha.Hash, confirmacaoSenhaNova, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
             Senha = novaSenha;
         }
 
