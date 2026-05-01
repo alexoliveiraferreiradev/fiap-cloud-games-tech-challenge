@@ -70,7 +70,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             //Act             
-            var result = Assert.Throws<DomainException>(() => _usuarioFixture.ObtemUsuarioComNomeInvalido(nomeInvalido));
+            var result = Assert.Throws<DomainException>(() => new Nome(nomeInvalido));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioTamanhoNomeInvalido, result.Message);
         }
