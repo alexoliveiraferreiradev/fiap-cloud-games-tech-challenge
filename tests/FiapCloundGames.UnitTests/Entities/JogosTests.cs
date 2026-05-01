@@ -156,13 +156,14 @@ namespace FiapCloundGames.UnitTests.Entities
 
         [Fact(DisplayName = "Falha ao adicionar promoção - valor promoção maior ou igual que o valor base")]
         [Trait("Categoria", "Jogos Tests")]
-        public void AdicionaPromocaoJogo_ValorInvalido_DeveLancarExcecao()
+        public void AdicionaPromocaoJogo_ValorMaiorQueBase_DeveLancarExcecao()
         {
             //Arrange
             var jogo = _jogoFixture.ObtemJogosParaPromocao();
             var precoBase = jogo.PrecoBase;
+            var valorPromocaoVO = new Preco(200.00m);
             //Act
-            var result = Assert.Throws<DomainException>(() => jogo.AdicionarPromocao(150, DateTime.UtcNow.AddMonths(2)));
+            var result = Assert.Throws<DomainException>(() => jogo.AdicionarPromocao(valorPromocaoVO, DateTime.UtcNow.AddMonths(2)));
             //Assert
             Assert.Contains(MensagensDominio.PromocaoValorMaior, result.Message);
         }
