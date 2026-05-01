@@ -6,8 +6,8 @@ namespace FiapCloundGames.API.Domain.ValueObjects
 {
     public class Periodo : ValueObject<Periodo>
     {
-        public DateTime DataInicio { get;  }
-        public DateTime DataFim { get; set; }
+        public DateTime DataInicio { get; }
+        public DateTime DataFim { get; }
 
         public Periodo(DateTime dataFinal)
         {
@@ -19,12 +19,12 @@ namespace FiapCloundGames.API.Domain.ValueObjects
 
         protected override bool EqualsCore(Periodo other)
         {
-            return DataInicio == other.DataInicio && DataFim == other.DataFim;  
+            return DataInicio == other.DataInicio && DataFim == other.DataFim;
         }
 
         protected override int GetHashCodeCore()
         {
-            return DataInicio.GetHashCode() ^ DataFim.GetHashCode();
+            return HashCode.Combine(DataInicio, DataFim);
         }
     }
 }
