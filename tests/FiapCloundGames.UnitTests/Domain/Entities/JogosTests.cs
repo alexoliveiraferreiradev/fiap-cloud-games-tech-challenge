@@ -186,7 +186,7 @@ namespace FiapCloundGames.UnitTests.Domain.Entities
             //Act
             jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
             var promocao = jogo.Promocoes.First();
-            jogo.AlteraValorPromocao(promocao.Id, novoValorPromocaoVO, novaData);
+            jogo.AlteraPromocao(promocao.Id, novoValorPromocaoVO, novaData);
             //Assert
             Assert.NotEqual(novoValorPromocaoVO, valorPromocaoVO);
         }
@@ -206,7 +206,7 @@ namespace FiapCloundGames.UnitTests.Domain.Entities
             //Act
             jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
             var promocao = jogo.Promocoes.First();
-            var result = Assert.Throws<DomainException>(() => jogo.AlteraValorPromocao(promocao.Id, novoValorPromocaoVO, novaData));
+            var result = Assert.Throws<DomainException>(() => jogo.AlteraPromocao(promocao.Id, novoValorPromocaoVO, novaData));
             //Assert
             Assert.Equal(MensagensDominio.PromocaoValorMaior, result.Message);
         }
