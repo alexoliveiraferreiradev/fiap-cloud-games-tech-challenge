@@ -6,7 +6,7 @@ using FiapCloundGames.API.Domain.ValueObjects;
 
 namespace FiapCloundGames.API.Domain.Entities
 {
-    public class Usuario : AgreggateRoot
+    public class Usuario : AggregateRoot
     {
         protected Usuario()
         {
@@ -70,11 +70,12 @@ namespace FiapCloundGames.API.Domain.Entities
 
         public void Atualizar(Nome novoNome, Email novoEmail, Senha novaSenha)
         {
-            AssertionConcern.AssertStateFalse(Ativo, MensagensDominio.UsuarioInativo);
+            if (!Ativo) throw new DomainException(MensagensDominio.UsuarioInativo);
 
             AtualizarNomeUsuario(novoNome);
             AtualizarEmail(novoEmail);
             AlterarSenha(novaSenha);
+            DataAlteracao = DateTime.UtcNow;
         }
 
         public void AtualizarNomeUsuario(Nome nomeNovo)
@@ -107,7 +108,8 @@ namespace FiapCloundGames.API.Domain.Entities
         public void PromoverPerfil(Usuario usuario)
         {
             AssertionConcern.AssertArgumentNotNull(usuario, MensagensDominio.UsuarioNaoEncontrado);
-            typeof(Usuario).GetProperty("Perfil").SetValue(usuario, TipoUsuario.Administrador);
+            Perfil = TipoUsuario.Administrador;
+            DataAlteracao = DateTime.UtcNow;
         }
 
         public void Reativar()

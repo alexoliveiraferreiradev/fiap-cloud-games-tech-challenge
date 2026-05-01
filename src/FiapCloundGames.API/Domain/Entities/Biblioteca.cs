@@ -3,7 +3,7 @@ using FiapCloundGames.API.Domain.Common.Exceptions;
 
 namespace FiapCloundGames.API.Domain.Entities
 {
-    public class Biblioteca : AgreggateRoot
+    public class Biblioteca : AggregateRoot
     {
         public Guid UsuarioId { get; private set; }
         public Guid JogoId { get; private set; }
