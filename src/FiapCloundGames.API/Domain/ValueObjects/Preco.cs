@@ -3,7 +3,7 @@ using FiapCloundGames.API.Domain.Resources;
 
 namespace FiapCloundGames.API.Domain.ValueObjects
 {
-    public class Preco : ValueObject
+    public class Preco : ValueObject<Preco>
     {
         public decimal Valor { get; }
 
@@ -12,9 +12,15 @@ namespace FiapCloundGames.API.Domain.ValueObjects
             AssertionConcern.AssertArgumentValueFormat(valor, MensagensDominio.ValorInvalido);
             Valor = valor;  
         }
-        protected override IEnumerable<object> GetEqualityComponents()
+
+        protected override bool EqualsCore(Preco other)
         {
-            yield return Valor;
+           return Valor == other.Valor; 
+        }
+
+        protected override int GetHashCodeCore()
+        {
+           return Valor.GetHashCode();
         }
     }
 }
