@@ -34,10 +34,6 @@ namespace FiapCloundGames.API.Domain.Entities
 
         protected override void ValidarEntidade()
         {
-            AssertionConcern.AssertArgumentEmpty(Nome, MensagensDominio.JogoNomeObrigatorio);
-            AssertionConcern.AssertArgumentEmpty(Descricao, MensagensDominio.JogoDescricaoObrigatoria);
-            AssertionConcern.AssertArgumentLength(Nome, 3, 20, MensagensDominio.JogoTamanhoNomeInvalido);
-            AssertionConcern.AssertArgumentLength(Descricao, 5, 100, MensagensDominio.JogoDescricaoTamanhoInvalido);
             AssertionConcern.AssertArgumentRange((int)Genero, 1, 15, MensagensDominio.JogoGeneroObrigatorio);
             Ativo = true;
             DataCadastro = DateTime.UtcNow;
