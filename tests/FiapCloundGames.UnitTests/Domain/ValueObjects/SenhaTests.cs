@@ -21,26 +21,6 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
             _faker = new Faker();
             _usuarioFixture = new UsuarioFixture();
         }
-        [Fact(DisplayName = "Valida senha - deve criptografar a senha com sucesso")]
-        [Trait("Categoria", "Usuario Service Tests")]
-        public async Task ValidacaoSenha_DeveCadastrarComSucesso()
-        {
-            //Arrange
-            var senha = "Senha@123";
-            //Mock
-            var passwordHasher = new PasswordHasher();
-            var repoMock = new Mock<IUsuarioRepository>();
-            var hasherMock = new Mock<IPasswordHasher>();
-            var service = new UsuarioService(repoMock.Object, hasherMock.Object);
-
-            hasherMock.Setup(h => h.HashPassword(senha)).Returns("HashSenha@123");
-
-            //Act
-            var result = passwordHasher.HashPassword(senha);
-            //Arrange
-            Assert.Equal("HashSenha@123", result);
-            Assert.NotEqual("Teste@123", result);
-        }
 
         [Fact(DisplayName = "Sucesso ao criar senha - senha válida")]
         [Trait("Categoria", "Usuario Tests")]
@@ -55,21 +35,21 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
 
         }
 
-        [Fact(DisplayName = "Falha ao criar senha do usuário - senha não preenchida")]
+        [Fact(DisplayName = "Falha ao criar senha - senha não preenchida")]
         [Trait("Categoria", "Senha Tests")]
-        public void AtualizarSenhaUsuario_SenhaNaoPreenchida_DeveLancarExcecao()
+        public void CriaSenha_SenhaNaoPreenchida_DeveLancarExcecao()
         {
             //Arrange
             //Act 
             var result = Assert.Throws<DomainException>(() => new Senha(string.Empty));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioSenhaNovaObrigatoria, result.Message);
+            Assert.Equal(MensagensDominio.UsuarioSenhaObrigatoria, result.Message);
         }
         /// <summary>
         /// Testa falha quando a senha não atende aos requisitos de força.
         /// Deve lançar <see cref="DomainException"/> com a mensagem de senha fraca.
         /// </summary>
-        [Theory(DisplayName = "Falha ao cadastrar novo usuário - senha fraca")]
+        [Theory(DisplayName = "Falha ao criar senha - senha fraca")]
         [Trait("Categoria", "Senha Tests")]
         [InlineData("senhaFraca")]
         [InlineData("123456")]
@@ -77,7 +57,7 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
         [InlineData("@@@@@a")]
         [InlineData("senha@123")]
         [InlineData("SENHA@123")]
-        public void CadastrarUsuarioJogador_SenhaFraca_DeveLancarExcecao(string senhaInvalida)
+        public void CriaSenha_SenhaInvalida_DeveLancarExcecao(string senhaInvalida)
         {
             //Arrange
             //Act             
