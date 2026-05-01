@@ -8,18 +8,21 @@ namespace FiapCloundGames.UnitTests.Fixtures
     public class JogosFixture
     {
         private readonly Faker _faker;
+        private NomeJogo _nomeJogo;
+        private Descricao _descricaoJogo;
+        private Preco _precoJogo;
         public JogosFixture()
         {
             _faker = new Faker();
+            _nomeJogo = new NomeJogo(_faker.Random.String(10));
+            _descricaoJogo = new Descricao(_faker.Random.String(50));
+            _precoJogo = new Preco(_faker.Random.Decimal(10, 100));
         }
 
         public Jogos ObtemJogosComSucesso()
         {
-            var nomeJogo = _faker.Random.String(10);
-            var descricaoJogo = _faker.Random.String(50);
-            var precoJogo = new Preco(_faker.Random.Decimal(10, 100));
             GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
-            return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
+            return new Jogos(_nomeJogo, _descricaoJogo, _precoJogo, generoJogo);
         }
         public Jogos ObtemJogosParaPromocao()
         {
