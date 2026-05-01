@@ -10,10 +10,12 @@ namespace FiapCloundGames.UnitTests.Fixtures
     {
         private readonly Faker _faker;
         private Email _emailUsuario;
+        private Nome _nomeUsuario;
         public UsuarioFixture()
         {
             _faker = new Faker();
             _emailUsuario = new Email(_faker.Internet.Email());
+            _nomeUsuario = new Nome(_faker.Internet.UserName());
         }
 
         public CriaUsuarioRequest UsuarioRequest()
@@ -38,20 +40,12 @@ namespace FiapCloundGames.UnitTests.Fixtures
 
         public Usuario ObtemJogadorComSucesso()
         {
-            var nomeUsuario = _faker.Internet.UserName();
             var senhaUsuario = "Teste@123";
             var confirmacaoSenhaUsuario = senhaUsuario;
-            return new Usuario(nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
+            return new Usuario(_nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
         }
 
 
-        public Usuario ObtemUsuarioComNomeNaoPreenchido()
-        {
-            var nomeUsuario = string.Empty;
-            var senhaUsuario = "Teste@123";
-            var confirmacaoSenhaUsuario = senhaUsuario;
-            return new Usuario(nomeUsuario, _emailUsuario, senhaUsuario, confirmacaoSenhaUsuario);
-        }
         public Usuario ObtemUsuarioComNomeInvalido(string nomeInvalido)
         {
             var nomeUsuario = nomeInvalido;
