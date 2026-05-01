@@ -67,7 +67,7 @@ namespace FiapCloundGames.API.Application.Services
             return true;
         }
 
-        public async Task<Usuario> CadastrarJogador(CriaUsuarioRequest request)
+        public async Task<Usuario> CadastrarUsuario(CriaUsuarioRequest request)
         {
             ValidaSenhas(request.Senha, request.reSenha);
             var senhaCifrada = _passwordHasher.HashPassword(request.Senha);
