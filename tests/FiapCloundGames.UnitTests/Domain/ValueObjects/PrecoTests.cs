@@ -14,7 +14,7 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
             _faker = new Faker();   
         }
         [Fact(DisplayName = "Criar preço - preço válido")]
-        [Trait("Categoria", "Pedidos Tests")]
+        [Trait("Categoria", "Preco Tests")]
         public void CriaPromocao_PrecoValido_DevePassar()
         {
             //Arrange
@@ -26,7 +26,7 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
         }
 
         [Fact(DisplayName = "Falha ao criar preço - preço inválido")]
-        [Trait("Categoria", "Pedidos Tests")]
+        [Trait("Categoria", "Preco Tests")]
         public void CriaPromocao_PrecoInvalido_DeveLancarExcecao()
         {
             //Arrange
