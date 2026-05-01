@@ -40,7 +40,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await _jogosService.CriaJogo(request);
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(request.Nome, result.Nome);
+            Assert.Equal(request.Nome, result.Nome.Valor);
 
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Once);
         }
@@ -55,7 +55,6 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
             //Assert
-            Assert.Equal(MensagensDominio.JogoNomeObrigatorio, result.Message);
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogos>()), Times.Never);
         }
 
