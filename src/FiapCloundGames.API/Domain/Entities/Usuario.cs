@@ -24,15 +24,13 @@ namespace FiapCloundGames.API.Domain.Entities
         public DateTime DataAlteracao { get; private set; }
         public MotivoExclusao? MotivoDesativacao { get; private set; }
 
-        private string confirmacaoSenha = string.Empty;
+        
 
-        public Usuario(Nome nomeUsuario, Email emailUsuario, Senha senhaUsuario,
-            string confirmacaoSenhaUsuario)
+        public Usuario(Nome nomeUsuario, Email emailUsuario, Senha senhaUsuario)
         {
             NomeUsuario = nomeUsuario;
             EmailUsuario = emailUsuario;
             Senha = senhaUsuario;
-            confirmacaoSenha = confirmacaoSenhaUsuario;
             Perfil = TipoUsuario.Jogador;
             Ativo = true;
             DataCadastro = DateTime.UtcNow;
@@ -59,8 +57,6 @@ namespace FiapCloundGames.API.Domain.Entities
             AssertionConcern.AssertArgumentNotNull(NomeUsuario, MensagensDominio.UsuarioNomeObrigatorio);
             AssertionConcern.AssertArgumentNotNull(EmailUsuario, MensagensDominio.UsuarioEmailObrigatorio);
             AssertionConcern.AssertArgumentNotNull(Senha, MensagensDominio.UsuarioSenhaObrigatoria);
-            AssertionConcern.AssertArgumentEmpty(confirmacaoSenha, MensagensDominio.UsuarioConfirmacaoSenhaObrigatoria);    
-            AssertionConcern.AssertArgumentEquals(Senha.Hash, confirmacaoSenha, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
         }
 
         public void Desativar(MotivoExclusao motivo)
