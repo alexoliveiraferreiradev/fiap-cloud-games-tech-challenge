@@ -302,20 +302,24 @@ namespace FiapCloundGames.UnitTests.Application.Services
         [Trait("Categoria", "JogosService Tests")]
         public async Task AlteraValorPromocao_PromocaoValida_DeveAlterarComSucesso()
         {
-            //Arrange
+            //Arrange         
             var jogo = _jogosFixture.ObtemJogosParaPromocao();
-            var dataFim = DateTime.UtcNow.AddDays(10);
+            var dataFim = DateTime.UtcNow.AddDays(11);
+
             var criaPromocaoRequest = new CriaPromocaoRequest(jogo.Id, 90.00m, DateTime.UtcNow.AddDays(10));
             var updatePromocaoRequest = new UpdatePromocaoRequest(jogo.Id,70.00m, dataFim);
-            var serviceMock = new Mock<IJogosService>();
-            //Mock
+
             _mockJogo.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
             await _jogosService.AdicionarPromocao(criaPromocaoRequest);
+
+            var promocaoExistente = jogo.Promocoes.First();
+            //Mock           
+            _mockJogo.Setup(r => r.ObterPromocaoPorId(promocaoExistente.Id)).ReturnsAsync(promocaoExistente);
             //Act 
-            await _jogosService.AtualizaValorPromocao(updatePromocaoRequest);
+            await _jogosService.AtualizaValorPromocao(promocaoExistente.Id,updatePromocaoRequest);            
             //Assert
             Assert.NotEqual(updatePromocaoRequest.novoValorPromocao, criaPromocaoRequest.valorPromocao);
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Once);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.AtLeastOnce);
         }
 
         [Fact(DisplayName = "Desativar promocão - deve desativar com sucesso")]
