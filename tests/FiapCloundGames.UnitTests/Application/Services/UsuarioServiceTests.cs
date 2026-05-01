@@ -133,6 +133,26 @@ namespace FiapCloundGames.UnitTests.Application.Services
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never); ;
         }
 
+        [Fact(DisplayName = "Cadastrar usuário  - deve criptografar a senha ao cadastrar")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task CadastrarUsuario_ValidacaoSenha_DeveCadastrarComSucesso()
+        {
+            //Arrange
+            var usuarioRequest = _usuarioFixture.UsuarioRequest();
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var hasherMock = new Mock<IPasswordHasher>();
+            var service = new UsuarioService(repoMock.Object, hasherMock.Object);
+
+            hasherMock.Setup(h => h.HashPassword(usuarioRequest.Senha)).Returns("HashSenha@123");
+
+            //Act
+            var result = await service.CadastrarUsuario(usuarioRequest);
+            //Arrange
+            Assert.Equal("HashSenha@123", result.Senha.Hash);
+            Assert.NotEqual("Teste@123", result.Senha.Hash);
+        }
+
         /// <summary>
         /// Verifica se o método CadastrarAdministrador lança uma exceção do tipo DomainException quando a senha do usuário para criar um administrador é inválida.
         /// </summary>
@@ -222,7 +242,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             hashMock.Setup(h => h.HashPassword(usuarioRequest.Senha)).Returns(usuarioRequest.Senha);
             //Act
-            var result = await service.CadastrarJogador(usuarioRequest);
+            var result = await service.CadastrarUsuario(usuarioRequest);
             //Assert
             Assert.NotNull(result);
             Assert.Equal(usuarioRequest.Email, result.EmailUsuario.Valor);
@@ -274,7 +294,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarJogador(usuarioRequest));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarUsuario(usuarioRequest));
             //Assert
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
@@ -297,7 +317,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarJogador(usuarioRequest));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarUsuario(usuarioRequest));
             //Assert
             repoMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Never);
         }
@@ -327,7 +347,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             hashMock.Setup(h => h.HashPassword(usuarioRequest.Senha)).Returns(usuarioRequest.Senha);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarJogador(usuarioRequest));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarUsuario(usuarioRequest));
             //Assert
             repoMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Never);
         }
@@ -349,7 +369,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarJogador(_usuarioFixture.UsuarioRequestSenhaDiferente()));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarUsuario(_usuarioFixture.UsuarioRequestSenhaDiferente()));
             //Assert
             repoMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Never);
         }
