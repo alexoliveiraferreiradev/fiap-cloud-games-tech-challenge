@@ -50,7 +50,7 @@
         #endregion
 
         #region Promoção
-        public static string PromocaoDataFimInvalida = "A data de término deve ser no futuro.";
+        public static string PeriodoObrigatorio = "O período da promoção é obrigatório.";
         public static string PromocaoNaoEncontrada = "Promoção não encontrada para este jogo.";
         public static string PromocaoValorMaior = "O valor promocional deve ser menor que o preço base.";
         public static string PromocaoInativa = "A promoção já está desativada.";
