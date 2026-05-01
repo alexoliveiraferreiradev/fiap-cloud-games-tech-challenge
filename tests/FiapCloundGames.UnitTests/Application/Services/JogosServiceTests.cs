@@ -2,6 +2,7 @@
 using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Dtos.Promocao;
 using FiapCloundGames.API.Application.Services;
+using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
@@ -303,14 +304,18 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange
             var jogo = _jogosFixture.ObtemJogosParaPromocao();
+            var dataFim = DateTime.UtcNow.AddDays(10);
             var criaPromocaoRequest = new CriaPromocaoRequest(jogo.Id, 90.00m, DateTime.UtcNow.AddDays(10));
-
+            var updatePromocaoRequest = new UpdatePromocaoRequest(jogo.Id,70.00m, dataFim);
+            var serviceMock = new Mock<IJogosService>();
+            //Mock
             _mockJogo.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
-            //Act 
             await _jogosService.AdicionarPromocao(criaPromocaoRequest);
+            //Act 
+            await _jogosService.AtualizaValorPromocao(updatePromocaoRequest);
             //Assert
-            
-            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Never);
+            Assert.NotEqual(updatePromocaoRequest.novoValorPromocao, criaPromocaoRequest.valorPromocao);
+            _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.Once);
         }
 
         [Fact(DisplayName = "Desativar promocão - deve desativar com sucesso")]
