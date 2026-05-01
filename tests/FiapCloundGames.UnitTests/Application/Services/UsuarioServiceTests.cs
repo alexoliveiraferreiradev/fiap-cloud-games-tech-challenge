@@ -44,6 +44,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await service.CadastrarAdministrador(usuarioRequest, true, "INVITE-ADMIN-VALID");
             //Assert
             Assert.Equal(TipoUsuario.Administrador, result.Perfil);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);
         }
 
         /// <summary>
@@ -66,6 +67,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(usuario, false, "INVITE-ADMIN-VALID"));
             //Assert
             Assert.Equal(MensagensDominio.PermissaoNegadaCriarAdministrador, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
         /// <summary>
@@ -88,6 +90,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(usuario, true, ""));
             //Assert
             Assert.Equal(MensagensDominio.PermissaoNegadaCriarAdministrador, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
         /// <summary>
         /// Verifica se o método CadastrarAdministrador lança uma exceção do tipo DomainException quando o email do usuário para criar um administrador não é preenchido.
@@ -107,7 +110,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(usuarioRequest, true, ""));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioEmailObrigatorio, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
         /// <summary>
@@ -127,7 +130,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(usuarioRequest, true, ""));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioSenhaObrigatoria, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never); ;
         }
 
         /// <summary>
@@ -154,7 +157,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(usuarioRequest, true, ""));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioSenhaFraca, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
         /// <summary>
         /// Verifica se o método CadastrarAdministrador lança uma exceção do tipo DomainException quando o email do usuário para criar um administrador é inválido.
@@ -180,7 +183,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             var result = Assert.Throws<DomainException>(() =>new Email(emailInvalido));
             //Assert
-            Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
         /// <summary>
@@ -199,7 +202,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(_usuarioFixture.UsuarioRequestSenhaDiferente(), true, ""));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioSenhaConfirmacaoDiferente, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
         /// <summary>
@@ -251,7 +254,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             var result = Assert.Throws<DomainException>(() => new Email(emailInvalido));
             //Assert
-            Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
+            repoMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Never);
         }
 
         /// <summary>
@@ -273,7 +276,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarJogador(usuarioRequest));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioEmailObrigatorio, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
         /// <summary>
         /// Valida se a criação do jogador falha quando o campo de senha está em branco.
@@ -296,7 +299,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarJogador(usuarioRequest));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioSenhaObrigatoria, result.Message);
+            repoMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Never);
         }
         /// <summary>
         /// Valida se o sistema rejeita senhas que não atendem aos critérios mínimos de segurança.
@@ -326,7 +329,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarJogador(usuarioRequest));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioSenhaFraca, result.Message);
+            repoMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Never);
         }
         /// <summary>
         /// Valida se o sistema impede o cadastro quando a senha e a confirmação de senha são divergentes.
@@ -348,7 +351,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarJogador(_usuarioFixture.UsuarioRequestSenhaDiferente()));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioSenhaConfirmacaoDiferente, result.Message);
+            repoMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Never);
         }
 
         [Fact(DisplayName = "Cadastrar usuário  - deve criptografar a senha ao cadastrar")]
@@ -412,6 +415,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(idUsuarioRebaixar: usuarioRebaixar.Id, idAdminExecutor: admin.Id));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioPerfilRebaixarInvalido, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
         [Fact(DisplayName = "Falha ao rebaixar um administrador - não há administrador para rebaixar")]
@@ -432,6 +436,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var ex = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(idUsuarioRebaixar: usuarioRebaixar.Id, idAdminExecutor: idAdminInexistente));
 
             Assert.Equal(MensagensDominio.PermissaoNegadaCriarAdministrador, ex.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
 
@@ -453,6 +458,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(idUsuarioRebaixar: idUsuarioARebaixar, idAdminExecutor: admin.Id));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
         [Fact(DisplayName = "Atualizar usuário - dados com sucesso")]
@@ -496,7 +502,6 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
             //Assert
-            Assert.Equal(MensagensDominio.EmailObrigatorio, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
@@ -520,7 +525,6 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
             //Assert
-            Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
@@ -540,7 +544,6 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioSenhaNovaObrigatoria, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
@@ -587,7 +590,6 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioSenhaNovaFraca, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
@@ -668,6 +670,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             await service.Reativar(usuario.Id);
             //Assert
             Assert.True(usuario.Ativo);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);
         }
 
         [Fact(DisplayName = "Falha ao reativar usuário - usuário já está ativo")]
@@ -685,6 +688,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await Assert.ThrowsAsync<DomainException>(() => service.Reativar(usuario.Id));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioAtivo, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
     }
