@@ -11,7 +11,8 @@ namespace FiapCloundGames.API.Domain.Entities
         public Guid UsuarioId { get; private set; }
         public PedidoStatus Status { get; private set; }
         public decimal ValorTotal { get; private set; }
-        public DateTime DataAdicao { get; private set; }
+        public DateTime DataCadastro { get; private set; }
+        public DateTime DataAlteracao { get; private set;  }
         private List<PedidoJogo> _jogos;
         public IReadOnlyCollection<PedidoJogo> Jogos => _jogos;
 
@@ -24,7 +25,8 @@ namespace FiapCloundGames.API.Domain.Entities
             UsuarioId = usuarioId;
             _jogos = new List<PedidoJogo>();
             Status = PedidoStatus.Rascunho;
-            DataAdicao = DateTime.UtcNow;
+            DataCadastro = DateTime.UtcNow;
+            DataAlteracao = DataCadastro;
             ValidarEntidade();
         }
 

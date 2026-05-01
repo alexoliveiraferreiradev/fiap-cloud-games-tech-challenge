@@ -36,7 +36,7 @@ namespace FiapCloundGames.UnitTests.Entities
             Assert.Equal(usuario.Id, pedido.UsuarioId);
             Assert.Equal(PedidoStatus.Rascunho, pedido.Status);
             Assert.Empty(pedido.Jogos);
-            Assert.NotEqual(default, pedido.DataAdicao);
+            Assert.NotEqual(default, pedido.DataCadastro);
         }
 
         [Fact(DisplayName = "Finalizar Pedido - Deve finalizar o pedido com sucesso")]
