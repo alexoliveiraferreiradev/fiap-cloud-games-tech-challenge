@@ -11,30 +11,27 @@ namespace FiapCloundGames.UnitTests.Fixtures
         private NomeJogo _nomeJogo;
         private Descricao _descricaoJogo;
         private Preco _precoJogo;
+        private GeneroJogo _generoJogo;
         public JogosFixture()
         {
             _faker = new Faker();
             _nomeJogo = new NomeJogo(_faker.Random.String(10));
             _descricaoJogo = new Descricao(_faker.Random.String(50));
             _precoJogo = new Preco(_faker.Random.Decimal(10, 100));
+            _generoJogo = _faker.PickRandom<GeneroJogo>();
         }
 
         public Jogos ObtemJogosComSucesso()
         {
-            GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
-            return new Jogos(_nomeJogo, _descricaoJogo, _precoJogo, generoJogo);
+            return new Jogos(_nomeJogo, _descricaoJogo, _precoJogo, _generoJogo);
         }
         public Jogos ObtemJogosParaPromocao()
         {
-            var nomeJogo = _faker.Random.String(10);
-            var descricaoJogo = _faker.Random.String(50);
-            var precoJogo = new Preco(150.00m);
-            GeneroJogo generoJogo = _faker.PickRandom<GeneroJogo>();
-            return new Jogos(nomeJogo, descricaoJogo, precoJogo, generoJogo);
+            return new Jogos(_nomeJogo, _descricaoJogo, new Preco(150.00m), _generoJogo);
         }
         public Jogos ObtemJogosInativo()
         {
-            var jogos = new Jogos(_faker.Random.String(10), _faker.Random.String(50), new Preco( _faker.Random.Decimal(10, 100)), _faker.PickRandom<GeneroJogo>());
+            var jogos = new Jogos(_nomeJogo, _descricaoJogo, _precoJogo, _generoJogo);
             typeof(Jogos).GetProperty("Ativo").SetValue(jogos, false);
             return jogos;
         }
