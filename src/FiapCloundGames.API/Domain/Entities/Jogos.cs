@@ -10,7 +10,7 @@ namespace FiapCloundGames.API.Domain.Entities
     {
         public NomeJogo Nome { get; private set; }
         public Descricao Descricao { get; private set; }
-        public Preco Preco { get; private set; }
+        public Preco PrecoBase { get; private set; }
         public bool Ativo { get; private set; }
         public DateTime DataCadastro { get; private set; }
         public DateTime DataAlteracao { get; private set; }
@@ -27,7 +27,7 @@ namespace FiapCloundGames.API.Domain.Entities
         {
             Nome = nomeJogo;
             Descricao = descricaoJogo;
-            Preco = precoJogo;
+            PrecoBase = precoJogo;
             Genero = generoJogo;
             ValidarEntidade();
         }
@@ -73,8 +73,8 @@ namespace FiapCloundGames.API.Domain.Entities
 
         private void AtualizarPreco(Preco novoPreco)
         {
-            if (Preco == novoPreco) return;
-            Preco = novoPreco;
+            if (PrecoBase == novoPreco) return;
+            PrecoBase = novoPreco;
         }
 
         private void AtualizarDescricao(Descricao novaDescricao)
@@ -91,16 +91,16 @@ namespace FiapCloundGames.API.Domain.Entities
             Nome = novoNome;
         }
 
-        public void AdicionarPromocao(decimal valorPromocao, DateTime dataFim)
+        public void AdicionarPromocao(Preco valorPromocao, DateTime dataFim)
         {
-            if (valorPromocao >= Preco.Valor) throw new DomainException(MensagensDominio.PromocaoValorMaior);
+            if (valorPromocao.Valor >= PrecoBase.Valor) throw new DomainException(MensagensDominio.PromocaoValorMaior);
             foreach (var p in _promocoes.Where(x => x.Ativo)) p.Desativar();
             _promocoes.Add(new Promocao(Id, valorPromocao, dataFim));
         }
         public decimal ObterPrecoAtual()
         {
             var promoAtiva = _promocoes.FirstOrDefault(p => p.EstaValida());
-            return promoAtiva != null ? promoAtiva.Valor : Preco.Valor;
+            return promoAtiva != null ? promoAtiva.Valor : PrecoBase.Valor;
         }
         public void DesativarPromocao(Guid promocaoId)
         {

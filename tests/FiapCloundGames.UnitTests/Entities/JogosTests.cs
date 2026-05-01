@@ -35,7 +35,7 @@ namespace FiapCloundGames.UnitTests.Entities
             //Assert
             Assert.Equal(nomeJogo, jogo.Nome);
             Assert.Equal(descricaoJogo, jogo.Descricao);
-            Assert.Equal(precoNoMomento, jogo.Preco);
+            Assert.Equal(precoNoMomento, jogo.PrecoBase);
             Assert.True(jogo.Ativo);
             Assert.NotEqual(default, jogo.DataCadastro);
             Assert.NotEqual(Guid.Empty, jogo.Id);
@@ -119,7 +119,7 @@ namespace FiapCloundGames.UnitTests.Entities
             //Assert
             Assert.Equal(novoNome, jogo.Nome);
             Assert.Equal(novaDescricao, jogo.Descricao);
-            Assert.Equal(novoPreco, jogo.Preco);
+            Assert.Equal(novoPreco, jogo.PrecoBase);
             Assert.Equal(novoGenero, jogo.Genero);
         }
 
@@ -146,7 +146,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var jogo = _jogoFixture.ObtemJogosParaPromocao();
-            var precoBase = jogo.Preco;
+            var precoBase = jogo.PrecoBase;
             //Act
             jogo.AdicionarPromocao(100, DateTime.UtcNow.AddMonths(2));
             //Assert
@@ -159,7 +159,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var jogo = _jogoFixture.ObtemJogosParaPromocao();
-            var precoBase = jogo.Preco;
+            var precoBase = jogo.PrecoBase;
             //Act
             var result = Assert.Throws<DomainException>(() => jogo.AdicionarPromocao(150, DateTime.UtcNow.AddMonths(2)));
             //Assert
@@ -173,7 +173,7 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var jogo = _jogoFixture.ObtemJogosParaPromocao();
-            var precoBase = jogo.Preco;
+            var precoBase = jogo.PrecoBase;
             //Act
             jogo.AdicionarPromocao(100.00m, DateTime.UtcNow.AddDays(10));
             var promocao = jogo.Promocoes.FirstOrDefault(x => x.JogoId == jogo.Id);
