@@ -32,7 +32,7 @@ namespace FiapCloundGames.API.Domain.Entities
             ValidarEntidade();
         }
 
-        public override void ValidarEntidade()
+        protected override void ValidarEntidade()
         {
             AssertionConcern.AssertArgumentEmpty(Nome, MensagensDominio.JogoNomeObrigatorio);
             AssertionConcern.AssertArgumentEmpty(Descricao, MensagensDominio.JogoDescricaoObrigatoria);

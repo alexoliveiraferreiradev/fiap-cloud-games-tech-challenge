@@ -28,7 +28,7 @@ namespace FiapCloundGames.API.Domain.Entities
             ValidarEntidade();
         }
 
-        public override void ValidarEntidade()
+        protected override void ValidarEntidade()
         {
             if (UsuarioId == Guid.Empty) throw new DomainException(MensagensDominio.PedidoSemUsuario);
         }

@@ -54,7 +54,7 @@ namespace FiapCloundGames.API.Domain.Entities
             Ativo = true;
         }
 
-        public override void ValidarEntidade()
+        protected override void ValidarEntidade()
         {
             AssertionConcern.AssertArgumentEmpty(NomeUsuario, MensagensDominio.UsuarioNomeObrigatorio);
             AssertionConcern.AssertArgumentEmpty(Senha, MensagensDominio.UsuarioSenhaObrigatoria);
