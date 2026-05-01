@@ -627,7 +627,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var hasherMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object,hasherMock.Object);    
             hasherMock.Setup(h => h.HashPassword(loginRequest.senhaUsuario)).Returns(loginRequest.senhaUsuario);
-            hasherMock.Setup(h => h.VerifyPassword(loginRequest.senhaUsuario, usuario.Senha)).Returns(true);
+            hasherMock.Setup(h => h.VerifyPassword(loginRequest.senhaUsuario, usuario.Senha.Hash)).Returns(true);
             repoMock.Setup( r => r.ObterPorEmail(loginRequest.emailUsuario)).ReturnsAsync(usuario);
             //Act
             var result = await service.Autenticar(loginRequest);
