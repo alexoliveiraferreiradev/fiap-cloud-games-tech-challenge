@@ -496,7 +496,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioEmailNovoObrigatorio, result.Message);
+            Assert.Equal(MensagensDominio.EmailObrigatorio, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
@@ -520,7 +520,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(() => service.AtualizarUsuario(usuario.Id, updataRequest));
             //Assert
-            Assert.Equal(MensagensDominio.UsuarioEmailNovoInvalido, result.Message);
+            Assert.Equal(MensagensDominio.EmailInvalido, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
