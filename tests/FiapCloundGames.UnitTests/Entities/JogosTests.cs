@@ -168,8 +168,8 @@ namespace FiapCloundGames.UnitTests.Entities
         {
             //Arrange
             var jogo = _jogoFixture.ObtemJogosInativo();
-            var novoNome = "Novo Nome";
-            var novaDescricao = "Nova Descrição";
+            var novoNome = new NomeJogo("Novo Nome");
+            var novaDescricao = new Descricao("Nova Descrição");
             var novoPreco = new Preco(20.0m);
             GeneroJogo novoGenero = GeneroJogo.Aventura;
             //Act
