@@ -1,7 +1,11 @@
 ﻿using Bogus;
+using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Domain.Common.Exceptions;
+using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
+using FiapCloundGames.UnitTests.Fixtures;
+using Moq;
 
 namespace FiapCloundGames.UnitTests.Domain.ValueObjects
 {
