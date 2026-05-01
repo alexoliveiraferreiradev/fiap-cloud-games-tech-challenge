@@ -6,7 +6,6 @@ namespace FiapCloundGames.API.Infrastructure.Repository
     {
         Task Adicionar(T entity);   
         Task Atualizar(T entity);   
-        Task Remover(T entity);
         Task<T> ObterPorId(Guid id);   
         Task<IEnumerable<T>> ObterTodos();  
     }
