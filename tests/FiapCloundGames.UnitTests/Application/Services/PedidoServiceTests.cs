@@ -1,7 +1,10 @@
-﻿using FiapCloundGames.API.Domain.Entities;
+﻿using FiapCloundGames.API.Application.Services;
+using FiapCloundGames.API.Domain.Entities;
+using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Infrastructure.Repository;
 using FiapCloundGames.UnitTests.Fixtures;
 using Moq;
+using System.Net.NetworkInformation;
 
 namespace FiapCloundGames.UnitTests.Application.Services
 {
@@ -14,7 +17,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             _jogosFixture = new JogosFixture();
             _usuarioFixture = new UsuarioFixture();
         }
-        [Fact(DisplayName ="Sucesso ao criar pedido - pedido criado com sucesso")]
+        [Fact(DisplayName ="Sucesso ao realizar pedido - pedido criado com sucesso")]
         [Trait("Categoria","Pedido Service Tests")]
         public async Task RealizaPedido_PedidoValido_DeveCriarComSucesso()
         {
@@ -24,14 +27,17 @@ namespace FiapCloundGames.UnitTests.Application.Services
             List<Guid> lista = new List<Guid>();
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
+            var jogoMock = new Mock<IJogosRepository>();
             var pedidoMock = new Mock<IPedidoRepository>();
             usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
-            var pedidoService = new PedidoService(usuarioMock.Object, pedidoMock.Object);
+            jogoMock.Setup(r => r.ObterPorId(jogoPedido.Id)).ReturnsAsync(jogoPedido);
+            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object);
             //Act
             lista.Add(jogoPedido.Id);
-            await pedidoService.RealizarPedido(usuario.Id, lista);
+            var result = await pedidoService.RealizarPedido(usuario.Id, lista);
             //Assert
-            pedidoMock.Verify(p => p.Adicionar(It.IsAny<Pedido>), Times.Once);
+            Assert.Equal(PedidoStatus.Finalizado, result.Status);
+            pedidoMock.Verify(p => p.Adicionar(It.IsAny<Pedido>()), Times.Once);
         }
     }
 }
