@@ -10,9 +10,6 @@ namespace FiapCloundGames.API.Domain.Entities
     {
         public Guid UsuarioId { get; private set; }
         public Guid JogoId { get; private set; }
-        public NomeJogo Nome { get; private set; }
-        public Descricao Descricao { get; private set; }
-        public GeneroJogo Genero { get; private set; }
         public DateTime DataCadastro { get; private set; }
         public DateTime DataAlteracao { get; private set; }
         public bool Ativo { get; private set; }
@@ -22,6 +19,7 @@ namespace FiapCloundGames.API.Domain.Entities
             UsuarioId = usuarioId;
             JogoId = jogoId;
             DataCadastro = DateTime.UtcNow;
+            DataAlteracao = DataCadastro;
             Ativo = true;
             ValidarEntidade();
         }
@@ -31,31 +29,6 @@ namespace FiapCloundGames.API.Domain.Entities
             AssertionConcern.AssertArgumentNotEquals(UsuarioId,Guid.Empty, MensagensDominio.UsuarioNaoEncontrado);
             AssertionConcern.AssertArgumentNotEquals(JogoId,Guid.Empty, MensagensDominio.JogoNaoEncontrado);
         }
-
-        public void AdicionaJogo(NomeJogo nomeJogo, Descricao descricaoJogo, GeneroJogo generoJogo)
-        {
-            if (!Ativo) throw new DomainException(MensagensDominio.BibliotecaInativa);
-            AssertionConcern.AssertArgumentNotNull(nomeJogo, MensagensDominio.JogoNomeObrigatorio);
-            AssertionConcern.AssertArgumentNotNull(descricaoJogo, MensagensDominio.JogoDescricaoObrigatoria);
-            AssertionConcern.AssertArgumentNotNull(generoJogo, MensagensDominio.JogoGeneroObrigatorio);
-
-            Nome = nomeJogo;
-            Descricao = descricaoJogo;
-            Genero = generoJogo;
-        }
-        public void AtualizarDadosJogo(NomeJogo nomeJogo, Descricao descricaoJogo, GeneroJogo generoJogo)
-        {
-            if (!Ativo) throw new DomainException(MensagensDominio.BibliotecaInativa);
-            AssertionConcern.AssertArgumentNotNull(nomeJogo, MensagensDominio.JogoNomeObrigatorio);
-            AssertionConcern.AssertArgumentNotNull(descricaoJogo, MensagensDominio.JogoDescricaoObrigatoria);
-            AssertionConcern.AssertArgumentNotNull(generoJogo, MensagensDominio.JogoGeneroObrigatorio);
-
-            if (Nome != nomeJogo) Nome = nomeJogo;
-
-            if (Descricao != descricaoJogo) Descricao = descricaoJogo;
-
-            if (Genero != generoJogo) Genero = generoJogo;
-
-        }
+       
     }
 }
