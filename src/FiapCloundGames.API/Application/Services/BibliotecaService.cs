@@ -17,30 +17,28 @@ namespace FiapCloundGames.API.Application.Services
         public BibliotecaService(IBibliotecaRepository bibliotecaRepository, IUsuarioRepository usuarioRepository,
             IJogosRepository jogosRepository)
         {
-            _bibliotecaRepository = bibliotecaRepository;   
-            _usuarioRepository = usuarioRepository; 
-            _jogoRepository = jogosRepository;  
+            _bibliotecaRepository = bibliotecaRepository;
+            _usuarioRepository = usuarioRepository;
+            _jogoRepository = jogosRepository;
         }
-        public async Task AdicionaJogo(CriaBibliotecaRequest request)
+        public async Task LiberarJogosAposPedido(Guid usuarioId, List<Guid> jogosIds)
         {
-            var usuario = await _usuarioRepository.ObterPorId(request.usuarioId);
+            var usuario = await _usuarioRepository.ObterPorId(usuarioId);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
             if (!usuario.Ativo) throw new DomainException(MensagensDominio.UsuarioInativo);
 
-            var jogo = await _jogoRepository.ObterPorId(request.jogoId);
-            if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            if (!jogo.Ativo) throw new DomainException(MensagensDominio.JogoInvalido);
+            foreach (var jogoId in jogosIds)
+            {
+                var jogo = await _jogoRepository.ObterPorId(jogoId);
+                if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+                if (!jogo.Ativo) throw new DomainException(MensagensDominio.JogoInvalido);
 
-            var possuiJogo = await _bibliotecaRepository.VerificaSeUsuarioPossuiJogo(request.usuarioId, request.jogoId);
-            if (possuiJogo) throw new DomainException(MensagensDominio.BibliotecaJogoRepetido);
+                var possuiJogo = await _bibliotecaRepository.VerificaSeUsuarioPossuiJogo(usuario.Id, jogo.Id);
+                if (possuiJogo) throw new DomainException(MensagensDominio.BibliotecaJogoRepetido);
 
-            var bibliotecaItem = new Biblioteca(request.usuarioId, request.jogoId);
-            await _bibliotecaRepository.Adicionar(bibliotecaItem);
-        }
-
-        public Task AtualizarDados(UpdateBibliotecaRequest updateBibliotecaRequest)
-        {
-            throw new NotImplementedException();
+                var bibliotecaItem = new Biblioteca(usuario.Id, jogo.Id);
+                await _bibliotecaRepository.Adicionar(bibliotecaItem);
+            }
         }
     }
 }
