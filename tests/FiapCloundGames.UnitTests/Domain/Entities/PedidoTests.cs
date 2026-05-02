@@ -84,7 +84,7 @@ namespace FiapCloundGames.UnitTests.Domain.Entities
             pedido.AdicionarItem(Guid.NewGuid(), new Preco(100.00m));
             pedido.FinalizarPedido();
             //Assert
-            Assert.Equal(valorEsperado, pedido.ValorTotal);
+            Assert.Equal(valorEsperado, pedido.ValorTotal.Valor);
         }
 
         [Fact(DisplayName = "Falha ao calcular pedido - valor não bate com calculo")]
@@ -100,7 +100,7 @@ namespace FiapCloundGames.UnitTests.Domain.Entities
             pedido.AdicionarItem(Guid.NewGuid(), new Preco(100.00m));
             pedido.FinalizarPedido();
             //Assert
-            Assert.NotEqual(valorEsperado, pedido.ValorTotal);
+            Assert.NotEqual(valorEsperado, pedido.ValorTotal.Valor);
         }
     }
 

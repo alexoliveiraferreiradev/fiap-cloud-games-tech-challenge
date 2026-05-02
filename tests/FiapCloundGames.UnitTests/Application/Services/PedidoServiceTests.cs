@@ -170,7 +170,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Assert
             Assert.Equal(PedidoStatus.Finalizado, result.Status);
             Assert.NotEqual(valorPromocao, jogo.PrecoBase);
-            Assert.Equal(valorPromocao.Valor, result.ValorTotal);
+            Assert.Equal(valorPromocao, result.ValorTotal);
             pedidoMock.Verify(p => p.Adicionar(It.IsAny<Pedido>()), Times.Once);
         }
     }
