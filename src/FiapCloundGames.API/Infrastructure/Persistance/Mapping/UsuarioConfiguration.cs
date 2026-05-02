@@ -19,12 +19,12 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
             builder.HasKey(p => p.Id);
             builder.OwnsOne(u => u.NomeUsuario, n =>
             {
-                n.Property(p => p.Valor).HasColumnName("Nome").IsRequired().HasMaxLength(20);
+                n.Property(p => p.Valor).HasColumnName("Nome").IsRequired().HasMaxLength(50);
             });
 
             builder.OwnsOne(u => u.EmailUsuario, e =>
             {
-                e.Property(p => p.Valor).HasColumnName("Email").IsRequired().HasMaxLength(40);
+                e.Property(p => p.Valor).HasColumnName("Email").IsRequired().HasMaxLength(100);
             });
 
             builder.OwnsOne(u => u.Senha, s =>
