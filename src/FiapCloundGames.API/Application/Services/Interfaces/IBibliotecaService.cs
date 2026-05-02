@@ -7,6 +7,6 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
     public interface IBibliotecaService
     {
         Task AdicionaJogo(CriaBibliotecaRequest criaBibliotecaRequest);
-        Task AtualizarDados(NomeJogo nomeJogo, Descricao descricao, GeneroJogo generoJogo);
+        Task AtualizarDados(UpdateBibliotecaRequest updateBibliotecaRequest);
     }
 }
