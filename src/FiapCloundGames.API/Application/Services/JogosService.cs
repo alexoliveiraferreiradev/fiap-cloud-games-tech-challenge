@@ -19,7 +19,7 @@ namespace FiapCloundGames.API.Application.Services
         public async Task<Jogo> CriaJogo(CriarJogoRequest request)
         {
             await VerificaDuplicidadeNome(request.Nome);
-            var preco = new Preco(request.preco);
+            var preco = new Preco(request.Preco);
             var nomeJogoVO = new NomeJogo(request.Nome);
             var descricaoVO = new Descricao(request.Descricao);
             var jogos = new Jogo(nomeJogoVO, descricaoVO, preco, request.Genero);
