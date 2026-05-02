@@ -21,9 +21,15 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
                 i.ToTable("PedidoJogos");
                 i.HasKey(x => x.Id);
 
-                i.Property(x=>x.ValorUnitario).IsRequired().HasPrecision(18,2);
+                i.OwnsOne(x => x.ValorUnitario, v =>
+                {                    
+                    v.Property(p => p.Valor)
+                        .HasColumnName("ValorUnitario") 
+                        .HasPrecision(18, 2)
+                        .IsRequired();
+                });
 
-                i.HasOne<Jogo>().WithMany().HasForeignKey(x => x.JogoId);
+                i.HasOne(x=>x.Jogo).WithMany().HasForeignKey(x => x.JogoId).OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Navigation(p => p.Jogos)
