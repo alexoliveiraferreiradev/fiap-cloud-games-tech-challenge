@@ -1,4 +1,5 @@
 ﻿using FiapCloundGames.API.Application.Dtos.Biblioteca;
+using FiapCloundGames.API.Application.Services;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.ValueObjects;
@@ -17,25 +18,31 @@ namespace FiapCloundGames.UnitTests.Application.Services
             _jogoFixture = new JogosFixture();
             _usuarioFixture = new UsuarioFixture();
         }
-        [Fact(DisplayName ="Sucesso ao adicionar jogo na biblioteca - adiciona jogo com sucesso")]
-        [Trait("Categoria","Biblioteca Services")]
+        [Fact(DisplayName = "Sucesso ao adicionar jogo na biblioteca - adiciona jogo com sucesso")]
+        [Trait("Categoria", "Biblioteca Services")]
         public async Task AdicionaJogo_JogoValido_DeveAdicionarComSucesso()
         {
             //Arrage
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var jogo = _jogoFixture.ObtemJogosComSucesso();
-            var criaJogoBibliotecaRequest = new CriaBibliotecaRequest(jogo.Nome.Valor, jogo.Descricao.Valor, jogo.Genero);
+            var jogosIds = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+
             //Mock
             var repoMock = new Mock<IBibliotecaRepository>();
             var usuarioMock = new Mock<IUsuarioRepository>();
+            var bibliotecaMock = new Mock<IBibliotecaRepository>();
             var jogoMock = new Mock<IJogosRepository>();
-            var service = new BibliotecaService(repoMock.Object,usuarioMock.Object,jogoMock.Object);
+            var service = new BibliotecaService(repoMock.Object, usuarioMock.Object, jogoMock.Object);
             usuarioMock.Setup(u => u.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
-            jogoMock.Setup(j => j.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+            foreach (var id in jogosIds)
+            {
+                var jogo = _jogoFixture.ObtemJogosComSucesso();
+                jogoMock.Setup(j => j.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+                bibliotecaMock.Setup(b => b.VerificaSeUsuarioPossuiJogo(usuario.Id, jogo.Id)).ReturnsAsync(false);
+            }
             //Act
-            await service.AdicionaJogo(usuario.Id,jogo.Id);
+            await service.LiberarJogosAposPedido(usuario.Id, jogosIds);
             //Assert            
-            repoMock.Verify(r => r.Adicionar(It.IsAny<Biblioteca>()), Times.Once);
+            repoMock.Verify(r => r.Adicionar(It.IsAny<Biblioteca>()), Times.Exactly(jogosIds.Count));
         }
     }
 }
