@@ -15,5 +15,6 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task AtualizaPromocao(Guid promocaoId,UpdatePromocaoRequest criaPromocaoRequest);
         Task DesativarPromocao(Guid jogoId,Guid promocaoId);
         Task<IEnumerable<JogoResponse>> ObtemCatalagoJogos();
+        Task<Jogo> ObtemJogoPorId(Guid jogoId);
     }
 }
