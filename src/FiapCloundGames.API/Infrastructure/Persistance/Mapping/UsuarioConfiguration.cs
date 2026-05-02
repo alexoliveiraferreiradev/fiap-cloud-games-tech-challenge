@@ -33,13 +33,7 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
             });
 
             builder.Property(u => u.MotivoDesativacao)
-                .IsRequired(false);
-
-            builder.Property(u => u.DataCadastro)
-                .HasColumnType("datetime");
-
-            builder.Property(u => u.DataAlteracao)
-                .HasColumnType("datetime");
+                .IsRequired(false);            
 
             var adminId = Guid.Parse("83237EA1-B29B-41DE-B2C6-D905C8CC41C3");
             var senhaHash = _passwordHasher.HashPassword("SenhaAdmin@123");

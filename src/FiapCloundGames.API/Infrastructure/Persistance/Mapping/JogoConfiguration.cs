@@ -26,12 +26,6 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
                 p.Property(v => v.Valor).HasColumnName("PrecoBase").HasDefaultValue(0).HasPrecision(18, 2);
             });
 
-            builder.Property(u => u.DataCadastro)
-               .HasColumnType("datetime");
-
-            builder.Property(u => u.DataAlteracao)
-                .HasColumnType("datetime");
-
             builder.Property(u => u.Genero)
                 .IsRequired();
 
