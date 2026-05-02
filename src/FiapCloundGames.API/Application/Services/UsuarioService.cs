@@ -83,7 +83,7 @@ namespace FiapCloundGames.API.Application.Services
 
         private static void ValidaSenhas(string senhaRequest, string confirmacaoSenhaRequest)
         {
-            AssertionConcern.AssertArgumentEquals(senhaRequest, confirmacaoSenhaRequest, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
+            AssertionConcern.AssertArgumentNotEquals(senhaRequest, confirmacaoSenhaRequest, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
         }
 
         public async Task AtualizarUsuario(Guid id, UpdateUsuarioRequest request)
