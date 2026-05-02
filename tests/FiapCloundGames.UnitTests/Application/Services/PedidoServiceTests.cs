@@ -1,4 +1,5 @@
 ﻿using FiapCloundGames.API.Application.Services;
+using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
@@ -32,11 +33,12 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             var usuarioMock = new Mock<IUsuarioRepository>();
             var jogoMock = new Mock<IJogosRepository>();
+            var bibliotecaService = new Mock<IBibliotecaService>();
             lista.Add(jogoPedido.Id);
             var pedidoMock = new Mock<IPedidoRepository>();
             usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             jogoMock.Setup(r => r.ObterPorId(jogoPedido.Id)).ReturnsAsync(jogoPedido);
-            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object);
+            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object, bibliotecaService.Object);
             //Act
             var result = await pedidoService.RealizarPedido(usuario.Id, lista);
             //Assert
