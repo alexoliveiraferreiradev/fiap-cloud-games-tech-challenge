@@ -1,4 +1,5 @@
 ﻿using FiapCloundGames.API.Application.Dtos.Biblioteca;
+using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
@@ -6,7 +7,7 @@ using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.API.Infrastructure.Repository;
 
-namespace FiapCloundGames.API.Application.Services.Interfaces
+namespace FiapCloundGames.API.Application.Services
 {
     public class BibliotecaService : IBibliotecaService
     {
