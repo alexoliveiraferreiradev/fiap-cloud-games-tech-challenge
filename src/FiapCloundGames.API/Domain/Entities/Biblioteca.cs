@@ -32,7 +32,7 @@ namespace FiapCloundGames.API.Domain.Entities
             AssertionConcern.AssertArgumentNotNull(JogoId, MensagensDominio.JogoNaoEncontrado);
         }
 
-        public void Adicionar(NomeJogo nomeJogo, Descricao descricaoJogo, GeneroJogo generoJogo)
+        public void AdicionaJogo(NomeJogo nomeJogo, Descricao descricaoJogo, GeneroJogo generoJogo)
         {
             if (!Ativo) throw new DomainException(MensagensDominio.BibliotecaInativa);
             AssertionConcern.AssertArgumentNotNull(nomeJogo, MensagensDominio.JogoNomeObrigatorio);
@@ -43,7 +43,7 @@ namespace FiapCloundGames.API.Domain.Entities
             Descricao = descricaoJogo;
             Genero = generoJogo;
         }
-        public void AtualizarDados(NomeJogo nomeJogo, Descricao descricaoJogo, GeneroJogo generoJogo)
+        public void AtualizarDadosJogo(NomeJogo nomeJogo, Descricao descricaoJogo, GeneroJogo generoJogo)
         {
             if (!Ativo) throw new DomainException(MensagensDominio.BibliotecaInativa);
             AssertionConcern.AssertArgumentNotNull(nomeJogo, MensagensDominio.JogoNomeObrigatorio);
