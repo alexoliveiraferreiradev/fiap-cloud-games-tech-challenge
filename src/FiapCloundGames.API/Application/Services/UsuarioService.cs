@@ -23,7 +23,7 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> CadastrarAdministrador(CriaUsuarioRequest request, bool hasPermision, string token)
         {
-            ValidaSenhas(request.Senha, request.reSenha);
+            ValidaSenhas(request.Senha, request.ConfirmacaoSenha);
             var emailUsuarioValueObject = new Email(request.Email);
             var nomeUsuarioValueObject = new Nome(request.Nome);
             var senhaUsuarioValueObject = new Senha(request.Senha);
@@ -69,7 +69,7 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> CadastrarUsuario(CriaUsuarioRequest request)
         {
-            ValidaSenhas(request.Senha, request.reSenha);
+            ValidaSenhas(request.Senha, request.ConfirmacaoSenha);
             var senhaCifrada = _passwordHasher.HashPassword(request.Senha);
 
             var nomeVO = new Nome(request.Nome);
