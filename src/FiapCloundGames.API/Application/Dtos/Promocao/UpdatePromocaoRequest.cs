@@ -6,10 +6,19 @@ namespace FiapCloundGames.API.Application.Dtos.Promocao
     public class UpdatePromocaoRequest
     {
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        public Guid jogoId { get; set; }
+        public Guid JogoId { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        public decimal novoValorPromocao { get; set; }
+        public decimal NovoValorPromocao { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        public DateTime novaDataFim { get; set; }
+        public DateTime NovaDataFim { get; set; }
+
+        public UpdatePromocaoRequest()
+        {
+        }
+
+        public UpdatePromocaoRequest(Guid jogoId, decimal valorPromocao, DateTime dataFim)
+        {
+            JogoId = jogoId; NovoValorPromocao = valorPromocao; NovaDataFim = dataFim;
+        }
     }
 }
