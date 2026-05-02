@@ -16,7 +16,7 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
             builder.ToTable("Usuarios");
-
+            builder.HasKey(p => p.Id);
             builder.OwnsOne(u => u.NomeUsuario, n =>
             {
                 n.Property(p => p.Valor).HasColumnName("Nome").IsRequired().HasMaxLength(20);
