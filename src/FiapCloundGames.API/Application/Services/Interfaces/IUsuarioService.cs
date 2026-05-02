@@ -12,6 +12,8 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task Desativar(DeleteUsuarioRequest deleteUsuarioRequest);
         Task Reativar(Guid usuarioId);
         Task<Usuario> Autenticar(LoginRequest loginRequest);
+        Task<Usuario> ObterPorId(Guid usuarioId);
+        Task<IEnumerable<Usuario>> ObterTodos();
 
     }
 }
