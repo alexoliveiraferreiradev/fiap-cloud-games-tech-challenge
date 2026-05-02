@@ -40,5 +40,10 @@ namespace FiapCloundGames.API.Application.Services
                 await _bibliotecaRepository.Adicionar(bibliotecaItem);
             }
         }
+
+        public async Task<IEnumerable<BibliotecaResponse>> ObterJogosPorUsuario(Guid usuarioId)
+        {
+            return await _bibliotecaRepository.ObterJogosPorUsuario(usuarioId);
+        }
     }
 }
