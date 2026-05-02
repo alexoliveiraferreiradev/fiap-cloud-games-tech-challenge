@@ -66,6 +66,7 @@
         #endregion
 
         #region Biblioteca
+        public static string BibliotecaInativa = "A biblioteca está inativa.";
         #endregion
     }
 }
