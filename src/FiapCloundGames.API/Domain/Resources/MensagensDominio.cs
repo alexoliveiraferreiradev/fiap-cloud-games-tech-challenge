@@ -67,6 +67,7 @@
 
         #region Biblioteca
         public static string BibliotecaInativa = "A biblioteca está inativa.";
+        public static string BibliotecaJogoRepetido = "O usuário já possui o jogo na biblioteca.";
         #endregion
     }
 }
