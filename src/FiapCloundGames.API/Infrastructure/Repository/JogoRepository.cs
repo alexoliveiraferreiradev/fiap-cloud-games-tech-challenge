@@ -20,7 +20,7 @@ namespace FiapCloundGames.API.Infrastructure.Repository
 
         public async Task<Jogo?> ObtemPorNome(string nomeJogo)
         {
-            return await _dbContext.Jogos.FirstOrDefaultAsync(x => x.Nome.Valor.Equals(nomeJogo));
+            return await _dbContext.Jogos.FirstOrDefaultAsync(x => x.Nome.Valor.ToLower() ==  nomeJogo.ToLower());
         }
 
         public async Task<Promocao?> ObterPromocaoPorId(Guid id)
