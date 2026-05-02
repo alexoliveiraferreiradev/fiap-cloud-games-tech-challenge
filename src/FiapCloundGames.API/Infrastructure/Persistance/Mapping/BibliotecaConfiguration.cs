@@ -12,6 +12,9 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
             builder.HasKey(x => x.Id);
             builder.HasIndex(p => new { p.UsuarioId, p.JogoId })
             .IsUnique();
+
+            builder.Property(p => p.Ativo).HasDefaultValue(true);
+
             builder.HasOne(b => b.Usuario)
                 .WithMany()
                 .HasForeignKey(b => b.UsuarioId)
