@@ -35,7 +35,7 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
             builder.Property(u => u.MotivoDesativacao)
                 .IsRequired(false);            
 
-            var adminId = Guid.Parse("83237EA1-B29B-41DE-B2C6-D905C8CC41C3");
+            var adminId = Guid.Parse("AEA0B4F3-D220-4C8D-ABA8-D868BE7CA593");
             var senhaHash = _passwordHasher.HashPassword("SenhaAdmin@123");
             builder.HasData(new
             {
@@ -45,33 +45,36 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
                 Nome_Valor = "Admin Sistema",
                 Email_Valor = "admin@fiapcloundgames.com.br",
                 Senha_Hash = senhaHash,
-                DataCadastro = DateTime.UtcNow
+                DataCadastro = DateTime.UtcNow,
+                DataAlteracao = DateTime.UtcNow
             });
 
-            var jogadorId = Guid.Parse("05694ceb-5b21-4ee0-9398-8babc16b3fc8");
+            var jogadorId = Guid.Parse("E99C8CAF-7067-49B4-8EEF-B0D7ED801033");
             senhaHash = _passwordHasher.HashPassword("SenhaJogador@123");
             builder.HasData(new
             {
-                Id = adminId,
+                Id = jogadorId,
                 Ativo = true,
                 Perfil = TipoUsuario.Jogador,
                 Nome_Valor = "Jogador 1",
                 Email_Valor = "jogador1@fiapcloundgames.com.br",
                 Senha_Hash = senhaHash,
-                DataCadastro = DateTime.UtcNow
+                DataCadastro = DateTime.UtcNow,
+                DataAlteracao = DateTime.UtcNow
             });
 
-            jogadorId = Guid.Parse("d4fa2a47-b9d1-48fa-b28e-eef16e8db38f");
+            jogadorId = Guid.Parse("BC359373-699B-4152-B63C-4FBF5A509AAD");
             senhaHash = _passwordHasher.HashPassword("SenhaJogador@1234");
             builder.HasData(new
             {
-                Id = adminId,
+                Id = jogadorId,
                 Ativo = true,
                 Perfil = TipoUsuario.Jogador,
                 Nome_Valor = "Jogador 2",
                 Email_Valor = "jogador2@fiapcloundgames.com.br",
                 Senha_Hash = senhaHash,
-                DataCadastro = DateTime.UtcNow
+                DataCadastro = DateTime.UtcNow,
+                DataAlteracao = DateTime.UtcNow
             });
         }
     }
