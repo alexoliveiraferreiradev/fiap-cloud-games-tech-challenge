@@ -1,4 +1,5 @@
-﻿using FiapCloundGames.API.Domain.Enum;
+﻿using FiapCloundGames.API.Application.Dtos.Biblioteca;
+using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.API.Infrastructure.Repository;
 
@@ -11,7 +12,7 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         {
             _bibliotecaRepository = bibliotecaRepository;   
         }
-        public Task AdicionaJogo(NomeJogo nomeJogo, Descricao descricao, GeneroJogo generoJogo)
+        public Task AdicionaJogo(CriaBibliotecaRequest criaBibliotecaRequest)
         {
             throw new NotImplementedException();
         }
