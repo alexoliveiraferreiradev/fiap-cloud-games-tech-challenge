@@ -9,5 +9,14 @@
         public decimal PrecoAtual { get; set; }
         public bool TemDesconto => PrecoAtual < PrecoOriginal;
 
+        public JogoResponse()
+        {            
+        }
+
+        public JogoResponse(Guid jogoId, string nomeJogo, string descricaoJogo, decimal precoOriginal, decimal precoAtual)
+        {
+            Id = jogoId; Nome = nomeJogo; Descricao = descricaoJogo; PrecoOriginal = precoOriginal; PrecoAtual = precoAtual;
+        }
+
     }
 }
