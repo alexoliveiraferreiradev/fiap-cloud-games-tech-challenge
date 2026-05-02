@@ -28,8 +28,8 @@ namespace FiapCloundGames.API.Domain.Entities
 
         protected override void ValidarEntidade()
         {
-            AssertionConcern.AssertArgumentNotNull(UsuarioId, MensagensDominio.UsuarioNaoEncontrado);
-            AssertionConcern.AssertArgumentNotNull(JogoId, MensagensDominio.JogoNaoEncontrado);
+            AssertionConcern.AssertArgumentNotEquals(UsuarioId,Guid.Empty, MensagensDominio.UsuarioNaoEncontrado);
+            AssertionConcern.AssertArgumentNotEquals(JogoId,Guid.Empty, MensagensDominio.JogoNaoEncontrado);
         }
 
         public void AdicionaJogo(NomeJogo nomeJogo, Descricao descricaoJogo, GeneroJogo generoJogo)
