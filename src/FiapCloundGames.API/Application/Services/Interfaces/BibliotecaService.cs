@@ -17,7 +17,7 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
             throw new NotImplementedException();
         }
 
-        public Task AtualizarDados(NomeJogo nomeJogo, Descricao descricao, GeneroJogo generoJogo)
+        public Task AtualizarDados(UpdateBibliotecaRequest updateBibliotecaRequest)
         {
             throw new NotImplementedException();
         }
