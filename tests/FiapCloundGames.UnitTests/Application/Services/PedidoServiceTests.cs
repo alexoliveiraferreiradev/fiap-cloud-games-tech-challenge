@@ -85,11 +85,12 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var jogoPedido = _jogosFixture.ObtemJogosComSucesso();
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
+            var bibliotecaService = new Mock<IBibliotecaService>();
             var jogoMock = new Mock<IJogosRepository>();
             var pedidoMock = new Mock<IPedidoRepository>();
             jogoMock.Setup(r => r.ObterPorId(jogoPedido.Id)).ReturnsAsync(jogoPedido);
             lista.Add(jogoPedido.Id);
-            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object);
+            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object,bibliotecaService.Object);
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(async ()=> await pedidoService.RealizarPedido(usuarioId, lista));
             //Assert
@@ -108,11 +109,12 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             var usuarioMock = new Mock<IUsuarioRepository>();
             var jogoMock = new Mock<IJogosRepository>();
+            var bibliotecaService = new Mock<IBibliotecaService>();
             lista.Add(jogoPedido.Id);
             var pedidoMock = new Mock<IPedidoRepository>();
             usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             jogoMock.Setup(r => r.ObterPorId(jogoPedido.Id)).ReturnsAsync(jogoPedido);
-            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object);
+            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object,bibliotecaService.Object);
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(async ()=> await pedidoService.RealizarPedido(usuario.Id, lista));
             //Assert
@@ -130,11 +132,12 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var jogoId = Guid.NewGuid();
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
+            var bibliotecaService = new Mock<IBibliotecaService>();
             var jogoMock = new Mock<IJogosRepository>();
             var pedidoMock = new Mock<IPedidoRepository>();
             usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             lista.Add(jogoId);
-            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object);
+            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object,bibliotecaService.Object);
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(async ()=> await pedidoService.RealizarPedido(usuario.Id, lista));
             //Assert
@@ -154,12 +157,13 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var periodoPromocao = new Periodo(dataFimPromocao);
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
+            var bibliotecaService = new Mock<IBibliotecaService>();
             var jogoMock = new Mock<IJogosRepository>();
             var pedidoMock = new Mock<IPedidoRepository>();
             usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             jogoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
             lista.Add(jogo.Id);
-            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object);
+            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object,bibliotecaService.Object);
             //Act
             jogo.AdicionarPromocao(valorPromocao, periodoPromocao);
             var result = await pedidoService.RealizarPedido(usuario.Id, lista);
