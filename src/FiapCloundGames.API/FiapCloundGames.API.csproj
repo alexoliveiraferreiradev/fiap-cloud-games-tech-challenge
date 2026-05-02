@@ -32,6 +32,7 @@
   <ItemGroup>
     <Folder Include="Infrastructure\Caching\" />
     <Folder Include="Infrastructure\Caching\" />
+    <Folder Include="Infrastructure\Persistance\Migrations\" />
   </ItemGroup>
 
 </Project>
