@@ -23,9 +23,9 @@ namespace FiapCloundGames.UnitTests.Fixtures
         public CriaUsuarioRequest UsuarioRequest()
         {
             return new CriaUsuarioRequest(
-                Nome: _faker.Internet.UserName(),
-                Email: _faker.Internet.Email(),
-                Senha: "Teste@123",
+                nomeUsuario: _faker.Internet.UserName(),
+                emailUsuario: _faker.Internet.Email(),
+                senhaUsuario: "Teste@123",
                 reSenha: "Teste@123"
             );
         }
@@ -33,9 +33,9 @@ namespace FiapCloundGames.UnitTests.Fixtures
         public CriaUsuarioRequest UsuarioRequestSenhaDiferente()
         {
             return new CriaUsuarioRequest(
-                Nome: _faker.Internet.UserName(),
-                Email: _faker.Internet.Email(),
-                Senha: "Teste@123",
+                nomeUsuario: _faker.Internet.UserName(),
+                emailUsuario: _faker.Internet.Email(),
+                senhaUsuario: "Teste@123",
                 reSenha: "Teste@1243"
             );
         }
