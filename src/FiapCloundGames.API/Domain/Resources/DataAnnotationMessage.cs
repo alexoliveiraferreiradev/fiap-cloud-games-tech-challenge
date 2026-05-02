@@ -6,6 +6,7 @@
 
         public const string ErroRequired = "O campo {0} é obrigatório";
 
-        public const string ErroFormatoEmail = "O campo {0} está em formato incorreto";
+        public const string ErroFormato = "O campo {0} está em formato incorreto";
+        public const string ErroConfirmacaoSenha = "O campo {0} é diferente da senha";
     }
 }
