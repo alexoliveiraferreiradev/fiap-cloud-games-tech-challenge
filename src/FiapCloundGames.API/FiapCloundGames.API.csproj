@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Dtos\Biblioteca\" />
     <Folder Include="Infrastructure\Caching\" />
     <Folder Include="Infrastructure\Caching\" />
     <Folder Include="Infrastructure\Persistance\" />
