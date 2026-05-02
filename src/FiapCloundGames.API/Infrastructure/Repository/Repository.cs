@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FiapCloundGames.API.Infrastructure.Repository
 {
-    public abstract class Repository<Entidade> : IRepository<Entidade> where Entidade : AggregateRoot, new()
+    public abstract class Repository<Entidade> : IRepository<Entidade> where Entidade : AggregateRoot
     {
         protected readonly ApplicationDbContext _dbContext;
         protected readonly DbSet<Entidade> _dbSet;
