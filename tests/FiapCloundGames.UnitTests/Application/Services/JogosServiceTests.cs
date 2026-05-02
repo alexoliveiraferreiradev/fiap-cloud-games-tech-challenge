@@ -17,14 +17,14 @@ namespace FiapCloundGames.UnitTests.Application.Services
     public class JogosServiceTests
     {
         private readonly Faker _faker;
-        private readonly Mock<IJogosRepository> _mockJogo;
+        private readonly Mock<IJogoRepository> _mockJogo;
         private readonly JogosService _jogosService;
         private readonly JogosFixture _jogosFixture;
         private readonly PromocaoFixture _promocaoFixture;
         public JogosServiceTests()
         {
             _faker = new Faker();
-            _mockJogo = new Mock<IJogosRepository>();
+            _mockJogo = new Mock<IJogoRepository>();
             _jogosService = new JogosService(_mockJogo.Object);
             _jogosFixture = new JogosFixture();
             _promocaoFixture = new PromocaoFixture();

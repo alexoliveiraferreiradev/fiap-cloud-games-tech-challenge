@@ -11,8 +11,8 @@ namespace FiapCloundGames.API.Application.Services
 {
     public class JogosService : IJogosService
     {
-        private readonly IJogosRepository _jogoRepository;
-        public JogosService(IJogosRepository jogoRepository)
+        private readonly IJogoRepository _jogoRepository;
+        public JogosService(IJogoRepository jogoRepository)
         {
             _jogoRepository = jogoRepository;
         }

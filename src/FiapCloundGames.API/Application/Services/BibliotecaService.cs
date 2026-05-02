@@ -13,9 +13,9 @@ namespace FiapCloundGames.API.Application.Services
     {
         private readonly IBibliotecaRepository _bibliotecaRepository;
         private readonly IUsuarioRepository _usuarioRepository;
-        private readonly IJogosRepository _jogoRepository;
+        private readonly IJogoRepository _jogoRepository;
         public BibliotecaService(IBibliotecaRepository bibliotecaRepository, IUsuarioRepository usuarioRepository,
-            IJogosRepository jogosRepository)
+            IJogoRepository jogosRepository)
         {
             _bibliotecaRepository = bibliotecaRepository;
             _usuarioRepository = usuarioRepository;

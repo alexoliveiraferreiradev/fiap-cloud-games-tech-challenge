@@ -32,7 +32,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var repoMock = new Mock<IBibliotecaRepository>();
             var usuarioMock = new Mock<IUsuarioRepository>();
             var bibliotecaMock = new Mock<IBibliotecaRepository>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var service = new BibliotecaService(repoMock.Object, usuarioMock.Object, jogoMock.Object);
             usuarioMock.Setup(u => u.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             for (int i =0;i<=3;i++)
@@ -58,7 +58,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
             var bibliotecaMock = new Mock<IBibliotecaRepository>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var service = new BibliotecaService(bibliotecaMock.Object, usuarioMock.Object, jogoMock.Object);
             usuarioMock.Setup(u => u.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             for (int i = 0; i <= 3; i++)
@@ -85,7 +85,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
             var bibliotecaMock = new Mock<IBibliotecaRepository>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var service = new BibliotecaService(bibliotecaMock.Object, usuarioMock.Object, jogoMock.Object);
             usuarioMock.Setup(u => u.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             for (int i = 0; i <= 3; i++)
