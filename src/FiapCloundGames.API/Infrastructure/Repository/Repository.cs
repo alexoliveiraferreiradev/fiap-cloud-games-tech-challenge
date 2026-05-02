@@ -22,19 +22,20 @@ namespace FiapCloundGames.API.Infrastructure.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task Atualizar(Entidade entity)
+        public async Task Atualizar(Entidade entity)
         {
-            throw new NotImplementedException();
+           _dbSet.Update(entity);
+            await _dbContext.SaveChangesAsync();    
         }
 
-        public Task<Entidade> ObterPorId(Guid id)
+        public async Task<Entidade> ObterPorId(Guid id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.Where(x=>x.Id ==  id).FirstOrDefaultAsync();
         }
 
-        public Task<IEnumerable<Entidade>> ObterTodos()
+        public async Task<IEnumerable<Entidade>> ObterTodos()
         {
-            throw new NotImplementedException();
+            return await _dbSet.ToListAsync();
         }
     }
 }
