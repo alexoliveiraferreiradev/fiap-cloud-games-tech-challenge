@@ -6,10 +6,19 @@ namespace FiapCloundGames.API.Application.Dtos.Promocao
     public class CriaPromocaoRequest
     {
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        public Guid jogoId { get; set; }
+        public Guid JogoId { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        public decimal valorPromocao { get; set; }
+        public decimal ValorPromocao { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        public DateTime dataFim { get; set; }
+        public DateTime DataFim { get; set; }
+
+        public CriaPromocaoRequest()
+        {
+        }
+
+        public CriaPromocaoRequest(Guid jogoid, decimal valorPromocao, DateTime dataFim)
+        {
+            JogoId = jogoid; ValorPromocao = valorPromocao; DataFim = dataFim;
+        }
     }
 }
