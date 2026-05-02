@@ -10,7 +10,11 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
         public void Configure(EntityTypeBuilder<Jogo> builder)
         {
             builder.ToTable("Jogos");
+            
             builder.HasKey(p => p.Id);
+
+            builder.Property(p => p.Ativo).HasDefaultValue(true);
+
             builder.OwnsOne(j => j.Nome, n =>
             {
                 n.Property(p => p.Valor).HasColumnName("Nome").IsRequired().HasMaxLength(40);
