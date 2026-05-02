@@ -13,7 +13,7 @@ namespace FiapCloundGames.API.Domain.ValueObjects
         {
             AssertionConcern.AssertArgumentEmpty(valor, MensagensDominio.UsuarioEmailObrigatorio);
             AssertionConcern.AssertArgumentEmailFormat(valor, MensagensDominio.EmailInvalido);
-            AssertionConcern.AssertArgumentLength(valor, 7, 100, MensagensDominio.EmailTamanhpInvalido);
+            AssertionConcern.AssertArgumentLength(valor, 7, 100, MensagensDominio.EmailTamanhoInvalido);
             Valor = valor;
         }
 
