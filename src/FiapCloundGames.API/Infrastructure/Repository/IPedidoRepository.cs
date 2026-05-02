@@ -4,5 +4,6 @@ namespace FiapCloundGames.API.Infrastructure.Repository
 {
     public interface IPedidoRepository : IRepository<Pedido>
     {
+        Task<IEnumerable<Pedido>> ObtemHistoricoPorUsuario(Guid usuarioId);
     }
 }
