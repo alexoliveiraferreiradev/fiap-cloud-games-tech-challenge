@@ -103,13 +103,13 @@ namespace FiapCloundGames.API.Application.Services
         {
             var jogos = await _jogoRepository.ObtemJogosAtivos();
             return jogos.Select(j => new JogoResponse
-            {
-                Id = j.Id,
-                Nome = j.Nome.Valor,
-                Descricao = j.Descricao.Valor,
-                PrecoOriginal = j.PrecoBase.Valor,
-                PrecoAtual = j.ObterPrecoAtual().Valor
-            });
+            (
+                j.Id,
+                j.Nome.Valor,
+                j.Descricao.Valor,
+                j.PrecoBase.Valor,
+                j.ObterPrecoAtual().Valor
+            ));
         }
 
         public async Task<Jogo> ObtemJogoPorId(Guid jogoId)
