@@ -1,4 +1,5 @@
-﻿using FiapCloundGames.API.Application.Services.Interfaces;
+﻿using FiapCloundGames.API.Application.Dtos.Biblioteca;
+using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Resources;
@@ -9,15 +10,17 @@ namespace FiapCloundGames.API.Application.Services
 {
     public class PedidoService : IPedidoService
     {
+        private readonly IBibliotecaService _bibliotecaService;
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IJogosRepository _jogoRepository;
         private readonly IUsuarioRepository _usuarioRepository;
         public PedidoService(IPedidoRepository pedidoRepository, IJogosRepository jogosRepository,
-            IUsuarioRepository usuarioRepository)
+            IUsuarioRepository usuarioRepository, IBibliotecaService bibliotecaService)
         {
             _pedidoRepository = pedidoRepository;
             _jogoRepository = jogosRepository;
-            _usuarioRepository = usuarioRepository; 
+            _usuarioRepository = usuarioRepository;
+            _bibliotecaService = bibliotecaService;
         }
         public async Task<Pedido> RealizarPedido(Guid usuarioId, List<Guid> jogosIds)
         {
@@ -33,6 +36,8 @@ namespace FiapCloundGames.API.Application.Services
             }
             pedido.FinalizarPedido();
             await _pedidoRepository.Adicionar(pedido);
+
+            await _bibliotecaService.LiberarJogosAposPedido(usuario.Id,jogosIds);
             return pedido;
         }
     }
