@@ -49,8 +49,8 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
                 Ativo = true,
                 Perfil = TipoUsuario.Administrador,
                 Nome_Valor = "Administrador Sistema",
-                Email_Endereco = "admin@fiapcloundgames.com.br",
-                Senha = senhaHash,
+                Email_Valor = "admin@fiapcloundgames.com.br",
+                Senha_Hash = senhaHash,
                 DataCadastro = DateTime.UtcNow
             });
         }
