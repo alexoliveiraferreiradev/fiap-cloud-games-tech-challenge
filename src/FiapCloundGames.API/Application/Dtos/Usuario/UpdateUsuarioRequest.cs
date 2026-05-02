@@ -26,7 +26,7 @@ namespace FiapCloundGames.API.Application.Dtos.Usuario
         }
         public UpdateUsuarioRequest(string novoNome, string novoEmail, string novaSenha, string novaConfirmaoSenha)
         {
-            NomeUsuario = novoNome; EmailUsuario = novoEmail; SenhaUsuario = novaConfirmaoSenha; ConfirmacaoSenha = novaConfirmaoSenha;
+            NomeUsuario = novoNome; EmailUsuario = novoEmail; SenhaUsuario = novaSenha; ConfirmacaoSenha = novaConfirmaoSenha;
         }
     }
 }
