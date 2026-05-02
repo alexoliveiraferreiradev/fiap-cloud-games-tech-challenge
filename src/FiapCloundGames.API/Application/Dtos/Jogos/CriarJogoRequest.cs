@@ -13,8 +13,17 @@ namespace FiapCloundGames.API.Application.Dtos.Jogos
         [StringLength(500, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 7)]
         public string Descricao { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        public decimal preco { get; set; }
+        public decimal Preco { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         public GeneroJogo Genero { get; set; }
+
+        public CriarJogoRequest()
+        {
+        }
+
+        public CriarJogoRequest(string nomeJogo, string descricaoJogo, decimal precoJogo, GeneroJogo generoJogo)
+        {
+            Nome = nomeJogo; Descricao = descricaoJogo; Preco = precoJogo; Genero = generoJogo;
+        }
     }
 }
