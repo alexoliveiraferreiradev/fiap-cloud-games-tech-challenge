@@ -29,6 +29,17 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
             builder.Property(u => u.Genero)
                 .IsRequired();
 
+            builder.OwnsMany(j => j.Promocoes, p =>
+            {
+                p.ToTable("PromocaoJogos");
+                p.HasKey(p => p.Id);
+                p.Property(x => x.ValorPromocao).IsRequired().HasPrecision(18, 2);
+                p.HasOne<Jogo>().WithMany().HasForeignKey(p => p.JogoId);
+            });
+
+            builder.Navigation(p => p.Promocoes)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
             builder.HasData(
             new
             {
