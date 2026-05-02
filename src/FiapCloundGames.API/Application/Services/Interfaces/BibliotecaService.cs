@@ -20,20 +20,21 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
             _usuarioRepository = usuarioRepository; 
             _jogoRepository = jogosRepository;  
         }
-        public async Task AdicionaJogo(CriaBibliotecaRequest criaBibliotecaRequest)
+        public async Task AdicionaJogo(CriaBibliotecaRequest request)
         {
-            var usuario = await _usuarioRepository.ObterPorId(criaBibliotecaRequest.usuarioId);
-
-            if (usuario == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+            var usuario = await _usuarioRepository.ObterPorId(request.usuarioId);
+            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
             if (!usuario.Ativo) throw new DomainException(MensagensDominio.UsuarioInativo);
 
-            var jogo = await _jogoRepository.ObterPorId(criaBibliotecaRequest.jogoId);
+            var jogo = await _jogoRepository.ObterPorId(request.jogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
             if (!jogo.Ativo) throw new DomainException(MensagensDominio.JogoInvalido);
 
-            var biblioteca = new Biblioteca(criaBibliotecaRequest.usuarioId, criaBibliotecaRequest.jogoId);
-            biblioteca.AdicionaJogo(jogo.Nome, jogo.Descricao, jogo.Genero);
-            await _bibliotecaRepository.Adicionar(biblioteca);
+            var possuiJogo = await _bibliotecaRepository.VerificaSeUsuarioPossuiJogo(request.usuarioId, request.jogoId);
+            if (possuiJogo) throw new DomainException(MensagensDominio.BibliotecaJogoRepetido);
+
+            var bibliotecaItem = new Biblioteca(request.usuarioId, request.jogoId);
+            await _bibliotecaRepository.Adicionar(bibliotecaItem);
         }
 
         public Task AtualizarDados(UpdateBibliotecaRequest updateBibliotecaRequest)
