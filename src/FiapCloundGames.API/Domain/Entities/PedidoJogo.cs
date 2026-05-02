@@ -6,6 +6,7 @@ namespace FiapCloundGames.API.Domain.Entities
 {
     public class PedidoJogo : EntityBase   
     {
+        public virtual Jogo Jogo { get;private set;  }
         public Guid JogoId { get; private set; }
         public Preco ValorUnitario { get; private set; }
 
