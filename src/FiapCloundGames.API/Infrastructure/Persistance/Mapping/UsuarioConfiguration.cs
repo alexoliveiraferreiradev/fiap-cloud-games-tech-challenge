@@ -16,17 +16,21 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
             builder.ToTable("Usuarios");
-            builder.Property(u => u.NomeUsuario.Valor)
-                .IsRequired()
-                .HasColumnType("varchar(20)");
 
-            builder.Property(u => u.EmailUsuario.Valor)
-                .IsRequired()
-                .HasColumnType("varchar(40)");
+            builder.OwnsOne(u => u.NomeUsuario, n =>
+            {
+                n.Property(p => p.Valor).HasColumnName("Nome").IsRequired().HasMaxLength(20);
+            });
 
-            builder.Property(u => u.Senha.Hash)
-                .IsRequired()
-                .HasColumnType("nvarchar(60)");
+            builder.OwnsOne(u => u.EmailUsuario, e =>
+            {
+                e.Property(p => p.Valor).HasColumnName("Email").IsRequired().HasMaxLength(40);
+            });
+
+            builder.OwnsOne(u => u.Senha, s =>
+            {
+                s.Property(p => p.Hash).HasColumnName("Senha").IsRequired().HasMaxLength(60);
+            });
 
             builder.Property(u => u.MotivoDesativacao)
                 .IsRequired(false);
