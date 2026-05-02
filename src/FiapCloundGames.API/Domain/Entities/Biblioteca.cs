@@ -7,7 +7,7 @@ namespace FiapCloundGames.API.Domain.Entities
     {
         public virtual Usuario Usuario { get; private set; }
         public Guid UsuarioId { get; private set; }
-        public virtual ICollection<Jogo> Jogos { get; private set; }
+        public virtual Jogo Jogo { get; private set; }
         public Guid JogoId { get; private set; }
         public DateTime DataCadastro { get; private set; }
         public DateTime DataAlteracao { get; private set; }
