@@ -64,6 +64,7 @@
         public static string EmailInvalido = "O email é inválido.";
         public static string DataFimInvalida = "A data final deve ser no futuro.";
         public static string SenhaTamanhoInvalido = "O tamanho da senha é inválido.";
+        public static string EmailTamanhpInvalido = "O tamanho do email é inválido.";
         #endregion
 
         #region Biblioteca
