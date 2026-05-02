@@ -113,18 +113,18 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task Desativar(DeleteUsuarioRequest deletaUsuarioRequest)
         {
-            var usuario = await _usuarioRepository.ObterPorId(deletaUsuarioRequest.id);
+            var usuario = await _usuarioRepository.ObterPorId(deletaUsuarioRequest.Id);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
-            usuario.Desativar(deletaUsuarioRequest.motivoDelecao);
+            usuario.Desativar(deletaUsuarioRequest.MotivoDelecao);
             await _usuarioRepository.Atualizar(usuario);
         }
 
         public async Task<Usuario> Autenticar(LoginRequest request)
         {
-            var usuario = await _usuarioRepository.ObterPorEmail(request.emailUsuario);
+            var usuario = await _usuarioRepository.ObterPorEmail(request.Email);
             if (usuario == null) throw new DomainException(MensagensDominio.CrendenciasInvalidas);
             if (!usuario.Ativo) throw new DomainException(MensagensDominio.UsuarioInativo);
-            bool senhaValida = _passwordHasher.VerifyPassword(request.senhaUsuario, usuario.Senha.Hash);
+            bool senhaValida = _passwordHasher.VerifyPassword(request.Senha, usuario.Senha.Hash);
             if (!senhaValida) throw new DomainException(MensagensDominio.CrendenciasInvalidas);
             return usuario;
         }
