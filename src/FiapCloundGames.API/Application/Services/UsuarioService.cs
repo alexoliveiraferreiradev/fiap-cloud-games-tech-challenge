@@ -69,7 +69,11 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> CadastrarUsuario(CriaUsuarioRequest request)
         {
+            if (await _usuarioRepository.VerificaEmailCadastrado(request.Email)) throw new DomainException(MensagensDominio.EmailJaCadastrado);
+            if (await _usuarioRepository.VerificaNomeCadastrado(request.Nome)) throw new DomainException(MensagensDominio.NomeUsuarioJaCadastrado);
+
             ValidaSenhas(request.Senha, request.ConfirmacaoSenha);
+
             var senhaCifrada = _passwordHasher.HashPassword(request.Senha);
 
             var nomeVO = new Nome(request.Nome);
