@@ -15,10 +15,12 @@ namespace FiapCloundGames.API.Application.Dtos.Usuario
         public string Email { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         [DataType(DataType.Password, ErrorMessage = DataAnnotationMessage.ErroFormato)]
+        [StringLength(60, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 8)]
         public string Senha { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         [DataType(DataType.Password)]
         [Compare("Senha", ErrorMessage = DataAnnotationMessage.ErroConfirmacaoSenha)]
+        [StringLength(60, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 8)]
         public string ConfirmacaoSenha { get; set; }
 
         public CriaUsuarioRequest()
