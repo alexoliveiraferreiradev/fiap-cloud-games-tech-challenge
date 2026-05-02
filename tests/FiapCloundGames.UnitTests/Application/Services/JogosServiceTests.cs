@@ -318,7 +318,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act 
             await _jogosService.AtualizaPromocao(promocaoExistente.Id, updatePromocaoRequest);
             //Assert
-            Assert.NotEqual(updatePromocaoRequest.novoValorPromocao, criaPromocaoRequest.ValorPromocao);
+            Assert.NotEqual(updatePromocaoRequest.NovoValorPromocao, criaPromocaoRequest.ValorPromocao);
             _mockJogo.Verify(r => r.Atualizar(It.IsAny<Jogo>()), Times.AtLeastOnce);
         }
 
