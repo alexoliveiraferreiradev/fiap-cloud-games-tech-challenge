@@ -56,7 +56,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         private void CalcularValorTotal()
         {
-            ValorTotal = new Preco(_jogos.Sum(j => j.PrecoNoMomento.Valor));
+            ValorTotal = new Preco(_jogos.Sum(j => j.ValorUnitario.Valor));
         }
     }
 }

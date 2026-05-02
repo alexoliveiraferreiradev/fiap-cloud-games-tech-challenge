@@ -7,23 +7,23 @@ namespace FiapCloundGames.API.Domain.Entities
     public class PedidoJogo : EntityBase   
     {
         public Guid JogoId { get; private set; }
-        public Preco PrecoNoMomento { get; private set; }
+        public Preco ValorUnitario { get; private set; }
 
         protected PedidoJogo()
         {
         }
 
-        public PedidoJogo(Guid jogoId, Preco precoNoMomento)
+        public PedidoJogo(Guid jogoId, Preco valorUnitario)
         {
             JogoId = jogoId;
-            PrecoNoMomento = precoNoMomento;
+            ValorUnitario = valorUnitario;
             ValidarEntidade();
         }
 
         protected override void ValidarEntidade()
         {
             AssertionConcern.AssertArgumentNotNull(JogoId, MensagensDominio.JogoNaoEncontrado);
-            AssertionConcern.AssertArgumentNotNull(PrecoNoMomento, MensagensDominio.PrecoObrigatorio);
+            AssertionConcern.AssertArgumentNotNull(ValorUnitario, MensagensDominio.PrecoObrigatorio);
         }
     }
 }
