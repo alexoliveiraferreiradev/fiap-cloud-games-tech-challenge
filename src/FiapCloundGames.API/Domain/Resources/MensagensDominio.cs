@@ -64,5 +64,8 @@
         public static string EmailInvalido = "O email é inválido.";
         public static string DataFimInvalida = "A data final deve ser no futuro.";
         #endregion
+
+        #region Biblioteca
+        #endregion
     }
 }
