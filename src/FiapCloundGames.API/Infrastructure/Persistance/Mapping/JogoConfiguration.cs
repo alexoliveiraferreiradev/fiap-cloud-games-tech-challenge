@@ -17,17 +17,17 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
 
             builder.OwnsOne(j => j.Nome, n =>
             {
-                n.Property(p => p.Valor).HasColumnName("Nome").IsRequired().HasMaxLength(40);
+                n.Property(p => p.Valor).HasColumnName("Nome").IsRequired().HasMaxLength(100);
             });
 
             builder.OwnsOne(j => j.Descricao, d =>
             {
-                d.Property(p => p.Valor).HasColumnName("Descricao").IsRequired().HasMaxLength(100);
+                d.Property(p => p.Valor).HasColumnName("Descricao").IsRequired().HasMaxLength(500);
             });
 
             builder.OwnsOne(j => j.PrecoBase, p =>
             {
-                p.Property(v => v.Valor).HasColumnName("PrecoBase").HasDefaultValue(0).HasPrecision(18, 2);
+                p.Property(v => v.Valor).HasColumnName("PrecoBase").HasPrecision(18, 2);
             });
 
             builder.Property(u => u.Genero)
