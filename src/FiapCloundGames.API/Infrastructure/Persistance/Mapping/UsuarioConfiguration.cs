@@ -45,8 +45,8 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
                 Nome_Valor = "Admin Sistema",
                 Email_Valor = "admin@fiapcloundgames.com.br",
                 Senha_Hash = senhaHash,
-                DataCadastro = DateTime.UtcNow,
-                DataAlteracao = DateTime.UtcNow
+                DataCadastro = new DateTime(2026, 5, 2),
+                DataAlteracao = new DateTime(2026, 5, 2)
             });
 
             var jogadorId = Guid.Parse("E99C8CAF-7067-49B4-8EEF-B0D7ED801033");
@@ -59,8 +59,8 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
                 Nome_Valor = "Jogador 1",
                 Email_Valor = "jogador1@fiapcloundgames.com.br",
                 Senha_Hash = senhaHash,
-                DataCadastro = DateTime.UtcNow,
-                DataAlteracao = DateTime.UtcNow
+                DataCadastro = new DateTime(2026, 5, 2),
+                DataAlteracao = new DateTime(2026, 5, 2)
             });
 
             jogadorId = Guid.Parse("BC359373-699B-4152-B63C-4FBF5A509AAD");
@@ -73,8 +73,8 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
                 Nome_Valor = "Jogador 2",
                 Email_Valor = "jogador2@fiapcloundgames.com.br",
                 Senha_Hash = senhaHash,
-                DataCadastro = DateTime.UtcNow,
-                DataAlteracao = DateTime.UtcNow
+                DataCadastro = new DateTime(2026, 5, 2),
+                DataAlteracao = new DateTime(2026, 5, 2)
             });
         }
     }
