@@ -5,6 +5,6 @@ namespace FiapCloundGames.API.Domain.Repositories
 {
     public interface IUsuarioRepository : IRepository<Usuario>
     {
-        Task<Usuario> ObterPorEmail(string email);  
+        Task<Usuario?> ObterPorEmail(string email);  
     }
 }
