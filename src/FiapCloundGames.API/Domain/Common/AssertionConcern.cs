@@ -43,13 +43,13 @@ namespace FiapCloundGames.API.Domain.Common
 
             if (stringValue == null)
             {
-                throw new DomainException(MensagensDominio.UsuarioSenhaObrigatoria );
+                throw new DomainException(message);
             }
 
             int length = stringValue.Trim().Length;
             if (length < minimum || length > maximum)
             {
-                throw new DomainException(MensagensDominio.SenhaTamanhoInvalido);
+                throw new DomainException(message);
             }
         }
 
