@@ -16,6 +16,19 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
                 v.Property(p => p.Valor).HasColumnName("PrecoTotal").HasDefaultValue(0).HasPrecision(18, 2);
             });
 
+            builder.OwnsMany(p => p.Jogos, i =>
+            {
+                i.ToTable("PedidoJogos");
+                i.HasKey(x => x.Id);
+
+                i.Property(x=>x.ValorUnitario).IsRequired().HasPrecision(18,2);
+
+                i.HasOne<Jogo>().WithMany().HasForeignKey(x => x.JogoId);
+            });
+
+            builder.Navigation(p => p.Jogos)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
             builder.HasOne(p => p.Usuario)
                .WithMany()            
                .HasForeignKey(p => p.UsuarioId)
