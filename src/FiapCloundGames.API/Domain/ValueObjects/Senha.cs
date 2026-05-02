@@ -9,8 +9,8 @@ namespace FiapCloundGames.API.Domain.ValueObjects
 
         public Senha(string senha)
         {
-            AssertionConcern.AssertArgumentLength(senha,3, 8, MensagensDominio.SenhaTamanhoInvalido);
             AssertionConcern.AssertArgumentEmpty(senha, MensagensDominio.UsuarioSenhaObrigatoria);
+            AssertionConcern.AssertArgumentLength(senha,3, 60, MensagensDominio.SenhaTamanhoInvalido);
             AssertionConcern.AssertArgumentPasswordStrenght(senha, MensagensDominio.UsuarioSenhaFraca);
             Hash = senha;
         }
