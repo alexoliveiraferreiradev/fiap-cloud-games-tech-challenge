@@ -9,13 +9,14 @@ namespace FiapCloundGames.API.Domain.ValueObjects
         public DateTime DataInicio { get; }
         public DateTime DataFim { get; }
 
-        public Periodo(DateTime dataInicio,DateTime dataFinal)
+        public Periodo(DateTime dataInicio,DateTime dataFim)
         {
-            if (dataFinal <= dataInicio) throw new DomainException(MensagensDominio.DataFimInvalida);
+            if (dataFim <= dataInicio) throw new DomainException(MensagensDominio.DataFimInvalida);
             DataInicio = dataInicio;
-            DataFim = dataFinal;
+            DataFim = dataFim;
         }
-        public Periodo(DateTime dataFinal) : this(DateTime.UtcNow,dataFinal){ }
+        protected Periodo() { }
+        public Periodo(DateTime dataFim) : this(DateTime.UtcNow, dataFim) { }
 
         protected override bool EqualsCore(Periodo other)
         {
