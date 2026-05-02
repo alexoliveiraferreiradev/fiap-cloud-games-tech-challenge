@@ -42,8 +42,34 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
                 Id = adminId,
                 Ativo = true,
                 Perfil = TipoUsuario.Administrador,
-                Nome_Valor = "Administrador Sistema",
+                Nome_Valor = "Admin Sistema",
                 Email_Valor = "admin@fiapcloundgames.com.br",
+                Senha_Hash = senhaHash,
+                DataCadastro = DateTime.UtcNow
+            });
+
+            var jogadorId = Guid.Parse("05694ceb-5b21-4ee0-9398-8babc16b3fc8");
+            senhaHash = _passwordHasher.HashPassword("SenhaJogador@123");
+            builder.HasData(new
+            {
+                Id = adminId,
+                Ativo = true,
+                Perfil = TipoUsuario.Jogador,
+                Nome_Valor = "Jogador 1",
+                Email_Valor = "jogador1@fiapcloundgames.com.br",
+                Senha_Hash = senhaHash,
+                DataCadastro = DateTime.UtcNow
+            });
+
+            jogadorId = Guid.Parse("d4fa2a47-b9d1-48fa-b28e-eef16e8db38f");
+            senhaHash = _passwordHasher.HashPassword("SenhaJogador@1234");
+            builder.HasData(new
+            {
+                Id = adminId,
+                Ativo = true,
+                Perfil = TipoUsuario.Jogador,
+                Nome_Valor = "Jogador 2",
+                Email_Valor = "jogador2@fiapcloundgames.com.br",
                 Senha_Hash = senhaHash,
                 DataCadastro = DateTime.UtcNow
             });
