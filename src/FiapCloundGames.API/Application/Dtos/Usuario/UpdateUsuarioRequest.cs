@@ -21,5 +21,12 @@ namespace FiapCloundGames.API.Application.Dtos.Usuario
         [Compare("Senha", ErrorMessage = DataAnnotationMessage.ErroConfirmacaoSenha)]
         [StringLength(60, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 8)]
         public string ConfirmacaoSenha { get; set; }
+        public UpdateUsuarioRequest()
+        {             
+        }
+        public UpdateUsuarioRequest(string novoNome, string novoEmail, string novaSenha, string novaConfirmaoSenha)
+        {
+            NomeUsuario = novoNome; EmailUsuario = novoEmail; SenhaUsuario = novaConfirmaoSenha; ConfirmacaoSenha = novaConfirmaoSenha;
+        }
     }
 }
