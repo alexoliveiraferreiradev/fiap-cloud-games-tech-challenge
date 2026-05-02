@@ -9,6 +9,7 @@ namespace FiapCloundGames.API.Domain.Entities
     public class Pedido : AggregateRoot
     {
         public Guid UsuarioId { get; private set; }
+        public virtual Usuario Usuario { get; private set; }
         public PedidoStatus Status { get; private set; }
         public decimal ValorTotal { get; private set; }
         public DateTime DataCadastro { get; private set; }
