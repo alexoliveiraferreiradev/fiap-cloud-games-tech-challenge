@@ -112,5 +112,9 @@ namespace FiapCloundGames.API.Application.Services
             });
         }
 
+        public async Task<Jogo> ObtemJogoPorId(Guid jogoId)
+        {
+            return await _jogoRepository.ObterPorId(jogoId);
+        }
     }
 }
