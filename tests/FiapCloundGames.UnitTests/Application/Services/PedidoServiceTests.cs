@@ -56,6 +56,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             List<Guid> lista = new List<Guid>();
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
+            var bibliotecaService = new Mock<IBibliotecaService>();
             var jogoMock = new Mock<IJogosRepository>();
             var pedidoMock = new Mock<IPedidoRepository>();
             usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
@@ -65,7 +66,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
                 jogoMock.Setup(r => r.ObterPorId(jogoPedido.Id)).ReturnsAsync(jogoPedido);
                 lista.Add(jogoPedido.Id);
             }
-            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object);
+            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object, bibliotecaService.Object);
             //Act
             var result = await pedidoService.RealizarPedido(usuario.Id, lista);
             //Assert
