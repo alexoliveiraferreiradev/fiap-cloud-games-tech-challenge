@@ -20,18 +20,18 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
             _usuarioRepository = usuarioRepository; 
             _jogoRepository = jogosRepository;  
         }
-        public async Task AdicionaJogo(Guid usuarioId, Guid jogoId)
+        public async Task AdicionaJogo(CriaBibliotecaRequest criaBibliotecaRequest)
         {
-            var usuario = await _usuarioRepository.ObterPorId(usuarioId);
+            var usuario = await _usuarioRepository.ObterPorId(criaBibliotecaRequest.usuarioId);
 
             if (usuario == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
             if (!usuario.Ativo) throw new DomainException(MensagensDominio.UsuarioInativo);
 
-            var jogo = await _jogoRepository.ObterPorId(jogoId);
+            var jogo = await _jogoRepository.ObterPorId(criaBibliotecaRequest.jogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
             if (!jogo.Ativo) throw new DomainException(MensagensDominio.JogoInvalido);
 
-            var biblioteca = new Biblioteca(usuarioId, jogoId);
+            var biblioteca = new Biblioteca(criaBibliotecaRequest.usuarioId, criaBibliotecaRequest.jogoId);
             biblioteca.AdicionaJogo(jogo.Nome, jogo.Descricao, jogo.Genero);
             await _bibliotecaRepository.Adicionar(biblioteca);
         }
