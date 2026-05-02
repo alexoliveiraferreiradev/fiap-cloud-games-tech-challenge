@@ -1,5 +1,6 @@
 ﻿using FiapCloundGames.API.Domain.Common;
 using FiapCloundGames.API.Domain.Common.Exceptions;
+using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
 
@@ -10,6 +11,8 @@ namespace FiapCloundGames.API.Domain.Entities
         public Guid UsuarioId { get; private set; }
         public Guid JogoId { get; private set; }
         public NomeJogo Nome { get;private set; }
+        public Descricao Descricao { get; private set; }
+        public GeneroJogo Genero { get; private set; }
         public DateTime DataCadastro { get; private set; }
         public DateTime DataAlteracao { get; private set; }
         public bool Ativo { get; private set; }
