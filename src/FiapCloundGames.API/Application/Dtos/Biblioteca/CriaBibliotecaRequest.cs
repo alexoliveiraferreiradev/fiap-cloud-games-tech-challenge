@@ -2,5 +2,5 @@
 
 namespace FiapCloundGames.API.Application.Dtos.Biblioteca
 {
-    public record CriaBibliotecaRequest(string nomeJogo, string descricaoJogo, GeneroJogo genero);
+    public record CriaBibliotecaRequest(Guid usuarioId, Guid jogoId);
 }
