@@ -33,6 +33,7 @@
     <Folder Include="Infrastructure\Caching\" />
     <Folder Include="Infrastructure\Caching\" />
     <Folder Include="Infrastructure\Persistance\Migrations\" />
+    <Folder Include="Infrastructure\Repository\" />
   </ItemGroup>
 
 </Project>
