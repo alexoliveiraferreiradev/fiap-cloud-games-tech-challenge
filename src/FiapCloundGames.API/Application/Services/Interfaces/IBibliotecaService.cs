@@ -1,6 +1,4 @@
 ﻿using FiapCloundGames.API.Application.Dtos.Biblioteca;
-using FiapCloundGames.API.Domain.Enum;
-using FiapCloundGames.API.Domain.ValueObjects;
 
 namespace FiapCloundGames.API.Application.Services.Interfaces
 {
