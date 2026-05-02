@@ -34,9 +34,9 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
             var nomeJogoVO = new NomeJogo("Teste Jogo");
             var precoVO = new Preco(10.0m);
             //Arrange
-            var descricaoNoLimite = new Descricao(_faker.Random.String(100));
+            var descricaoNoLimite = new Descricao(_faker.Random.String(500));
             //Assert
-            Assert.Equal(100, descricaoNoLimite.Valor.Length);
+            Assert.Equal(500, descricaoNoLimite.Valor.Length);
         }
 
         [Fact(DisplayName = "Falha ao criar descrição jogo - descrição do jogo inválida deve lançar exceção")]
