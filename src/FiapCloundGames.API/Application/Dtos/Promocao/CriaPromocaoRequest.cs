@@ -3,11 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FiapCloundGames.API.Application.Dtos.Promocao
 {
-    public record CriaPromocaoRequest(
+    public class CriaPromocaoRequest
+    {
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        Guid jogoId,
+        public Guid jogoId { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        decimal valorPromocao,
+        public decimal valorPromocao { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        DateTime dataFim);
+        public DateTime dataFim { get; set; }
+    }
 }
