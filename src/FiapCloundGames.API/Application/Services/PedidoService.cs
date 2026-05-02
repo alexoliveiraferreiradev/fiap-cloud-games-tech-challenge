@@ -1,5 +1,6 @@
 ﻿using FiapCloundGames.API.Application.Dtos.Biblioteca;
 using FiapCloundGames.API.Application.Services.Interfaces;
+using FiapCloundGames.API.Domain.Common;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Resources;
@@ -22,6 +23,17 @@ namespace FiapCloundGames.API.Application.Services
             _usuarioRepository = usuarioRepository;
             _bibliotecaService = bibliotecaService;
         }
+
+        public async Task<IEnumerable<Pedido>> ObtemHistoricoPorUsuario(Guid usuarioId)
+        {
+            return await _pedidoRepository.ObtemHistoricoPorUsuario(usuarioId);
+        }
+
+        public async Task<Pedido> ObterPedidoPorId(Guid id)
+        {
+            return await _pedidoRepository.ObterPorId(id);              
+        }
+
         public async Task<Pedido> RealizarPedido(Guid usuarioId, List<Guid> jogosIds)
         {
             var usuario = await _usuarioRepository.ObterPorId(usuarioId);
