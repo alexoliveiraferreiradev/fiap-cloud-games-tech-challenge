@@ -9,7 +9,7 @@ namespace FiapCloundGames.API.Domain.ValueObjects
         public Nome(string nomeUsuario)
         {
             AssertionConcern.AssertArgumentEmpty(nomeUsuario, MensagensDominio.UsuarioNomeObrigatorio);
-            AssertionConcern.AssertArgumentLength(nomeUsuario, 3, 20, MensagensDominio.UsuarioTamanhoNomeInvalido);
+            AssertionConcern.AssertArgumentLength(nomeUsuario, 3, 50, MensagensDominio.UsuarioTamanhoNomeInvalido);
             Valor = nomeUsuario;
         }
 
