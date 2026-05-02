@@ -88,13 +88,13 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task AtualizarUsuario(Guid id, UpdateUsuarioRequest request)
         {
-            ValidaSenhas(request.senhaUsuario, request.reSenhaUsuario);
+            ValidaSenhas(request.SenhaUsuario, request.ConfirmacaoSenha);
             var usuario = await _usuarioRepository.ObterPorId(id);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
 
-            var novaSenhaCriptografa = _passwordHasher.HashPassword(request.senhaUsuario);
-            var novoUsuarioVO = new Nome(request.nomeUsuario);
-            var novoEmailUsuarioVO = new Email(request.emailUsuario);
+            var novaSenhaCriptografa = _passwordHasher.HashPassword(request.SenhaUsuario);
+            var novoUsuarioVO = new Nome(request.NomeUsuario);
+            var novoEmailUsuarioVO = new Email(request.EmailUsuario);
             var novaSenhaUsuarioVO = new Senha(novaSenhaCriptografa);
 
             usuario.Atualizar(novoUsuarioVO, novoEmailUsuarioVO, novaSenhaUsuarioVO);
