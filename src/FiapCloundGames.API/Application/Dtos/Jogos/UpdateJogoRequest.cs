@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FiapCloundGames.API.Application.Dtos.Jogos
 {
-    public record UpdateJogosRequest
+    public record UpdateJogoRequest
     {
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         [StringLength(100, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 2)]
@@ -18,11 +18,11 @@ namespace FiapCloundGames.API.Application.Dtos.Jogos
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         public GeneroJogo NovoGenero { get; set; }
 
-        public UpdateJogosRequest()
+        public UpdateJogoRequest()
         {            
         }
 
-        public UpdateJogosRequest(string novoNome, string novaDescricao, decimal novoPreco, GeneroJogo novoGenero)
+        public UpdateJogoRequest(string novoNome, string novaDescricao, decimal novoPreco, GeneroJogo novoGenero)
         {
             NovoNome = novoNome; NovaDescricao = novaDescricao; NovoPreco = novoPreco; NovoGenero = novoGenero;
         }

@@ -152,7 +152,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange
             var jogo = _jogosFixture.ObtemJogosComSucesso();
-            var request = new UpdateJogosRequest("Read Dead 2", "Jogo de tiro", 10.00m, GeneroJogo.Aventura);
+            var request = new UpdateJogoRequest("Read Dead 2", "Jogo de tiro", 10.00m, GeneroJogo.Aventura);
 
             _mockJogo.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
             //Act 
@@ -170,7 +170,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange
             var jogoId = Guid.NewGuid();
-            var request = new UpdateJogosRequest("Read Dead 2", "Jogo de tiro", 10.00m, GeneroJogo.Aventura);
+            var request = new UpdateJogoRequest("Read Dead 2", "Jogo de tiro", 10.00m, GeneroJogo.Aventura);
 
             _mockJogo.Setup(r => r.ObterPorId(jogoId)).ReturnsAsync((Jogo)null);
             //Act 

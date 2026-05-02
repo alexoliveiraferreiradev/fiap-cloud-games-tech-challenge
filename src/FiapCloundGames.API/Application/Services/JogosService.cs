@@ -32,7 +32,7 @@ namespace FiapCloundGames.API.Application.Services
             await _jogoRepository.Adicionar(jogos);
         }
 
-        public async Task AtualizarJogo(Guid id, UpdateJogosRequest updateJogosRequest)
+        public async Task AtualizarJogo(Guid id, UpdateJogoRequest updateJogosRequest)
         {
             var jogo = await _jogoRepository.ObterPorId(id);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
