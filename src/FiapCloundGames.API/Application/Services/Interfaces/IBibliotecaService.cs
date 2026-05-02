@@ -7,6 +7,5 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
     {
         Task AdicionaJogo(NomeJogo nomeJogo, Descricao descricao, GeneroJogo generoJogo);
         Task AtualizarDados(NomeJogo nomeJogo, Descricao descricao, GeneroJogo generoJogo);
-        Task Limpar();
     }
 }
