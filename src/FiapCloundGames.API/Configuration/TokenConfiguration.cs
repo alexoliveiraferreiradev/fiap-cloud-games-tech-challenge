@@ -61,6 +61,7 @@ namespace FiapCloundGames.API.Configuration
         public async Task<IEnumerable<Claim>> ObtemClaims(Usuario usuario)
         {
             var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Name, usuario.NomeUsuario.Valor));
             claims.Add(new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()));
             claims.Add(new Claim(ClaimTypes.Email, usuario.EmailUsuario.Valor));
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
