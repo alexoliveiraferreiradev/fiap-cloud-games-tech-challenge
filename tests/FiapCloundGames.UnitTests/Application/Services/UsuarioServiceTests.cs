@@ -42,34 +42,10 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             //Act
             repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
-            var result = await service.PromoverParaAdmin(usuario.Id, true, "INVITE-ADMIN-VALID");
+            var result = await service.PromoverParaAdmin(usuario.Id);
             //Assert
             Assert.Equal(TipoUsuario.Administrador, result.Perfil);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);
-        }
-
-        /// <summary>
-        /// Verifica se o método CadastrarAdministrador lança uma exceção do tipo DomainException quando as permissões para criar um administrador são inválidas.
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando as permissões 
-        /// para criar um administrador são inválidas.</remarks>
-        [Fact(DisplayName = "Falha ao promover novo admistrador - não há permissões")]
-        [Trait("Categoria", "Usuario Service Tests")]
-        public async Task PromoverUsuarioAdministrador_AdministradorInvalidoSemPermissao_DeveLancarExcecao()
-        {
-            //Arrange            
-            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            //Mock
-            var hashMock = new Mock<IPasswordHasher>();
-            var repoMock = new Mock<IUsuarioRepository>();
-            var service = new UsuarioService(repoMock.Object, hashMock.Object);
-            //Act 
-            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.PromoverParaAdmin(usuario.Id, false, "INVITE-ADMIN-VALID"));
-            //Assert
-            Assert.Equal(MensagensDominio.PermissaoNegadaCriarAdministrador, result.Message);
-            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
         /// <summary>
@@ -78,9 +54,9 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// <returns></returns>
         /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando o token de acesso 
         /// para criar um administrador é inválido ou ausente.</remarks>
-        [Fact(DisplayName = "Falha ao promover novo admistrador - não há token")]
+        [Fact(DisplayName = "Falha ao promover novo admistrador - usuário não encontrado")]
         [Trait("Categoria", "Usuario Service Tests")]
-        public async Task PromoverUsuarioAdministrador_AdministradorInvalidoSemToken_DeveLancarExcecao()
+        public async Task PromoverUsuarioAdministrador_UsuarioNaoEncontrado_DeveLancarExcecao()
         {
             //Arrange            
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
@@ -89,10 +65,9 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             //Act 
-            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.PromoverParaAdmin(usuario.Id, true, ""));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.PromoverParaAdmin(usuario.Id));
             //Assert
-            Assert.Equal(MensagensDominio.PermissaoNegadaCriarAdministrador, result.Message);
+            Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
