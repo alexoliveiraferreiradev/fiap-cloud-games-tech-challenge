@@ -1,10 +1,22 @@
-﻿namespace FiapCloundGames.API.Application.Dtos.Biblioteca
+﻿using FiapCloundGames.API.Domain.Enum;
+
+namespace FiapCloundGames.API.Application.Dtos.Biblioteca
 {
-    public record BibliotecaResponse(
-        Guid JogoId,
-        string NomeJogo,
-        string Descricao,
-        string Genero,
-        DateTime DataAquisicao
-        );
+    public class BibliotecaResponse
+    {
+        public Guid JogoId { get; set; }
+        public string NomeJogo { get; set; }
+        public string Descricao { get; set; }
+        public string Genero { get; set; }
+        public DateTime DataAquisicao { get; set; }
+
+        public BibliotecaResponse()
+        {            
+        }
+
+        public BibliotecaResponse(Guid jogoid, string nomeJogo, string descricaojogo, string generoJogo, DateTime dataAquisicao)
+        {
+            JogoId = jogoid; NomeJogo = nomeJogo; Descricao = descricaojogo; Genero = generoJogo; DataAquisicao = dataAquisicao;    
+        }
+    }
 }

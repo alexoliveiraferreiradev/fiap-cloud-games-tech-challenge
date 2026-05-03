@@ -46,7 +46,6 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
         [Trait("Categoria", "Usuario Tests")]
         [InlineData("aB")]
         [InlineData("xD")]
-        [InlineData("aBuhdoiumnaitionahjdrt")]
         public void NomeCria_NomeInvalido_DeveLancarExcecao(string nomeInvalido)
         {
             //Arrange

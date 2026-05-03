@@ -7,11 +7,12 @@ namespace FiapCloundGames.API.Domain.ValueObjects
     {
         public string Hash { get; }
 
-        public Senha(string senha)
+        public Senha(string hash)
         {
-            AssertionConcern.AssertArgumentEmpty(senha, MensagensDominio.UsuarioSenhaObrigatoria);
-            AssertionConcern.AssertArgumentPasswordStrenght(senha, MensagensDominio.UsuarioSenhaFraca);
-            Hash = senha;
+            AssertionConcern.AssertArgumentEmpty(hash, MensagensDominio.UsuarioSenhaObrigatoria);
+            AssertionConcern.AssertArgumentLength(hash, 8, 60, MensagensDominio.SenhaTamanhoInvalido);
+            AssertionConcern.AssertArgumentPasswordStrenght(hash, MensagensDominio.UsuarioSenhaFraca);
+            Hash = hash;
         }
 
         protected override bool EqualsCore(Senha other)

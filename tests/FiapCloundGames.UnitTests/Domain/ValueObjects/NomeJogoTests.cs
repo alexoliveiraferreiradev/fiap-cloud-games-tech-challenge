@@ -42,7 +42,7 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
         {
             //Arrange
             //Act 
-            var result = Assert.Throws<DomainException>(() => new NomeJogo(_faker.Random.String(41)));
+            var result = Assert.Throws<DomainException>(() => new NomeJogo(_faker.Random.String(101)));
             //Assert
             Assert.Equal(MensagensDominio.JogoTamanhoNomeInvalido, result.Message);
         }

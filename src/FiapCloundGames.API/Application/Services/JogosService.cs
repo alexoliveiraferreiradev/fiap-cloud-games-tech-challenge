@@ -3,23 +3,23 @@ using FiapCloundGames.API.Application.Dtos.Promocao;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
+using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
-using FiapCloundGames.API.Infrastructure.Repository;
 
 namespace FiapCloundGames.API.Application.Services
 {
     public class JogosService : IJogosService
     {
-        private readonly IJogosRepository _jogoRepository;
-        public JogosService(IJogosRepository jogoRepository)
+        private readonly IJogoRepository _jogoRepository;
+        public JogosService(IJogoRepository jogoRepository)
         {
             _jogoRepository = jogoRepository;
         }
         public async Task<Jogo> CriaJogo(CriarJogoRequest request)
         {
             await VerificaDuplicidadeNome(request.Nome);
-            var preco = new Preco(request.preco);
+            var preco = new Preco(request.Preco);
             var nomeJogoVO = new NomeJogo(request.Nome);
             var descricaoVO = new Descricao(request.Descricao);
             var jogos = new Jogo(nomeJogoVO, descricaoVO, preco, request.Genero);
@@ -32,15 +32,15 @@ namespace FiapCloundGames.API.Application.Services
             await _jogoRepository.Adicionar(jogos);
         }
 
-        public async Task AtualizarJogo(Guid id, UpdateJogosRequest updateJogosRequest)
+        public async Task AtualizarJogo(Guid id, UpdateJogoRequest updateJogosRequest)
         {
             var jogo = await _jogoRepository.ObterPorId(id);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            var precoVO = new Preco(updateJogosRequest.novoPreco);
-            var nomeJogoVO = new NomeJogo(updateJogosRequest.novoNome);
-            var descricaoJogoVO = new Descricao(updateJogosRequest.novaDescricao);
+            var precoVO = new Preco(updateJogosRequest.NovoPreco);
+            var nomeJogoVO = new NomeJogo(updateJogosRequest.NovoNome);
+            var descricaoJogoVO = new Descricao(updateJogosRequest.NovaDescricao);
 
-            jogo.Atualizar(nomeJogoVO, descricaoJogoVO, precoVO, updateJogosRequest.novoGenero);
+            jogo.Atualizar(nomeJogoVO, descricaoJogoVO, precoVO, updateJogosRequest.NovoGenero);
             await _jogoRepository.Atualizar(jogo);
         }
 
@@ -70,24 +70,24 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task AdicionarPromocao(CriaPromocaoRequest promocaoRequest)
         {
-            var jogo = await _jogoRepository.ObterPorId(promocaoRequest.jogoId);
+            var jogo = await _jogoRepository.ObterPorId(promocaoRequest.JogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            var valorPromocaoVO = new Preco(promocaoRequest.valorPromocao);
-            var periodoVO = new Periodo(promocaoRequest.dataFim);
+            var valorPromocaoVO = new Preco(promocaoRequest.ValorPromocao);
+            var periodoVO = new Periodo(promocaoRequest.DataFim);
             jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
             await _jogoRepository.Atualizar(jogo);
         }
 
         public async Task AtualizaPromocao(Guid promocaoId,UpdatePromocaoRequest promocaoRequest)
         {            
-            var jogo = await _jogoRepository.ObterPorId(promocaoRequest.jogoId);
+            var jogo = await _jogoRepository.ObterPorId(promocaoRequest.JogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            var novoPrecoPromocao = new Preco(promocaoRequest.novoValorPromocao);
-            var novaDataPromocao = new Periodo(promocaoRequest.novaDataFim);
+            var novoPrecoPromocao = new Preco(promocaoRequest.NovoValorPromocao);
+            var novaDataPromocao = new Periodo(promocaoRequest.NovaDataFim);
             if (!jogo.Promocoes.Any()) throw new DomainException(MensagensDominio.JogoSemPromocoes);
             var promocao = await _jogoRepository.ObterPromocaoPorId(promocaoId);
             if (promocao == null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);                        
-            jogo.AlteraPromocao(promocao.Id, new Preco(promocaoRequest.novoValorPromocao), promocaoRequest.novaDataFim);
+            jogo.AlteraPromocao(promocao.Id, new Preco(promocaoRequest.NovoValorPromocao), promocaoRequest.NovaDataFim);
             await _jogoRepository.Atualizar(jogo);
         }
 
@@ -103,13 +103,13 @@ namespace FiapCloundGames.API.Application.Services
         {
             var jogos = await _jogoRepository.ObtemJogosAtivos();
             return jogos.Select(j => new JogoResponse
-            {
-                Id = j.Id,
-                Nome = j.Nome.Valor,
-                Descricao = j.Descricao.Valor,
-                PrecoOriginal = j.PrecoBase.Valor,
-                PrecoAtual = j.ObterPrecoAtual().Valor
-            });
+            (
+                j.Id,
+                j.Nome.Valor,
+                j.Descricao.Valor,
+                j.PrecoBase.Valor,
+                j.ObterPrecoAtual().Valor
+            ));
         }
 
         public async Task<Jogo> ObtemJogoPorId(Guid jogoId)

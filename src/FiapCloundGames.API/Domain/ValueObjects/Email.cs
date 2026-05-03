@@ -9,11 +9,12 @@ namespace FiapCloundGames.API.Domain.ValueObjects
     {
         public string Valor { get; }
 
-        public Email(string emailUsuario)
+        public Email(string valor)
         {
-            AssertionConcern.AssertArgumentEmpty(emailUsuario, MensagensDominio.UsuarioEmailObrigatorio);
-            AssertionConcern.AssertArgumentEmailFormat(emailUsuario, MensagensDominio.EmailInvalido);
-            Valor = emailUsuario;
+            AssertionConcern.AssertArgumentEmpty(valor, MensagensDominio.UsuarioEmailObrigatorio);
+            AssertionConcern.AssertArgumentEmailFormat(valor, MensagensDominio.EmailInvalido);
+            AssertionConcern.AssertArgumentLength(valor, 7, 100, MensagensDominio.EmailTamanhoInvalido);
+            Valor = valor;
         }
 
         protected override bool EqualsCore(Email other)

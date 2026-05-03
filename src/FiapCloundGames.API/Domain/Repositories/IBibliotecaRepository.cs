@@ -1,7 +1,7 @@
 ﻿using FiapCloundGames.API.Application.Dtos.Biblioteca;
 using FiapCloundGames.API.Domain.Entities;
 
-namespace FiapCloundGames.API.Infrastructure.Repository
+namespace FiapCloundGames.API.Domain.Repositories
 {
     public interface IBibliotecaRepository : IRepository<Biblioteca>
     {

@@ -1,14 +1,13 @@
 ﻿using FiapCloundGames.API.Domain.Common;
-using FiapCloundGames.API.Domain.Common.Exceptions;
-using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
-using FiapCloundGames.API.Domain.ValueObjects;
 
 namespace FiapCloundGames.API.Domain.Entities
 {
     public class Biblioteca : AggregateRoot
     {
+        public virtual Usuario Usuario { get; private set; }
         public Guid UsuarioId { get; private set; }
+        public virtual Jogo Jogo { get; private set; }
         public Guid JogoId { get; private set; }
         public DateTime DataCadastro { get; private set; }
         public DateTime DataAlteracao { get; private set; }

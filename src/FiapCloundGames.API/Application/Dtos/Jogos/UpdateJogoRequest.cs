@@ -1,29 +1,30 @@
 ﻿using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Resources;
+using FiapCloundGames.API.Domain.ValueObjects;
 using System.ComponentModel.DataAnnotations;
 
 namespace FiapCloundGames.API.Application.Dtos.Jogos
 {
-    public class CriarJogoRequest
+    public record UpdateJogoRequest
     {
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         [StringLength(100, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 2)]
-        public string Nome { get; set; }
+        public string NovoNome { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         [StringLength(500, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 7)]
-        public string Descricao { get; set; }
+        public string NovaDescricao { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        public decimal Preco { get; set; }
+        public decimal NovoPreco { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
-        public GeneroJogo Genero { get; set; }
+        public GeneroJogo NovoGenero { get; set; }
 
-        public CriarJogoRequest()
-        {
+        public UpdateJogoRequest()
+        {            
         }
 
-        public CriarJogoRequest(string nomeJogo, string descricaoJogo, decimal precoJogo, GeneroJogo generoJogo)
+        public UpdateJogoRequest(string novoNome, string novaDescricao, decimal novoPreco, GeneroJogo novoGenero)
         {
-            Nome = nomeJogo; Descricao = descricaoJogo; Preco = precoJogo; Genero = generoJogo;
+            NovoNome = novoNome; NovaDescricao = novaDescricao; NovoPreco = novoPreco; NovoGenero = novoGenero;
         }
     }
 }

@@ -3,9 +3,9 @@ using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
+using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
-using FiapCloundGames.API.Infrastructure.Repository;
 
 namespace FiapCloundGames.API.Application.Services
 {
@@ -13,9 +13,9 @@ namespace FiapCloundGames.API.Application.Services
     {
         private readonly IBibliotecaService _bibliotecaService;
         private readonly IPedidoRepository _pedidoRepository;
-        private readonly IJogosRepository _jogoRepository;
+        private readonly IJogoRepository _jogoRepository;
         private readonly IUsuarioRepository _usuarioRepository;
-        public PedidoService(IPedidoRepository pedidoRepository, IJogosRepository jogosRepository,
+        public PedidoService(IPedidoRepository pedidoRepository, IJogoRepository jogosRepository,
             IUsuarioRepository usuarioRepository, IBibliotecaService bibliotecaService)
         {
             _pedidoRepository = pedidoRepository;

@@ -9,8 +9,9 @@ namespace FiapCloundGames.API.Domain.Entities
     public class Pedido : AggregateRoot
     {
         public Guid UsuarioId { get; private set; }
+        public virtual Usuario Usuario { get; private set; }
         public PedidoStatus Status { get; private set; }
-        public decimal ValorTotal { get; private set; }
+        public Preco ValorTotal { get; private set; }
         public DateTime DataCadastro { get; private set; }
         public DateTime DataAlteracao { get; private set;  }
         private List<PedidoJogo> _jogos;
@@ -55,7 +56,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         private void CalcularValorTotal()
         {
-            ValorTotal = _jogos.Sum(j => j.PrecoNoMomento.Valor);
+            ValorTotal = new Preco(_jogos.Sum(j => j.ValorUnitario.Valor));
         }
     }
 }

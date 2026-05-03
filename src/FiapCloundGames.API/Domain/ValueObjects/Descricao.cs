@@ -7,11 +7,11 @@ namespace FiapCloundGames.API.Domain.ValueObjects
     {
         public string Valor { get; set; }
 
-        public Descricao(string descricao)
+        public Descricao(string valor)
         {
-            AssertionConcern.AssertArgumentEmpty(descricao, MensagensDominio.JogoDescricaoObrigatoria);
-            AssertionConcern.AssertArgumentLength(descricao, 5, 100, MensagensDominio.JogoDescricaoTamanhoInvalido);
-            Valor = descricao;
+            AssertionConcern.AssertArgumentEmpty(valor, MensagensDominio.JogoDescricaoObrigatoria);
+            AssertionConcern.AssertArgumentLength(valor, 5, 500, MensagensDominio.JogoDescricaoTamanhoInvalido);
+            Valor = valor;
         }
 
         protected override bool EqualsCore(Descricao other)

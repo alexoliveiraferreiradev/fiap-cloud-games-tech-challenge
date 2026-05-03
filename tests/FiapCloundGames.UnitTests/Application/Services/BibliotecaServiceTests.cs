@@ -3,9 +3,9 @@ using FiapCloundGames.API.Application.Services;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
+using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
-using FiapCloundGames.API.Infrastructure.Repository;
 using FiapCloundGames.UnitTests.Fixtures;
 using Moq;
 
@@ -32,7 +32,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var repoMock = new Mock<IBibliotecaRepository>();
             var usuarioMock = new Mock<IUsuarioRepository>();
             var bibliotecaMock = new Mock<IBibliotecaRepository>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var service = new BibliotecaService(repoMock.Object, usuarioMock.Object, jogoMock.Object);
             usuarioMock.Setup(u => u.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             for (int i =0;i<=3;i++)
@@ -58,7 +58,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
             var bibliotecaMock = new Mock<IBibliotecaRepository>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var service = new BibliotecaService(bibliotecaMock.Object, usuarioMock.Object, jogoMock.Object);
             usuarioMock.Setup(u => u.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             for (int i = 0; i <= 3; i++)
@@ -85,7 +85,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
             var bibliotecaMock = new Mock<IBibliotecaRepository>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var service = new BibliotecaService(bibliotecaMock.Object, usuarioMock.Object, jogoMock.Object);
             usuarioMock.Setup(u => u.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             for (int i = 0; i <= 3; i++)

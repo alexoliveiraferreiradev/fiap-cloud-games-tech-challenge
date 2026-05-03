@@ -30,7 +30,7 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
         public void CriaPromocao_PrecoInvalido_DeveLancarExcecao()
         {
             //Arrange
-            var precoInvalido = _faker.Random.Decimal(-1);
+            var precoInvalido = _faker.Random.Decimal(-1,-2);
             //Act 
             var result = Assert.Throws<DomainException>(() => new Preco(precoInvalido));
             //Assert

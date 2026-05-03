@@ -52,9 +52,9 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
         [Theory(DisplayName = "Falha ao criar senha - senha fraca")]
         [Trait("Categoria", "Senha Tests")]
         [InlineData("senhaFraca")]
-        [InlineData("123456")]
-        [InlineData("abcdefg")]
-        [InlineData("@@@@@a")]
+        [InlineData("12345687")]
+        [InlineData("abcdefgaa")]
+        [InlineData("@@@@@aaa")]
         [InlineData("senha@123")]
         [InlineData("SENHA@123")]
         public void CriaSenha_SenhaInvalida_DeveLancarExcecao(string senhaInvalida)
@@ -64,6 +64,25 @@ namespace FiapCloundGames.UnitTests.Domain.ValueObjects
             var result = Assert.Throws<DomainException>(() => new Senha(senhaInvalida));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioSenhaFraca, result.Message);
+        }
+        /// <summary>
+        /// Testa falha quando a senha não atende aos requisitos de força.
+        /// Deve lançar <see cref="DomainException"/> com a mensagem de senha fraca.
+        /// </summary>
+        [Theory(DisplayName = "Falha ao criar senha - tamanho inválido")]
+        [Trait("Categoria", "Senha Tests")]
+        [InlineData("senha")]
+        [InlineData("123456")]
+        [InlineData("abcde")]
+        [InlineData("@@@@@")]
+        [InlineData("ENHA@23")]
+        public void CriaSenha_SenhaTamanhoPequeno_DeveLancarExcecao(string senhaInvalida)
+        {
+            //Arrange
+            //Act             
+            var result = Assert.Throws<DomainException>(() => new Senha(senhaInvalida));
+            //Assert
+            Assert.Equal(MensagensDominio.SenhaTamanhoInvalido, result.Message);
         }
     }
 }

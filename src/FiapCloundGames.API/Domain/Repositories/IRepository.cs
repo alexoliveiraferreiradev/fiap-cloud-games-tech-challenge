@@ -1,6 +1,6 @@
 ﻿using FiapCloundGames.API.Domain.Common;
 
-namespace FiapCloundGames.API.Infrastructure.Repository
+namespace FiapCloundGames.API.Domain.Repositories
 {
     public interface IRepository<T> where T : AggregateRoot
     {

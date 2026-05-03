@@ -24,7 +24,7 @@ namespace FiapCloundGames.UnitTests.Infrastructure
         {
             // Arrange - Classe REAL, sem Mock
             var hasher = new PasswordHasher();
-            var senhaPura = "MinhaSenha@123";
+            var senhaPura = "SenhaAdmin@123";
             var hashGerado = hasher.HashPassword(senhaPura);    
             // Act
             var result = hasher.VerifyPassword(senhaPura, hashGerado);

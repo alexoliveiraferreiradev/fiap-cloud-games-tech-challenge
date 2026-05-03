@@ -4,26 +4,27 @@ using FiapCloundGames.API.Domain.ValueObjects;
 
 namespace FiapCloundGames.API.Domain.Entities
 {
-    public class PedidoJogo
+    public class PedidoJogo : EntityBase   
     {
+        public virtual Jogo Jogo { get;private set;  }
         public Guid JogoId { get; private set; }
-        public Preco PrecoNoMomento { get; private set; }
+        public Preco ValorUnitario { get; private set; }
 
         protected PedidoJogo()
         {
         }
 
-        public PedidoJogo(Guid jogoId, Preco precoNoMomento)
+        public PedidoJogo(Guid jogoId, Preco valorUnitario)
         {
-            ValidaEntidades(jogoId, precoNoMomento);
             JogoId = jogoId;
-            PrecoNoMomento = precoNoMomento;
+            ValorUnitario = valorUnitario;
+            ValidarEntidade();
         }
 
-        private void ValidaEntidades(Guid jogoId,Preco preco)
+        protected override void ValidarEntidade()
         {
-            AssertionConcern.AssertArgumentNotNull(jogoId, MensagensDominio.JogoNaoEncontrado);
-            AssertionConcern.AssertArgumentNotNull(preco, MensagensDominio.PrecoObrigatorio);
+            AssertionConcern.AssertArgumentNotNull(JogoId, MensagensDominio.JogoNaoEncontrado);
+            AssertionConcern.AssertArgumentNotNull(ValorUnitario, MensagensDominio.PrecoObrigatorio);
         }
     }
 }

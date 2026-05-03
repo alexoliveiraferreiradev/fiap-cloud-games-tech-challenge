@@ -3,9 +3,9 @@ using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
+using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
-using FiapCloundGames.API.Infrastructure.Repository;
 using FiapCloundGames.UnitTests.Fixtures;
 using Moq;
 using System.Net.NetworkInformation;
@@ -32,7 +32,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock
 
             var usuarioMock = new Mock<IUsuarioRepository>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var bibliotecaService = new Mock<IBibliotecaService>();
             lista.Add(jogoPedido.Id);
             var pedidoMock = new Mock<IPedidoRepository>();
@@ -57,7 +57,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
             var bibliotecaService = new Mock<IBibliotecaService>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var pedidoMock = new Mock<IPedidoRepository>();
             usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             for (int i = 0; i <= 3; i++)
@@ -86,7 +86,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
             var bibliotecaService = new Mock<IBibliotecaService>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var pedidoMock = new Mock<IPedidoRepository>();
             jogoMock.Setup(r => r.ObterPorId(jogoPedido.Id)).ReturnsAsync(jogoPedido);
             lista.Add(jogoPedido.Id);
@@ -108,7 +108,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock
 
             var usuarioMock = new Mock<IUsuarioRepository>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var bibliotecaService = new Mock<IBibliotecaService>();
             lista.Add(jogoPedido.Id);
             var pedidoMock = new Mock<IPedidoRepository>();
@@ -133,7 +133,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
             var bibliotecaService = new Mock<IBibliotecaService>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var pedidoMock = new Mock<IPedidoRepository>();
             usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             lista.Add(jogoId);
@@ -158,7 +158,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Mock
             var usuarioMock = new Mock<IUsuarioRepository>();
             var bibliotecaService = new Mock<IBibliotecaService>();
-            var jogoMock = new Mock<IJogosRepository>();
+            var jogoMock = new Mock<IJogoRepository>();
             var pedidoMock = new Mock<IPedidoRepository>();
             usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             jogoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
@@ -170,7 +170,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Assert
             Assert.Equal(PedidoStatus.Finalizado, result.Status);
             Assert.NotEqual(valorPromocao, jogo.PrecoBase);
-            Assert.Equal(valorPromocao.Valor, result.ValorTotal);
+            Assert.Equal(valorPromocao, result.ValorTotal);
             pedidoMock.Verify(p => p.Adicionar(It.IsAny<Pedido>()), Times.Once);
         }
     }
