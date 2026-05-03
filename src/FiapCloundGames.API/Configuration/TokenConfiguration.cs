@@ -20,7 +20,7 @@ namespace FiapCloundGames.API.Configuration
             ILogger<TokenConfiguration> logger)
         {
             _jwtSettings = jwtSettings.Value;
-            _logger = logger;   
+            _logger = logger;
         }
         public async Task<LoginResponse> RetornaJwt(Usuario usuario)
         {
@@ -36,10 +36,10 @@ namespace FiapCloundGames.API.Configuration
                 Email = usuario.EmailUsuario.Valor,
                 Claims = claims.Select(c => new ClaimResponse { Type = c.Type, Value = c.Value })
             };
-        }   
+        }
 
         public string TokenGenerate(IEnumerable<Claim> claims)
-        {         
+        {
             var identityClaims = new ClaimsIdentity();
             identityClaims.AddClaims(claims);
 
@@ -67,14 +67,12 @@ namespace FiapCloundGames.API.Configuration
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
-            if (usuario.Perfil == TipoUsuario.Administrador)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, "AdminRole"));
-            }
+            if (usuario.Perfil == TipoUsuario.Administrador) claims.Add(new Claim(ClaimTypes.Role, "AdminRole"));
+            if (usuario.Perfil == TipoUsuario.Jogador) claims.Add(new Claim(ClaimTypes.Role, "JogadorRole"));
             return claims;
         }
 
-        
+
 
         private static long ToUnixEpochDate(DateTime date)
             => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
