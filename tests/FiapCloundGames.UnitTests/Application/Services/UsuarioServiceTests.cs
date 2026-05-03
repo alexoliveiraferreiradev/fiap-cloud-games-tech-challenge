@@ -71,7 +71,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
-        [Fact(DisplayName = "Cadastrar usuário  - deve criptografar a senha ao cadastrar")]
+        [Fact(DisplayName = "Sucesso ao cadastrar usuário  - deve criptografar a senha ao cadastrar")]
         [Trait("Categoria", "Usuario Service Tests")]
         public async Task CadastrarUsuario_ValidacaoSenha_DeveCadastrarComSucesso()
         {
@@ -123,7 +123,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         /// Verifica se o método CriaJogador cria um usuário com perfil de Jogador corretamente quando os dados fornecidos são válidos.
         /// </summary>
         /// <remarks>Este teste verifica se um usuário com perfil de Jogador é criado corretamente quando os dados fornecidos são válidos. Ele utiliza um mock do serviço de usuário para simular a criação do jogador e valida se o perfil do usuário criado é realmente de Jogador, além de verificar se o método de adição do repositório foi chamado corretamente.</remarks>
-        [Fact(DisplayName = "Cadastrar novo jogador")]
+        [Fact(DisplayName = "Sucesso ao cadastrar novo jogador")]
         [Trait("Categoria", "Usuario Service Tests")]
         public async Task CadastrarUsuarioJogador_JogadorValido_DeveCriarComSucesso()
         {
@@ -283,7 +283,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             repoMock.Setup(r => r.ObterPorId(usuarioRebaixar.Id)).ReturnsAsync(usuarioRebaixar);
 
             //Act
-            await service.RebaixarParaJogador(usuarioRebaixar.Id);
+            await service.RebaixarParaJogador(usuarioRebaixar.Id,Guid.NewGuid());
             //Assert
             Assert.Equal(TipoUsuario.Jogador, usuarioRebaixar.Perfil);
         }
@@ -303,7 +303,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             repoMock.Setup(r => r.ObterPorId(usuarioRebaixar.Id)).ReturnsAsync(usuarioRebaixar);
 
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarParaJogador(idUsuarioRebaixar: usuarioRebaixar.Id));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarParaJogador(idUsuarioRebaixar: usuarioRebaixar.Id, Guid.NewGuid()));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioPerfilRebaixarInvalido, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
@@ -323,13 +323,30 @@ namespace FiapCloundGames.UnitTests.Application.Services
             repoMock.Setup(r => r.ObterPorId(idUsuarioARebaixar)).ReturnsAsync((Usuario)null);
 
             // Act  
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarParaJogador(idUsuarioRebaixar: idUsuarioARebaixar));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarParaJogador(idUsuarioRebaixar: idUsuarioARebaixar, Guid.NewGuid()));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
-        [Fact(DisplayName = "Atualizar usuário - dados com sucesso")]
+        [Fact(DisplayName = "Falha ao rebaixar um administrador - usuário tentando rebaixar o próprio perfil")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task RebaixarPerfil_RebaixamentoInvalido_DeveLancarExcecao()
+        {
+
+            var idUsuarioARebaixar = Guid.NewGuid();
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var hashMock = new Mock<IPasswordHasher>();
+            var service = new UsuarioService(repoMock.Object, hashMock.Object);
+            // Act  
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarParaJogador(idUsuarioARebaixar, idUsuarioARebaixar));
+            //Assert
+            Assert.Equal(MensagensDominio.OperacaoRebaixarInvalida, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
+        }
+
+        [Fact(DisplayName = "Sucesso ao atualizar usuário - dados com sucesso")]
         [Trait("Categoria", "Usuario Service Tests")]
         public async Task AtualizarUsuario_UsuarioValido_DeveAtualizarComSucesso()
         {
@@ -462,7 +479,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         }
 
 
-        [Fact(DisplayName = "Desativar usuário - desativação com sucesso")]
+        [Fact(DisplayName = "Sucesso ao desativar usuário - desativação com sucesso")]
         [Trait("Categoria", "Usuario Service Tests")]
         public async Task DesativarUsuario_UsuarioValido_DeveDesativarComSucesso()
         {
@@ -475,15 +492,72 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             repoMock.Setup(r => r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync(usuario);
             //Act
-            await service.Desativar(deleteUsuarioRequest);
+            await service.Desativar(deleteUsuarioRequest,Guid.NewGuid());
             //Assert
             Assert.False(usuario.Ativo);
 
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);
         }
 
+        [Fact(DisplayName = "Sucesso ao desativar usuário - desativação com sucesso")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task DesativarConta_UsuarioValido_DeveDesativarComSucesso()
+        {
+            //Arrange            
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var deleteUsuarioRequest = new DeleteUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var hashMock = new Mock<IPasswordHasher>();
+            var service = new UsuarioService(repoMock.Object, hashMock.Object);
+            repoMock.Setup(r => r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync(usuario);
+            //Act
+            await service.DesativarConta(deleteUsuarioRequest);
+            //Assert
+            Assert.False(usuario.Ativo);
 
-        [Fact(DisplayName = "Desativar usuário - usuário não existe")]
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);
+        }
+
+        [Fact(DisplayName = "Falha ao desativar usuário - usuário não encontrado")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task DesativarConta_UsuarioNaoEncontrado_DeveDesativarComSucesso()
+        {
+            //Arrange            
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var deleteUsuarioRequest = new DeleteUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var hashMock = new Mock<IPasswordHasher>();
+            var service = new UsuarioService(repoMock.Object, hashMock.Object);
+            //Act
+           var result = await Assert.ThrowsAsync<DomainException>(async () => await service.DesativarConta(deleteUsuarioRequest));
+            //Assert
+            Assert.Equal(MensagensDominio.UsuarioNaoEncontrado,result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
+        }
+        [Fact(DisplayName = "Falha ao desativar usuário - administrador não encontrado")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task DesativarConta_AdministradorNaoEncontrado_DeveDesativarComSucesso()
+        {
+            //Arrange
+            var admin = _usuarioFixture.ObtemAdminComSucesso();
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var deleteUsuarioRequest = new DeleteUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var hashMock = new Mock<IPasswordHasher>();
+            var service = new UsuarioService(repoMock.Object, hashMock.Object);
+            repoMock.Setup(r => r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync(usuario);
+            //Act
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.Desativar(deleteUsuarioRequest,admin.Id));
+            //Assert
+            Assert.Equal(MensagensDominio.AdminNaoEncontrado, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
+        }
+
+
+        [Fact(DisplayName = "Falha ao desativar usuário - usuário não existe")]
         [Trait("Categoria", "Usuario Service Tests")]
         public async Task DesativarUsuario_UsuarioInexistente_DeveLancarExcecao()
         {
@@ -496,9 +570,28 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             repoMock.Setup(r =>  r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync((Usuario)null);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.Desativar(deleteUsuarioRequest));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.Desativar(deleteUsuarioRequest,Guid.NewGuid()));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
+            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
+        }
+
+        [Fact(DisplayName = "Falha ao desativar usuário - usuário tentando desativar o próprio perfil")]
+        [Trait("Categoria", "Usuario Service Tests")]
+        public async Task DesativarUsuario_DesativacaoPropria_DeveLancarExcecao()
+        {
+            //Arrange
+            var idUsuario = Guid.NewGuid();
+            var deleteUsuarioRequest = new DeleteUsuarioRequest(idUsuario, MotivoExclusao.Inatividade);
+            //Mock
+            var repoMock = new Mock<IUsuarioRepository>();
+            var hashMock = new Mock<IPasswordHasher>();
+            var service = new UsuarioService(repoMock.Object, hashMock.Object);
+            repoMock.Setup(r =>  r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync((Usuario)null);
+            //Act
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.Desativar(deleteUsuarioRequest, deleteUsuarioRequest.Id));
+            //Assert
+            Assert.Equal(MensagensDominio.OperacaoDesativarInvalida, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
