@@ -24,6 +24,7 @@
         public static string UsuarioSenhaNovaObrigatoria = "A senha nova do usuário é obrigatória.";
         public static string UsuarioSenhaNovaFraca = "A senha nova do usuário é fraca.";        
         public static string UsuarioNaoEncontrado = "O usuário não foi encontrado.";
+        public static string AdminNaoEncontrado = "O administrador não foi encontrado.";
         public static string UsuarioPerfilRebaixarInvalido = "O perfil do usuário não pode ser rebaixado para jogador, pois ele já é um jogador.";
         public static string CrendenciasInvalidas = "Credenciais inválidas.";
         public static string EmailJaCadastrado = "O email já foi cadastrado.";
