@@ -35,13 +35,14 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task PromovendoUsuarioAdministrador_AdministradorValido_DeveCriarComSucesso()
         {
             //Arrange            
-            var usuarioRequest = _usuarioFixture.UsuarioRequest();
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             //Mock
             var hashMock = new Mock<IPasswordHasher>();
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             //Act
-            var result = await service.CadastrarAdministrador(usuarioRequest, true, "INVITE-ADMIN-VALID");
+            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            var result = await service.PromoverParaAdmin(usuario.Id, true, "INVITE-ADMIN-VALID");
             //Assert
             Assert.Equal(TipoUsuario.Administrador, result.Perfil);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);
@@ -58,13 +59,14 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task PromoverUsuarioAdministrador_AdministradorInvalidoSemPermissao_DeveLancarExcecao()
         {
             //Arrange            
-            var usuario = _usuarioFixture.UsuarioRequest();
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             //Mock
             var hashMock = new Mock<IPasswordHasher>();
             var repoMock = new Mock<IUsuarioRepository>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(usuario, false, "INVITE-ADMIN-VALID"));
+            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.PromoverParaAdmin(usuario.Id, false, "INVITE-ADMIN-VALID"));
             //Assert
             Assert.Equal(MensagensDominio.PermissaoNegadaCriarAdministrador, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
@@ -81,56 +83,17 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task PromoverUsuarioAdministrador_AdministradorInvalidoSemToken_DeveLancarExcecao()
         {
             //Arrange            
-            var usuario = _usuarioFixture.UsuarioRequest();
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(usuario, true, ""));
+            repoMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.PromoverParaAdmin(usuario.Id, true, ""));
             //Assert
             Assert.Equal(MensagensDominio.PermissaoNegadaCriarAdministrador, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
-        }
-        /// <summary>
-        /// Verifica se o método CadastrarAdministrador lança uma exceção do tipo DomainException quando o email do usuário para criar um administrador não é preenchido.
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando o email do usuário para criar um administrador não é preenchido.</remarks>
-        [Fact(DisplayName = "Falha ao promover novo admistrador - email não preenchido")]
-        [Trait("Categoria", "Usuario Service Tests")]
-        public async Task PromoverUsuarioAdministrador_EmailNãoPreenchido_DeveLancarExcecao()
-        {
-            //Arrange
-            var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), string.Empty, "Teste@123", "Teste@123");
-            //Mock
-            var repoMock = new Mock<IUsuarioRepository>();
-            var hashMock = new Mock<IPasswordHasher>();
-            var service = new UsuarioService(repoMock.Object, hashMock.Object);
-            //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(usuarioRequest, true, ""));
-            //Assert
-            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
-        }
-
-        /// <summary>
-        /// Verifica se o método CadastrarAdministrador lança uma exceção do tipo DomainException quando a senha do usuário para criar um administrador não é preenchida.
-        /// </summary>
-        /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando a senha do usuário para criar um administrador não é preenchida.</remarks>
-        [Fact(DisplayName = "Falha ao promover novo admistrador - senha não preenchida")]
-        [Trait("Categoria", "Usuario Service Tests")]
-        public async Task PromoverUsuarioAdministrador_SenhaNaoPreenchida_DeveLancarExcecao()
-        {
-            //Arrange
-            var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), _faker.Internet.Email(), string.Empty, string.Empty);
-            //Mock
-            var repoMock = new Mock<IUsuarioRepository>();
-            var hashMock = new Mock<IPasswordHasher>();
-            var service = new UsuarioService(repoMock.Object, hashMock.Object);
-            //Act
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(usuarioRequest, true, ""));
-            //Assert
-            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never); ;
         }
 
         [Fact(DisplayName = "Cadastrar usuário  - deve criptografar a senha ao cadastrar")]
@@ -153,32 +116,6 @@ namespace FiapCloundGames.UnitTests.Application.Services
             Assert.NotEqual("Teste@123", result.Senha.Hash);
         }
 
-        /// <summary>
-        /// Verifica se o método CadastrarAdministrador lança uma exceção do tipo DomainException quando a senha do usuário para criar um administrador é inválida.
-        /// </summary>
-        /// <param name="senhaInvalida"> A senha inválida a ser testada</param>
-        /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando a senha do usuário para criar um administrador é inválida </remarks>
-        [Theory(DisplayName = "Falha ao promover novo admistrador - senha inválida")]
-        [Trait("Categoria", "Usuario Service Tests")]
-        [InlineData("senhaFraca")]
-        [InlineData("123456")]
-        [InlineData("abcdefg")]
-        [InlineData("@@@@@a")]
-        [InlineData("senha@123")]
-        [InlineData("SENHA@123")]
-        public async Task PromoverUsuarioAdministrador_SenhaInvalida_DeveLancarExcecao(string senhaInvalida)
-        {
-            //Arrange
-            var usuarioRequest = new CriaUsuarioRequest(_faker.Name.FullName(), _faker.Internet.Email(), senhaInvalida, senhaInvalida);
-            //Mock
-            var repoMock = new Mock<IUsuarioRepository>();
-            var hashMock = new Mock<IPasswordHasher>();
-            var service = new UsuarioService(repoMock.Object, hashMock.Object);
-            //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(usuarioRequest, true, ""));
-            //Assert
-            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
-        }
         /// <summary>
         /// Verifica se o método CadastrarAdministrador lança uma exceção do tipo DomainException quando o email do usuário para criar um administrador é inválido.
         /// </summary>
@@ -206,24 +143,6 @@ namespace FiapCloundGames.UnitTests.Application.Services
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
-        /// <summary>
-        /// Verifica se o método CadastrarAdministrador lança uma exceção do tipo DomainException quando a confirmação de senha do usuário para criar um administrador é diferente da senha.
-        /// </summary>
-        /// <remarks>Este teste verifica se uma exceção é lançada corretamente quando a confirmação de senha do usuário para criar um administrador é diferente da senha </remarks>
-        [Fact(DisplayName = "Falha ao promover novo admistrador - confirmação de senha diferente")]
-        [Trait("Categoria", "Usuario Service Tests")]
-        public async Task PromoverUsuarioAdministrador_ConfirmacaoDeSenhaInvalida_DeveLancarExcecao()
-        {
-            //Arrange                       
-            //Mock
-            var repoMock = new Mock<IUsuarioRepository>();
-            var hashMock = new Mock<IPasswordHasher>();
-            var service = new UsuarioService(repoMock.Object, hashMock.Object);
-            //Act
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await service.CadastrarAdministrador(_usuarioFixture.UsuarioRequestSenhaDiferente(), true, ""));
-            //Assert
-            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
-        }
 
         /// <summary>
         /// Verifica se o método CriaJogador cria um usuário com perfil de Jogador corretamente quando os dados fornecidos são válidos.
