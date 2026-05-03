@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Services.Interfaces;
+using FiapCloundGames.API.Domain.Enum;
+using FiapCloundGames.API.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,13 +38,21 @@ namespace FiapCloundGames.API.Controller
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<JogoResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<JogoResponse>>> ObtemCatalogoDeJogos()
         {
             _logger.LogInformation("Recupera catálogo de jogos");
             var jogos = await _jogoService.ObtemCatalagoJogos();
             if (!jogos.Any()) return NoContent();
+            return Ok(jogos);
+        }
+
+        [HttpGet("buscar-por-genero/{genero}")]
+        [ProducesResponseType(typeof(IEnumerable<JogoResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<JogoResponse>>> ListarPorGenero(GeneroJogo genero)
+        {            
+            var jogos = await _jogoService.ObtemPorGenero(genero);
             return Ok(jogos);
         }
     }
