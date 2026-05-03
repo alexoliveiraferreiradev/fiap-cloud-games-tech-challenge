@@ -21,11 +21,10 @@ namespace FiapCloundGames.API.Application.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<Usuario> PromoverParaAdmin(Guid id,bool hasPermision, string token)
+        public async Task<Usuario> PromoverParaAdmin(Guid id)
         {
             var usuario = await _usuarioRepository.ObterPorId(id);
-            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
-            if (!ValidaPermissoesAdministrador(hasPermision, token)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
+            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);            
             usuario.PromoverPerfil(usuario);
             await _usuarioRepository.Atualizar(usuario);
             return usuario;
@@ -43,25 +42,6 @@ namespace FiapCloundGames.API.Application.Services
             usuario.RebaixarPerfil();
 
             await _usuarioRepository.Atualizar(usuario);
-        }
-
-
-        private bool ValidaPermissoesAdministrador(bool hasPermision, string token)
-        {
-            if (!hasPermision || !IsValidToken(token))
-            {
-                throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
-            }
-            return true;
-        }
-
-        private bool IsValidToken(string token)
-        {
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                return false;
-            }
-            return true;
         }
 
         public async Task<Usuario> CadastrarUsuario(CriaUsuarioRequest request)
