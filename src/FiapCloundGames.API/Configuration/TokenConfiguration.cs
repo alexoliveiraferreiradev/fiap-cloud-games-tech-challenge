@@ -1,6 +1,10 @@
-﻿using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Configuration.Exceptions;
+﻿using FiapCloundGames.API.Application.Dtos.Usuario;
+using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Interfaces;
+using FiapCloundGames.API.Domain.Entities;
+using FiapCloundGames.API.Domain.Enum;
+using FiapCloundGames.API.Infrastructure.Security;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,63 +14,68 @@ namespace FiapCloundGames.API.Configuration
 {
     public class TokenConfiguration : IToken
     {
-        private readonly IConfiguration _configuration;
-        private readonly IUsuarioService _usuarioService;
         private readonly ILogger<TokenConfiguration> _logger;
-        private static string _secreteKey = string.Empty;
-        private static string _issuer = string.Empty;
-        private static string _audience = string.Empty;
-        private static string _expirationHours = string.Empty;
-        public TokenConfiguration(IConfiguration configuration, IUsuarioService usuarioService,
+        private readonly JwtSettings _jwtSettings;
+        public TokenConfiguration(IOptions<JwtSettings> jwtSettings,
             ILogger<TokenConfiguration> logger)
         {
-            _configuration = configuration;
-            _usuarioService = usuarioService;
+            _jwtSettings = jwtSettings.Value;
             _logger = logger;   
         }
-
-        
-        public async Task<string> GenerateToken(string configurationTagName, string emailUsuario, IEnumerable<Claim> claims)
+        public async Task<LoginResponse> RetornaJwt(Usuario usuario)
         {
-            _logger.LogInformation("Requisição iniciado para gerar token de usuário. EMAIL: {email}", emailUsuario);
-            var usuario = await _usuarioService.ObterPorEmail(emailUsuario);
-            if (usuario == null)
+            _logger.LogInformation("Iniciando geração de token. ID: {id}", usuario.Id);
+            var claims = await ObtemClaims(usuario);
+            var acessToken = TokenGenerate(claims);
+            _logger.LogInformation("Token gerado com sucesso. ID: {id}", usuario.Id);
+            return new LoginResponse
             {
-                _logger.LogInformation("Não foi encontrado nenhum usuário com este email. EMAIL: {email}", emailUsuario);
-                throw new BusinessException("Não foi encontrado nenhum usuario");                
-            }
-            var token = TokenGenerate(claims, configurationTagName);
-            return token;
-        }
+                AcessToken = acessToken,
+                ExpiresIn = TimeSpan.FromHours(_jwtSettings.ExpiracaoHoras).TotalSeconds,
+                Id = usuario.Id.ToString(),
+                Email = usuario.EmailUsuario.Valor,
+                Claims = claims.Select(c => new ClaimResponse { Type = c.Type, Value = c.Value })
+            };
+        }   
 
-
-        public bool ValidateToken(string token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string TokenGenerate(IEnumerable<Claim> claims, string configurationTagName)
-        {
-            _secreteKey = _configuration[$"{configurationTagName}:Secret"] ?? string.Empty;
-            _issuer = _configuration[$"{configurationTagName}:Emissor"] ?? string.Empty;
-            _audience = _configuration[$"{configurationTagName}:ValidoEm"] ?? string.Empty;
-            _expirationHours = _configuration[$"{configurationTagName}:ExpiracaoHoras"];
+        public string TokenGenerate(IEnumerable<Claim> claims)
+        {         
             var identityClaims = new ClaimsIdentity();
             identityClaims.AddClaims(claims);
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secreteKey);
-            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+            var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
+            var tokenDescriptor = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
-                Issuer = _issuer,
-                Audience = _audience,
+                Issuer = _jwtSettings.Emissor,
+                Audience = _jwtSettings.ValidoEm,
                 Subject = identityClaims,
-                Expires = DateTime.UtcNow.AddHours(double.Parse(_expirationHours ?? "1")),
+                Expires = DateTime.UtcNow.AddHours(_jwtSettings.ExpiracaoHoras),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature)
             });
 
-            return tokenHandler.WriteToken(token);
+            return tokenHandler.WriteToken(tokenDescriptor);
         }
+
+        public async Task<IEnumerable<Claim>> ObtemClaims(Usuario usuario)
+        {
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()));
+            claims.Add(new Claim(ClaimTypes.Email, usuario.EmailUsuario.Valor));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
+            if (usuario.Perfil == TipoUsuario.Administrador)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "AdminRole"));
+            }
+            return claims;
+        }
+
+        
+
+        private static long ToUnixEpochDate(DateTime date)
+            => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
     }
 }
