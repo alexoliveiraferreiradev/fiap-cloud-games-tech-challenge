@@ -7,7 +7,7 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
     public interface IJogosService
     {
         Task<Jogo> AdicionaJogo(CriarJogoRequest request);
-        Task AtualizarJogo(Guid usuarioId,UpdateJogoRequest updateJogoRequest);
+        Task AtualizarJogo(Guid jogoId,UpdateJogoRequest updateJogoRequest);
         Task Desativar(Guid jogoId);
         Task Reativar(Guid jogoId);
         Task<bool> VerificaDuplicidadeNome(string nomeJogo);
