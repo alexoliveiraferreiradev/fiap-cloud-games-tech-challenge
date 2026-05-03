@@ -110,9 +110,9 @@ namespace FiapCloundGames.API.Application.Services
             return await _usuarioRepository.ObterPorId(id);
         }
 
-        public Task<IEnumerable<Usuario>> ObterTodos()
+        public async Task<IEnumerable<Usuario>> ObterTodos()
         {
-            throw new NotImplementedException();
+            return await _usuarioRepository.ObterTodos();
         }
 
         public async Task Desativar(DeleteUsuarioRequest deletaUsuarioRequest)
