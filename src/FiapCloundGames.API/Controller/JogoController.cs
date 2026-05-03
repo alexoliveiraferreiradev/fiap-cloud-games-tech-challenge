@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
 using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FiapCloundGames.API.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Tags("Catálogo de Jogos")]
+    [Tags("Gerenciamento de Jogos (Admin)")]
+    [Authorize(Roles = "AdminRole")]
     public class JogoController : ControllerBase
     {
         private readonly ILogger<JogoController> _logger;
@@ -19,7 +21,6 @@ namespace FiapCloundGames.API.Controller
             _jogoService = jogosService;
             _mapper = mapper;
         }
-
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(JogoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -32,19 +33,6 @@ namespace FiapCloundGames.API.Controller
 
             return Ok(_mapper.Map<JogoResponse>(jogo));
         }
-
-        [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<JogoResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<JogoResponse>>> ObtemCatalogoDeJogos()
-        {
-            _logger.LogInformation("Recupera catálogo de jogos");
-            var jogos = await _jogoService.ObtemCatalagoJogos();
-            if (!jogos.Any()) return NoContent();
-            return Ok(jogos);
-        }
-
         [HttpPost]
         [ProducesResponseType(typeof(JogoResponse), StatusCodes.Status201Created)]        
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
