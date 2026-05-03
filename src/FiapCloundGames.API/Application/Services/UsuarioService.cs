@@ -30,11 +30,8 @@ namespace FiapCloundGames.API.Application.Services
             return usuario;
         }
 
-        public async Task RebaixarPerfil(Guid idUsuarioRebaixar, Guid idAdminExecutor)
-        {
-            var adminExecutor = await _usuarioRepository.ObterPorId(idAdminExecutor);
-            if (adminExecutor == null || !adminExecutor.Perfil.Equals(TipoUsuario.Administrador)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
-
+        public async Task<Usuario> RebaixarParaJogador(Guid idUsuarioRebaixar)
+        {            
             var usuario = await _usuarioRepository.ObterPorId(idUsuarioRebaixar);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
             if (usuario.Perfil.Equals(TipoUsuario.Jogador)) throw new DomainException(MensagensDominio.UsuarioPerfilRebaixarInvalido);
@@ -42,6 +39,7 @@ namespace FiapCloundGames.API.Application.Services
             usuario.RebaixarPerfil();
 
             await _usuarioRepository.Atualizar(usuario);
+            return usuario;
         }
 
         public async Task<Usuario> CadastrarUsuario(CriaUsuarioRequest request)

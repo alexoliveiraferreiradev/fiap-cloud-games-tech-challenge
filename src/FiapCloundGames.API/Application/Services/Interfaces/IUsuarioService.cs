@@ -7,6 +7,7 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
     public interface IUsuarioService  
     {
         Task<Usuario> PromoverParaAdmin(Guid id);
+        Task<Usuario> RebaixarParaJogador(Guid id);
         Task<Usuario> CadastrarUsuario(CriaUsuarioRequest request);
         Task AtualizarUsuario(Guid usuarioId, UpdateUsuarioRequest updateUsuarioRequest);
         Task Desativar(DeleteUsuarioRequest deleteUsuarioRequest);
