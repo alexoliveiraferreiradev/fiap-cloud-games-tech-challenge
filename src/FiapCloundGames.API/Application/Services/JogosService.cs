@@ -65,7 +65,7 @@ namespace FiapCloundGames.API.Application.Services
             var jogo = await _jogoRepository.ObtemPorNome(nomeJogo);
             if (jogo != null) throw new DomainException(MensagensDominio.JogoMesmoNomeExistente);
 
-            return true;
+            return false;
         }
 
         public async Task AdicionarPromocao(CriaPromocaoRequest promocaoRequest)
