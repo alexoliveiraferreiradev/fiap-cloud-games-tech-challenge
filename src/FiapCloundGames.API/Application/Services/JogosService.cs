@@ -16,7 +16,7 @@ namespace FiapCloundGames.API.Application.Services
         {
             _jogoRepository = jogoRepository;
         }
-        public async Task<Jogo> CriaJogo(CriarJogoRequest request)
+        public async Task<Jogo> AdicionaJogo(CriarJogoRequest request)
         {
             await VerificaDuplicidadeNome(request.Nome);
             var preco = new Preco(request.Preco);

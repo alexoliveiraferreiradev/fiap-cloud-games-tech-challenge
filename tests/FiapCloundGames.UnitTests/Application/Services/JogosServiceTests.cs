@@ -38,7 +38,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var request = new CriarJogoRequest("Halo", "Jogo de tiro", 150.00m, GeneroJogo.FPS);
             //Mock
             //Act 
-            var result = await _jogosService.CriaJogo(request);
+            var result = await _jogosService.AdicionaJogo(request);
             //Assert
             Assert.NotNull(result);
             Assert.Equal(request.Nome, result.Nome.Valor);
@@ -54,7 +54,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Arrange
             var request = new CriarJogoRequest(string.Empty, "Jogo de tiro", 150.00m, GeneroJogo.FPS);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.AdicionaJogo(request));
             //Assert
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
         }
@@ -68,7 +68,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var request = new CriarJogoRequest(_faker.Random.String(101), "Jogo de tiro", 150.00m, GeneroJogo.FPS);
             //Mock
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.AdicionaJogo(request));
             //Assert
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
         }
@@ -83,7 +83,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             _mockJogo.Setup(r => r.ObtemPorNome(request.Nome)).ReturnsAsync(jogoExistente);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.AdicionaJogo(request));
             //Assert
             Assert.Equal(MensagensDominio.JogoMesmoNomeExistente, result.Message);
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
@@ -97,7 +97,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var request = new CriarJogoRequest("Read Dead 2", string.Empty, 150.00m, GeneroJogo.FPS);
 
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.AdicionaJogo(request));
             //Assert
             Assert.Equal(MensagensDominio.JogoDescricaoObrigatoria, result.Message);
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
@@ -111,7 +111,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Arrange
             var request = new CriarJogoRequest("Read Dead 2", _faker.Random.String(501), 150.00m, GeneroJogo.FPS);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.AdicionaJogo(request));
             //Assert
             Assert.Equal(MensagensDominio.JogoDescricaoTamanhoInvalido, result.Message);
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
@@ -125,7 +125,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Arrange
             var request = new CriarJogoRequest("Read Dead 2", "Jogo de tiro", 150.00m, (GeneroJogo)999);
             //Act 
-            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.CriaJogo(request));
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await _jogosService.AdicionaJogo(request));
             //Assert
             Assert.Equal(MensagensDominio.JogoGeneroObrigatorio, result.Message);
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Never);
