@@ -30,7 +30,17 @@ namespace FiapCloundGames.API.Configuration.Middlewares
                 await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
                 return true;
             }
-            return false;
+            var internalProblem = new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "Erro Interno do Servidor",
+                Detail = "Ocorreu um erro inesperado. Tente novamente mais tarde."
+            };
+
+            httpContext.Response.StatusCode = internalProblem.Status.Value;
+            await httpContext.Response.WriteAsJsonAsync(internalProblem, cancellationToken);
+
+            return true; 
         }
     }
 }
