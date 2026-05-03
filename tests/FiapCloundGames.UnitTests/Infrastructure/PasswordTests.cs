@@ -22,7 +22,7 @@ namespace FiapCloundGames.UnitTests.Infrastructure
         [Trait("Categoria","Password Tests")]
         public void Hash_DeveVerificarPassword()
         {
-            // Arrange - Classe REAL, sem Mock
+            // Arrange 
             var hasher = new PasswordHasher();
             var senhaPura = "SenhaAdmin@123";
             var hashGerado = hasher.HashPassword(senhaPura);    
