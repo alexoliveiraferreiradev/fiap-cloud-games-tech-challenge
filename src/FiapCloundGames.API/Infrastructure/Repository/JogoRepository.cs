@@ -1,4 +1,5 @@
 ﻿using FiapCloundGames.API.Domain.Entities;
+using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Infrastructure.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,11 @@ namespace FiapCloundGames.API.Infrastructure.Repository
         public async Task<IEnumerable<Jogo>> ObtemJogosAtivos()
         {
             return await _dbContext.Jogos.Where(x => x.Ativo == true).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Jogo>> ObtemPorGenero(GeneroJogo generoJogo)
+        {
+            return await _dbContext.Jogos.Where(x=>x.Ativo == true && x.Genero == generoJogo).ToListAsync();
         }
 
         public async Task<Jogo?> ObtemPorNome(string nomeJogo)

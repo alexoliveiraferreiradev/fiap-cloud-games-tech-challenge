@@ -1,4 +1,5 @@
 ﻿using FiapCloundGames.API.Domain.Entities;
+using FiapCloundGames.API.Domain.Enum;
 
 namespace FiapCloundGames.API.Domain.Repositories
 {
@@ -8,5 +9,6 @@ namespace FiapCloundGames.API.Domain.Repositories
         Task<IEnumerable<Jogo>> ObtemJogosAtivos();
 
         Task<Promocao?> ObterPromocaoPorId(Guid id);
+        Task<IEnumerable<Jogo>> ObtemPorGenero(GeneroJogo generoJogo);
     }
 }

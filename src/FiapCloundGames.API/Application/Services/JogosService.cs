@@ -3,6 +3,7 @@ using FiapCloundGames.API.Application.Dtos.Promocao;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
+using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
@@ -103,6 +104,18 @@ namespace FiapCloundGames.API.Application.Services
         public async Task<IEnumerable<JogoResponse>> ObtemCatalagoJogos()
         {
             var jogos = await _jogoRepository.ObtemJogosAtivos();
+            return jogos.Select(j => new JogoResponse
+            (
+                j.Id,
+                j.Nome.Valor,
+                j.Descricao.Valor,
+                j.PrecoBase.Valor,
+                j.ObterPrecoAtual().Valor
+            ));
+        }
+        public async Task<IEnumerable<JogoResponse>> ObtemPorGenero(GeneroJogo generoJogo)
+        {
+            var jogos = await _jogoRepository.ObtemPorGenero(generoJogo);
             return jogos.Select(j => new JogoResponse
             (
                 j.Id,
