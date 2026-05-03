@@ -6,13 +6,13 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
 {
     public interface IJogosService
     {
-        Task<Jogo> AdicionaJogo(CriarJogoRequest request);
-        Task AtualizarJogo(Guid usuarioId,UpdateJogoRequest updateJogoRequest);
+        Task<Jogo> AdicionaJogo(Jogo jogo);
+        Task AtualizarJogo(Guid usuarioId,Jogo novoJogo);
         Task Desativar(Guid jogoId);
         Task Reativar(Guid jogoId);
         Task<bool> VerificaDuplicidadeNome(string nomeJogo);
-        Task AdicionarPromocao(CriaPromocaoRequest criaPromocaoRequest);
-        Task AtualizaPromocao(Guid promocaoId,UpdatePromocaoRequest criaPromocaoRequest);
+        Task AdicionarPromocao(Promocao promocao);
+        Task AtualizaPromocao(Guid promocaoId,Promocao novaPromocao);
         Task DesativarPromocao(Guid jogoId,Guid promocaoId);
         Task<IEnumerable<JogoResponse>> ObtemCatalagoJogos();
         Task<Jogo> ObtemJogoPorId(Guid jogoId);
