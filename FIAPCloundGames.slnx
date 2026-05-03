@@ -1,8 +1,4 @@
 <Solution>
-  <Folder Name="/docs/" />
-  <Folder Name="/docs/sql/">
-    <File Path="src/FiapCloundGames.API/obj/Debug/net9.0/script-migration.sql" />
-  </Folder>
   <Folder Name="/src/">
     <Project Path="src/FiapCloundGames.API/FiapCloundGames.API.csproj" Id="c1edca7b-ed13-4737-8314-fc3edb1d749a" />
   </Folder>
