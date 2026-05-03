@@ -21,13 +21,10 @@ namespace FiapCloundGames.API.Application.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<Usuario> CadastrarAdministrador(CriaUsuarioRequest request, bool hasPermision, string token)
+        public async Task<Usuario> PromoverParaAdmin(Guid id,bool hasPermision, string token)
         {
-            ValidaSenhas(request.Senha, request.ConfirmacaoSenha);
-            var emailUsuarioValueObject = new Email(request.Email);
-            var nomeUsuarioValueObject = new Nome(request.Nome);
-            var senhaUsuarioValueObject = new Senha(request.Senha);
-            var usuario = new Usuario(nomeUsuarioValueObject, emailUsuarioValueObject, senhaUsuarioValueObject);
+            var usuario = await _usuarioRepository.ObterPorId(id);
+            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
             if (!ValidaPermissoesAdministrador(hasPermision, token)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
             usuario.PromoverPerfil(usuario);
             await _usuarioRepository.Atualizar(usuario);
