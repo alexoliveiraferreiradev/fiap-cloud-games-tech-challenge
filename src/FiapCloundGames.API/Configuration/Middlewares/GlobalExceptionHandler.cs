@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FiapCloundGames.API.Middlewares
+namespace FiapCloundGames.API.Configuration.Middlewares
 {
     public class GlobalExceptionHandler : IExceptionHandler
     {

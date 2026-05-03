@@ -2,7 +2,7 @@
 using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Domain.Entities;
 
-namespace FiapCloundGames.API.Application.Mapping
+namespace FiapCloundGames.API.Configuration.Mapping
 {
     public class AutoMapperConfiguration : Profile
     {
