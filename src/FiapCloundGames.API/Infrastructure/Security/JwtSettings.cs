@@ -1,6 +1,6 @@
 ﻿namespace FiapCloundGames.API.Infrastructure.Security
 {
-    public class JwSettings
+    public class JwtSettings
     {
         public string Secret { get; set; } = string.Empty;
         public int ExpiracaoHoras { get; set; }
