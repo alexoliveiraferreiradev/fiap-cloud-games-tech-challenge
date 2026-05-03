@@ -140,5 +140,11 @@ namespace FiapCloundGames.API.Application.Services
             usuario.Reativar();
             await _usuarioRepository.Atualizar(usuario);
         }
+
+        public async Task<Usuario?> ObterPorEmail(string emailUsuario)
+        {
+            var email = new Email(emailUsuario);
+            return await _usuarioRepository.ObterPorEmail(email.Valor);
+        }
     }
 }

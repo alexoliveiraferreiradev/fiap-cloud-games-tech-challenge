@@ -14,6 +14,7 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task<Usuario> Autenticar(LoginRequest loginRequest);
         Task<Usuario> ObterPorId(Guid usuarioId);
         Task<IEnumerable<Usuario>> ObterTodos();
+        Task<Usuario?> ObterPorEmail(string emailUsuario);
 
     }
 }
