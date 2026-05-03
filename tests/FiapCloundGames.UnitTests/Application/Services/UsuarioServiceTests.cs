@@ -274,18 +274,16 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task RebaixarPerfil_UsuarioEhAdmin_DeveMudarParaJogador()
         {
             //Arrange
-            var admin = _usuarioFixture.ObtemAdminComSucesso();
             var usuarioRebaixar = _usuarioFixture.ObtemAdminComSucesso();
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
 
-            repoMock.Setup(r => r.ObterPorId(admin.Id)).ReturnsAsync(admin);
             repoMock.Setup(r => r.ObterPorId(usuarioRebaixar.Id)).ReturnsAsync(usuarioRebaixar);
 
             //Act
-            await service.RebaixarPerfil(usuarioRebaixar.Id, admin.Id);
+            await service.RebaixarParaJogador(usuarioRebaixar.Id);
             //Assert
             Assert.Equal(TipoUsuario.Jogador, usuarioRebaixar.Perfil);
         }
@@ -296,61 +294,36 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task RebaixarPerfil_UsuarioJaEhJogador_DeveLancarExcecao()
         {
             //Arrange
-            var admin = _usuarioFixture.ObtemAdminComSucesso();
             var usuarioRebaixar = _usuarioFixture.ObtemJogadorComSucesso();
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
 
-            repoMock.Setup(r => r.ObterPorId(admin.Id)).ReturnsAsync(admin);
             repoMock.Setup(r => r.ObterPorId(usuarioRebaixar.Id)).ReturnsAsync(usuarioRebaixar);
 
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(idUsuarioRebaixar: usuarioRebaixar.Id, idAdminExecutor: admin.Id));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarParaJogador(idUsuarioRebaixar: usuarioRebaixar.Id));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioPerfilRebaixarInvalido, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
         }
 
-        [Fact(DisplayName = "Falha ao rebaixar um administrador - não há administrador para rebaixar")]
-        [Trait("Categoria", "Usuario Service Tests")]
-        public async Task RebaixarPerfil_AdministradorNaoExiste_DeveLancarExcecao()
-        {
-            var idAdminInexistente = Guid.NewGuid();
-            var usuarioRebaixar = _usuarioFixture.ObtemJogadorComSucesso();
-            //Mock
-            var repoMock = new Mock<IUsuarioRepository>();
-            var hashMock = new Mock<IPasswordHasher>();
-            var service = new UsuarioService(repoMock.Object, hashMock.Object);
-
-            repoMock.Setup(r => r.ObterPorId(usuarioRebaixar.Id)).ReturnsAsync(usuarioRebaixar);
-            repoMock.Setup(r => r.ObterPorId(idAdminInexistente))
-            .ReturnsAsync((Usuario)null);
-            // Act & Assert
-            var ex = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(idUsuarioRebaixar: usuarioRebaixar.Id, idAdminExecutor: idAdminInexistente));
-
-            Assert.Equal(MensagensDominio.PermissaoNegadaCriarAdministrador, ex.Message);
-            repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
-        }
-
-
-        [Fact(DisplayName = "Falha ao rebaixar um administrador - não há administrador para ser rebaixado")]
+        [Fact(DisplayName = "Falha ao rebaixar um administrador - não há usuário para ser rebaixado")]
         [Trait("Categoria", "Usuario Service Tests")]
         public async Task RebaixarPerfil_UsuarioNaoExiste_DeveLancarExcecao()
         {
-            var admin = _usuarioFixture.ObtemAdminComSucesso();
+
             var idUsuarioARebaixar = Guid.NewGuid();
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
 
-            repoMock.Setup(r => r.ObterPorId(admin.Id)).ReturnsAsync(admin);
             repoMock.Setup(r => r.ObterPorId(idUsuarioARebaixar)).ReturnsAsync((Usuario)null);
 
             // Act  
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarPerfil(idUsuarioRebaixar: idUsuarioARebaixar, idAdminExecutor: admin.Id));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.RebaixarParaJogador(idUsuarioRebaixar: idUsuarioARebaixar));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
