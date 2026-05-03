@@ -22,10 +22,9 @@
         public static string UsuarioSenhaAntigaObrigatoria = "A senha antiga do usuário é obrigatória.";
         public static string UsuarioSenhaAntigaFraca = "A senha antiga do usuário é fraca.";
         public static string UsuarioSenhaNovaObrigatoria = "A senha nova do usuário é obrigatória.";
-        public static string UsuarioSenhaNovaFraca = "A senha nova do usuário é fraca.";
-        public static string PermissaoNegadaCriarAdministrador = "Permissão negada para criar um administrador.";
+        public static string UsuarioSenhaNovaFraca = "A senha nova do usuário é fraca.";        
         public static string UsuarioNaoEncontrado = "O usuário não foi encontrado.";
-        public static string UsuarioPerfilRebaixarInvalido = "O perfil do usuário não pode ser rebaixado, pois ele não é um administrador.";
+        public static string UsuarioPerfilRebaixarInvalido = "O perfil do usuário não pode ser rebaixado para jogador, pois ele já é um jogador.";
         public static string CrendenciasInvalidas = "Credenciais inválidas.";
         public static string EmailJaCadastrado = "O email já foi cadastrado.";
         public static string NomeUsuarioJaCadastrado = "O nome de usuário já foi cadastrado.";
