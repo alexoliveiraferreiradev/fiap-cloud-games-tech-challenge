@@ -16,13 +16,13 @@ namespace FiapCloundGames.API.Application.Services
         {
             _jogoRepository = jogoRepository;
         }
-        public async Task<Jogo> AdicionaJogo(CriarJogoRequest request)
+        public async Task<Jogo> AdicionaJogo(Jogo novoJogo)
         {
-            await VerificaDuplicidadeNome(request.Nome);
-            var preco = new Preco(request.Preco);
-            var nomeJogoVO = new NomeJogo(request.Nome);
-            var descricaoVO = new Descricao(request.Descricao);
-            var jogos = new Jogo(nomeJogoVO, descricaoVO, preco, request.Genero);
+            await VerificaDuplicidadeNome(novoJogo.Nome.Valor);
+            var preco = new Preco(novoJogo.PrecoBase.Valor);
+            var nomeJogoVO = new NomeJogo(novoJogo.Nome.Valor);
+            var descricaoVO = new Descricao(novoJogo.Descricao.Valor);
+            var jogos = new Jogo(nomeJogoVO, descricaoVO, preco, novoJogo.Genero);
             await Adicionar(jogos);
             return jogos;
         }
@@ -32,15 +32,15 @@ namespace FiapCloundGames.API.Application.Services
             await _jogoRepository.Adicionar(jogos);
         }
 
-        public async Task AtualizarJogo(Guid id, UpdateJogoRequest updateJogosRequest)
+        public async Task AtualizarJogo(Guid id, Jogo novaPromocao)
         {
             var jogo = await _jogoRepository.ObterPorId(id);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            var precoVO = new Preco(updateJogosRequest.NovoPreco);
-            var nomeJogoVO = new NomeJogo(updateJogosRequest.NovoNome);
-            var descricaoJogoVO = new Descricao(updateJogosRequest.NovaDescricao);
+            var precoVO = new Preco(novaPromocao.PrecoBase.Valor);
+            var nomeJogoVO = new NomeJogo(novaPromocao.Nome.Valor);
+            var descricaoJogoVO = new Descricao(novaPromocao.Descricao.Valor);
 
-            jogo.Atualizar(nomeJogoVO, descricaoJogoVO, precoVO, updateJogosRequest.NovoGenero);
+            jogo.Atualizar(nomeJogoVO, descricaoJogoVO, precoVO, novaPromocao.Genero);
             await _jogoRepository.Atualizar(jogo);
         }
 
@@ -68,26 +68,26 @@ namespace FiapCloundGames.API.Application.Services
             return true;
         }
 
-        public async Task AdicionarPromocao(CriaPromocaoRequest promocaoRequest)
+        public async Task AdicionarPromocao(Promocao promocao)
         {
-            var jogo = await _jogoRepository.ObterPorId(promocaoRequest.JogoId);
+            var jogo = await _jogoRepository.ObterPorId(promocao.JogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            var valorPromocaoVO = new Preco(promocaoRequest.ValorPromocao);
-            var periodoVO = new Periodo(promocaoRequest.DataFim);
+            var valorPromocaoVO = new Preco(promocao.ValorPromocao.Valor);
+            var periodoVO = new Periodo(promocao.Periodo.DataFim);
             jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
             await _jogoRepository.Atualizar(jogo);
         }
 
-        public async Task AtualizaPromocao(Guid promocaoId,UpdatePromocaoRequest promocaoRequest)
+        public async Task AtualizaPromocao(Guid promocaoId, Promocao novaPromocao)
         {            
-            var jogo = await _jogoRepository.ObterPorId(promocaoRequest.JogoId);
+            var jogo = await _jogoRepository.ObterPorId(novaPromocao.JogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
-            var novoPrecoPromocao = new Preco(promocaoRequest.NovoValorPromocao);
-            var novaDataPromocao = new Periodo(promocaoRequest.NovaDataFim);
+            var novoPrecoPromocao = new Preco(novaPromocao.ValorPromocao.Valor);
+            var novaDataPromocao = new Periodo(novaPromocao.Periodo.DataFim);
             if (!jogo.Promocoes.Any()) throw new DomainException(MensagensDominio.JogoSemPromocoes);
             var promocao = await _jogoRepository.ObterPromocaoPorId(promocaoId);
             if (promocao == null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);                        
-            jogo.AlteraPromocao(promocao.Id, new Preco(promocaoRequest.NovoValorPromocao), promocaoRequest.NovaDataFim);
+            jogo.AlteraPromocao(promocao.Id, new Preco(novaPromocao.ValorPromocao.Valor), novaPromocao.Periodo.DataFim);
             await _jogoRepository.Atualizar(jogo);
         }
 
