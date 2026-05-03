@@ -32,7 +32,7 @@ namespace FiapCloundGames.API.Application.Services
             await _jogoRepository.Adicionar(jogos);
         }
 
-        public async Task AtualizarJogo(Guid id, UpdateJogoRequest updateJogosRequest)
+        public async Task<Jogo> AtualizarJogo(Guid id, UpdateJogoRequest updateJogosRequest)
         {
             var jogo = await _jogoRepository.ObterPorId(id);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
@@ -42,6 +42,7 @@ namespace FiapCloundGames.API.Application.Services
 
             jogo.Atualizar(nomeJogoVO, descricaoJogoVO, precoVO, updateJogosRequest.NovoGenero);
             await _jogoRepository.Atualizar(jogo);
+            return jogo;
         }
 
         public async Task Desativar(Guid jogoId)
