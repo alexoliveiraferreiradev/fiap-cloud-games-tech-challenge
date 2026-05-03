@@ -1,4 +1,5 @@
 ﻿using FiapCloundGames.API.Domain.Entities;
+using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Infrastructure.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ namespace FiapCloundGames.API.Infrastructure.Repository
         private readonly ApplicationDbContext _dbContext;
         public UsuarioRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
-            _dbContext = dbContext; 
+            _dbContext = dbContext;
         }
 
         public async Task<Usuario?> ObterPorEmail(string email)
@@ -23,9 +24,28 @@ namespace FiapCloundGames.API.Infrastructure.Repository
             return await _dbContext.Usuarios.AnyAsync(x => x.EmailUsuario.Valor.ToLower() == emailCadastrado.ToLower());
         }
 
+        public async Task<bool> VerificaEmailCadastradoParaAlteracao(Guid usuarioId, string emailUsuario)
+        {
+            return await _dbContext.Usuarios
+                        .AnyAsync(x => x.EmailUsuario.Valor.ToLower() == emailUsuario.ToLower()
+                     && x.Id != usuarioId);
+        }
+
+        public async Task<bool> VerificaMaisDeUmAdminCadastrado()
+        {
+            return await _dbContext.Usuarios.Where(x=>x.Perfil == TipoUsuario.Administrador).CountAsync() > 1;
+        }
+
         public async Task<bool> VerificaNomeCadastrado(string nomeCadastrado)
         {
             return await _dbContext.Usuarios.AnyAsync(x => x.NomeUsuario.Valor.ToLower() == nomeCadastrado.ToLower());
+        }
+
+        public async Task<bool> VerificaNomeCadastradoParaAlteracao(Guid usuarioId, string nomeCadastrado)
+        {
+            return await _dbContext.Usuarios
+                       .AnyAsync(x => x.EmailUsuario.Valor.ToLower() == nomeCadastrado.ToLower()
+                        && x.Id != usuarioId);
         }
     }
 }
