@@ -1,4 +1,5 @@
-﻿using FiapCloundGames.API.Domain.Common.Exceptions;
+﻿using FiapCloundGames.API.Configuration.Exceptions;
+using FiapCloundGames.API.Domain.Common.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ namespace FiapCloundGames.API.Configuration.Middlewares
             CancellationToken cancellationToken)
         {
             _logger.LogError(exception, "Ocorreu um erro: {Message}", exception.Message);
-            if (exception is DomainException)
+            if (exception is DomainException || exception is BusinessException)
             {
                 var problemDetails = new ProblemDetails
                 {
