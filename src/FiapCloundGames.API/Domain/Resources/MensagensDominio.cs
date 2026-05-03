@@ -28,6 +28,8 @@
         public static string CrendenciasInvalidas = "Credenciais inválidas.";
         public static string EmailJaCadastrado = "O email já foi cadastrado.";
         public static string NomeUsuarioJaCadastrado = "O nome de usuário já foi cadastrado.";
+        public static string OperacaoDesativarInvalida = "Operação inválida: você não pode deletar seu próprio perfil.";
+        public static string OperacaoRebaixarInvalida = "Operação inválida: você não pode rebaixar seu próprio perfil.";
         #endregion
 
         #region Jogos
