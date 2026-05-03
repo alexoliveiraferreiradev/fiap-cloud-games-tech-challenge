@@ -5,7 +5,8 @@ namespace FiapCloundGames.API.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AutenticacaoController : ControllerBase
     {
+
     }
 }
