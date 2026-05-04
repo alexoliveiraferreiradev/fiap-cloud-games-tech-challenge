@@ -1,5 +1,6 @@
 ﻿using FiapCloundGames.API.Filters;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace FiapCloundGames.API.Configuration.Extensions
 {
@@ -9,7 +10,18 @@ namespace FiapCloundGames.API.Configuration.Extensions
         {
             builder.Services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Fiap Cloud Games", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "FIAP Cloud Games API",
+                    Version = "v1",
+                    Description = "API para gestão de catálogo de jogos e processamento de pedidos.",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Alex Oliveira Ferreira",
+                        Email = "alexoliveiraferreiradev@gmail.com"
+                    }
+                });
+
                 options.SchemaFilter<EnumSchemaFilter>();
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -20,6 +32,7 @@ namespace FiapCloundGames.API.Configuration.Extensions
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer"
                 });
+
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
