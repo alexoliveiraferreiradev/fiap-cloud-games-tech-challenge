@@ -33,6 +33,15 @@ namespace FiapCloundGames.API.Controller
                 return NotFound("Usuário não encotrado.");
             }
             return await _tokenConfiguration.RetornaJwt(usuario);
-        }      
+        }    
+        
+        [HttpPost("cadastrar")]
+        public async Task<ActionResult<LoginResponse>> Cadastrar(CriaUsuarioRequest request)
+        {
+            var usuario = await _usuarioService.CadastrarUsuario(request);          
+            return await _tokenConfiguration.RetornaJwt(usuario);
+        }
+
+        
     }
 }
