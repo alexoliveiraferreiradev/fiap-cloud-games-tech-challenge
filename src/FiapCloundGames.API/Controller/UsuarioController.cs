@@ -23,7 +23,6 @@ namespace FiapCloundGames.API.Controller
         {
             _usuarioService = usuarioService;
             _logger = logger;
-            _mapper = mapper;
         }
 
         [HttpGet]
