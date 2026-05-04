@@ -46,16 +46,14 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> CadastrarUsuario(CriaUsuarioRequest request)
         {
+            var nomeVO = new Nome(request.Nome);
+            var emailVO = new Email(request.Email);
             if (await _usuarioRepository.VerificaEmailCadastrado(request.Email)) throw new DomainException(MensagensDominio.EmailJaCadastrado);
             if (await _usuarioRepository.VerificaNomeCadastrado(request.Nome)) throw new DomainException(MensagensDominio.NomeUsuarioJaCadastrado);
-
             ValidaSenhas(request.Senha, request.ConfirmacaoSenha);
 
             var senhaCifrada = _passwordHasher.HashPassword(request.Senha);
-
-            var nomeVO = new Nome(request.Nome);
-            var emailVO = new Email(request.Email);
-            var senhaCifradaVO = new Senha(senhaCifrada);
+            var senhaCifradaVO = new Senha(senhaCifrada);            
 
             var usuario = new Usuario(nomeVO, emailVO, senhaCifradaVO);
             await _usuarioRepository.Adicionar(usuario);
@@ -69,11 +67,13 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<Usuario> AtualizarUsuario(Guid id, UpdateUsuarioRequest request)
         {
-            if (await _usuarioRepository.VerificaEmailCadastrado(request.EmailUsuario)) throw new DomainException(MensagensDominio.EmailJaCadastrado);
-            if (await _usuarioRepository.VerificaNomeCadastrado(request.NomeUsuario)) throw new DomainException(MensagensDominio.NomeUsuarioJaCadastrado);
-            ValidaSenhas(request.SenhaUsuario, request.ConfirmacaoSenha);
             var usuario = await _usuarioRepository.ObterPorId(id);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
+
+            if (await _usuarioRepository.VerificaEmailCadastradoParaAlteracao(id,request.EmailUsuario)) throw new DomainException(MensagensDominio.EmailJaCadastrado);
+            if (await _usuarioRepository.VerificaNomeCadastradoParaAlteracao(id,request.NomeUsuario)) throw new DomainException(MensagensDominio.NomeUsuarioJaCadastrado);
+
+            ValidaSenhas(request.SenhaUsuario, request.ConfirmacaoSenha);
 
             var novaSenhaCriptografa = _passwordHasher.HashPassword(request.SenhaUsuario);
             var novoUsuarioVO = new Nome(request.NomeUsuario);
@@ -95,7 +95,7 @@ namespace FiapCloundGames.API.Application.Services
             return await _usuarioRepository.ObterTodos();
         }
 
-        public async Task Desativar(DeleteUsuarioRequest deletaUsuarioRequest,Guid idOperador)
+        public async Task Desativar(DesativaUsuarioRequest deletaUsuarioRequest,Guid idOperador)
         {
             if (idOperador == deletaUsuarioRequest.Id) throw new DomainException(MensagensDominio.OperacaoDesativarInvalida);
             var admin = await _usuarioRepository.ObterPorId(idOperador);
@@ -106,11 +106,19 @@ namespace FiapCloundGames.API.Application.Services
             await _usuarioRepository.Atualizar(usuario);
         }
 
-        public async Task DesativarConta(DeleteUsuarioRequest deletaUsuarioRequest)
+        public async Task DesativarConta(Guid id)
         {
-            var usuario = await _usuarioRepository.ObterPorId(deletaUsuarioRequest.Id);
+            var usuario = await _usuarioRepository.ObterPorId(id);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
-            usuario.Desativar(deletaUsuarioRequest.MotivoDelecao);
+            if(usuario.Perfil == TipoUsuario.Administrador)
+            {
+                var existeOutroAdmin = await _usuarioRepository.VerificaMaisDeUmAdminCadastrado();
+                if (!existeOutroAdmin)
+                {
+                    throw new DomainException(MensagensDominio.OperacaoDesativarAdminInvalida);
+                }
+            }
+            usuario.DesativarConta();
             await _usuarioRepository.Atualizar(usuario);
         }
 
@@ -136,6 +144,11 @@ namespace FiapCloundGames.API.Application.Services
         {
             var email = new Email(emailUsuario);
             return await _usuarioRepository.ObterPorEmail(email.Valor);
+        }
+
+        public async Task<bool> VerificaAdminCadastrado()
+        {
+            return await _usuarioRepository.VerificaMaisDeUmAdminCadastrado();
         }
     }
 }
