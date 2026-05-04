@@ -1,4 +1,5 @@
-﻿using FiapCloundGames.API.Application.Dtos.Usuario;
+﻿using AutoMapper;
+using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common;
 using FiapCloundGames.API.Domain.Common.Exceptions;
@@ -14,11 +15,13 @@ namespace FiapCloundGames.API.Application.Services
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IMapper _mapper;
         private readonly IPasswordHasher _passwordHasher;
-        public UsuarioService(IUsuarioRepository usuarioRepository, IPasswordHasher passwordHasher)
+        public UsuarioService(IUsuarioRepository usuarioRepository, IPasswordHasher passwordHasher, IMapper mapper)
         {
             _usuarioRepository = usuarioRepository;
             _passwordHasher = passwordHasher;
+            _mapper = mapper;
         }
 
         public async Task<Usuario> PromoverParaAdmin(Guid id)

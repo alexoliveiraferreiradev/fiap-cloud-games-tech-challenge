@@ -1,4 +1,5 @@
-﻿using FiapCloundGames.API.Application.Services.Interfaces;
+﻿using AutoMapper;
+using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Repositories;
@@ -12,15 +13,17 @@ namespace FiapCloundGames.API.Application.Services
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IJogoRepository _jogoRepository;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IMapper _mapper;
         private List<string> errors;
         public PedidoService(IPedidoRepository pedidoRepository, IJogoRepository jogosRepository,
-            IUsuarioRepository usuarioRepository, IBibliotecaService bibliotecaService)
+            IUsuarioRepository usuarioRepository, IBibliotecaService bibliotecaService, IMapper mapper)
         {
             _pedidoRepository = pedidoRepository;
             _jogoRepository = jogosRepository;
             _usuarioRepository = usuarioRepository;
             _bibliotecaService = bibliotecaService;
             errors = new List<string>();
+            _mapper = mapper;
         }
 
         public IEnumerable<string> ObtemErrosDoPedido()

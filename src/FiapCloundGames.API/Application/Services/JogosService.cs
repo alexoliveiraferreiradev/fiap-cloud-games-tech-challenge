@@ -14,9 +14,11 @@ namespace FiapCloundGames.API.Application.Services
     public class JogosService : IJogosService
     {
         private readonly IJogoRepository _jogoRepository;
-        public JogosService(IJogoRepository jogoRepository)
+        private readonly IMapper _mapper;
+        public JogosService(IJogoRepository jogoRepository, IMapper mapper)
         {
             _jogoRepository = jogoRepository;
+            _mapper = mapper;
         }
         public async Task<Jogo> AdicionaJogo(CriarJogoRequest request)
         {
