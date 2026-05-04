@@ -5,6 +5,7 @@ namespace FiapCloundGames.API.Application.Dtos.Pedido
     public class PedidoResponse
     {
         public Guid Id { get; set; }
+        public Guid UsuarioId { get; set; }
         public Guid JogoId { get; set; }
         public DateTime DataPedido { get; set; }
         public PedidoStatus Status { get; set; }       
