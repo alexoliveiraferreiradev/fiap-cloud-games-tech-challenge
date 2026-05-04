@@ -483,16 +483,18 @@ namespace FiapCloundGames.UnitTests.Application.Services
         [Trait("Categoria", "Usuario Service Tests")]
         public async Task DesativarUsuario_UsuarioValido_DeveDesativarComSucesso()
         {
-            //Arrange            
+            //Arrange
+            var admin = _usuarioFixture.ObtemAdminComSucesso();
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var deleteUsuarioRequest = new DeleteUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             repoMock.Setup(r => r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync(usuario);
+            repoMock.Setup(r => r.ObterPorId(admin.Id)).ReturnsAsync(admin);
             //Act
-            await service.Desativar(deleteUsuarioRequest,Guid.NewGuid());
+            await service.Desativar(deleteUsuarioRequest, admin.Id);
             //Assert
             Assert.False(usuario.Ativo);
 
@@ -505,14 +507,14 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange            
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var deleteUsuarioRequest = new DeleteUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             repoMock.Setup(r => r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync(usuario);
             //Act
-            await service.DesativarConta(deleteUsuarioRequest);
+            await service.DesativarConta(deleteUsuarioRequest.Id);
             //Assert
             Assert.False(usuario.Ativo);
 
@@ -525,13 +527,13 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange            
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var deleteUsuarioRequest = new DeleteUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             //Act
-           var result = await Assert.ThrowsAsync<DomainException>(async () => await service.DesativarConta(deleteUsuarioRequest));
+           var result = await Assert.ThrowsAsync<DomainException>(async () => await service.DesativarConta(deleteUsuarioRequest.Id));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNaoEncontrado,result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
@@ -543,7 +545,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Arrange
             var admin = _usuarioFixture.ObtemAdminComSucesso();
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var deleteUsuarioRequest = new DeleteUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
@@ -562,15 +564,16 @@ namespace FiapCloundGames.UnitTests.Application.Services
         public async Task DesativarUsuario_UsuarioInexistente_DeveLancarExcecao()
         {
             //Arrange
-            var idUsuario = Guid.NewGuid();
-            var deleteUsuarioRequest = new DeleteUsuarioRequest(idUsuario, MotivoExclusao.Inatividade);
+            var admin = _usuarioFixture.ObtemAdminComSucesso();
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
             var service = new UsuarioService(repoMock.Object, hashMock.Object);
             repoMock.Setup(r =>  r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync((Usuario)null);
+            repoMock.Setup(r => r.ObterPorId(admin.Id)).ReturnsAsync(admin);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(() => service.Desativar(deleteUsuarioRequest,Guid.NewGuid()));
+            var result = await Assert.ThrowsAsync<DomainException>(() => service.Desativar(deleteUsuarioRequest,admin.Id));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
             repoMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
@@ -582,7 +585,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange
             var idUsuario = Guid.NewGuid();
-            var deleteUsuarioRequest = new DeleteUsuarioRequest(idUsuario, MotivoExclusao.Inatividade);
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(idUsuario, MotivoExclusao.Inatividade);
             //Mock
             var repoMock = new Mock<IUsuarioRepository>();
             var hashMock = new Mock<IPasswordHasher>();
