@@ -25,6 +25,8 @@ namespace FiapCloundGames.API.Controller
         /// Atualiza as informações do perfil do usuário.
         /// </summary>
         /// <remarks>
+        /// * **Validação de Nome:** Obrigatório, entre 3 e 20 caracteres.
+        /// * **Validação de E-mail:** Obrigatório, formato válido, verificação de duplicidade.
         /// Este endpoint permite a alteração de dados como nome e preferências. 
         /// 
         /// **Nota:** O ID na URL deve coincidir com o ID do recurso que se deseja atualizar.

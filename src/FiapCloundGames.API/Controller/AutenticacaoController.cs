@@ -27,7 +27,10 @@ namespace FiapCloundGames.API.Controller
         /// <summary>
         /// Autentica um usuário e gera um token de acesso.
         /// </summary>
-        /// <remarks>
+        /// <remarks> 
+        /// * **Validação de E-mail:** Obrigatório, formato válido, verificação de duplicidade.
+        /// * **Validação de Senha:** Mínimo 8 caracteres (A-z, 0-9, @#$), confirmação idêntica.
+        /// 
         /// Exemplo de requisição:
         /// 
         ///     POST /login
@@ -67,7 +70,7 @@ namespace FiapCloundGames.API.Controller
         /// Este endpoint realiza a criação da conta e, em caso de sucesso, 
         /// já autentica o usuário automaticamente, retornando o token JWT.
         /// 
-        /// Possíveis mensagens de erro (Bad Request):
+        /// Possíveis mensagens de erro:
         /// 
         /// * **Validação de Nome:** Obrigatório, entre 3 e 20 caracteres.
         /// * **Validação de E-mail:** Obrigatório, formato válido, verificação de duplicidade.
@@ -79,25 +82,10 @@ namespace FiapCloundGames.API.Controller
         ///     {
         ///        "nome": "Nome usuario",
         ///        "email": "usuario.dev@exemplo.com",
-        ///        "senha": "SenhaForte@2026"
+        ///        "senha": "SenhaForte@2026",
+        ///        "confirmacaoSenha": "SenhaForte@2026"
         ///     }
-        ///     Exemplo de erro:
-        /// 
-        ///     {
-        ///        "errors":[
-        ///         "O nome do usuário é obrigatório.",
-        ///         "O nome do usuário deve conter entre 3 e 20 caracteres.",
-        ///         "O email do usuário é obrigatório.",
-        ///         "O email é inválido.",
-        ///         "O tamanho do email é inválido.",
-        ///         "O email já foi cadastrado.",
-        ///         "O nome de usuário já foi cadastrado.",
-        ///         "A senha e a confirmação de senha devem ser iguais.",
-        ///         "A senha do usuário é obrigatória.",
-        ///         "O tamanho da senha é inválido.",
-        ///         "A senha deve conter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais."
-        ///        ]
-        ///     }
+        ///     
         /// 
         /// </remarks>
         /// <param name="request">Objeto contendo os dados necessários para o cadastro (Nome, E-mail e Senha).</param>

@@ -44,6 +44,9 @@ namespace FiapCloundGames.API.Controller
         /// Realiza o cadastro de um novo jogo no catálogo do marketplace.
         /// </summary>
         /// <remarks>
+        /// * **Validação de Nome do Jogo:** Obrigatório, entre 3 e 100 caracteres.
+        /// * **Validação de Descrição do Jogo:** Obrigatório, entre 5 e 500 caracteres.
+        /// * **Validação de Preco:** Obrigatório, não sendo negativo.
         /// Exemplo de requisição:
         /// 
         ///     POST /api/jogos
@@ -91,6 +94,9 @@ namespace FiapCloundGames.API.Controller
 
         /// <summary>
         /// Atualiza as informações de um jogo existente.
+        /// * **Validação de Nome do Jogo:** Obrigatório, entre 3 e 100 caracteres.
+        /// * **Validação de Descrição do Jogo:** Obrigatório, entre 5 e 500 caracteres.
+        /// * **Validação de Preco:** Obrigatório, não sendo negativo.
         /// </summary>
         /// <param name="id">O identificador único do jogo.</param>
         /// <param name="updateRequest">Novos dados para o jogo (Nome, Preço, etc.).</param>
