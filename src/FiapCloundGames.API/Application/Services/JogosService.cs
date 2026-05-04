@@ -107,7 +107,7 @@ namespace FiapCloundGames.API.Application.Services
         public async Task<PagedResult<JogoResponse>> ObtemCatalagoJogoPaginado(int pagina = 1, int tamanhoPagina = 10)
         {
             var totalRegistros = (await _jogoRepository.ObtemJogosAtivos()).Count();
-            var jogoResponse = _mapper.Map<IEnumerable<JogoResponse>>(await _jogoRepository.ObtemCatalogoPaginado());
+            var jogoResponse = _mapper.Map<IEnumerable<JogoResponse>>(await _jogoRepository.ObtemCatalogoPaginado(pagina,tamanhoPagina));
             return new PagedResult<JogoResponse>(jogoResponse, pagina, tamanhoPagina, totalRegistros);
         }
         public async Task<IEnumerable<JogoResponse>> ObtemPorGenero(GeneroJogo generoJogo)
