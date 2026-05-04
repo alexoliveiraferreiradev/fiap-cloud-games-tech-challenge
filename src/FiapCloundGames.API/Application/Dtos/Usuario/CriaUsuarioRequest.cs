@@ -7,10 +7,12 @@ namespace FiapCloundGames.API.Application.Dtos.Usuario
     public class CriaUsuarioRequest
     {
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
+        [RegularExpression(@"^(?i)(?!string$).*", ErrorMessage = DataAnnotationMessage.ErroNomeReal)]
         [StringLength(40, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 3)]
         public string Nome { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         [EmailAddress(ErrorMessage = DataAnnotationMessage.ErroFormato)]
+        [RegularExpression(@"^(?!.*@example\.com$).*", ErrorMessage = DataAnnotationMessage.ErroEmail)]
         [StringLength(100, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 7)]
         public string Email { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
