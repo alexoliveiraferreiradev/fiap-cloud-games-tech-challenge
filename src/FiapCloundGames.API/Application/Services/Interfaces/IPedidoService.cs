@@ -7,5 +7,6 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task<Pedido> RealizarPedido(Guid usuarioId, List<Guid> jogosIds);
         Task<Pedido> ObterPedidoPorId(Guid id);
         Task<IEnumerable<Pedido>> ObtemHistoricoPorUsuario(Guid usuarioId);
+        IEnumerable<string> ObtemErrosDoPedido();
     }
 }
