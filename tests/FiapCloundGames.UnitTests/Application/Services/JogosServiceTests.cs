@@ -28,7 +28,14 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             _faker = new Faker();
             _mockJogo = new Mock<IJogoRepository>();
-            _jogosService = new JogosService(_mockJogo.Object);
+            var configMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<JogoProfile>();
+                cfg.AddProfile<PromocaoProfile>();
+            });
+            _mapper = configMapper.CreateMapper();
+
+            _jogosService = new JogosService(_mockJogo.Object,_mapper);
             _jogosFixture = new JogosFixture();
             _promocaoFixture = new PromocaoFixture();
         }
