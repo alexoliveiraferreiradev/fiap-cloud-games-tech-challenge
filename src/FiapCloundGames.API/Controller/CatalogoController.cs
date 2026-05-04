@@ -2,7 +2,6 @@
 using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Enum;
-using FiapCloundGames.API.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +28,7 @@ namespace FiapCloundGames.API.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<JogoResponse>> ObterJogoPorId(Guid id)
         {
+            await _jogoService.DesativaPromocoesInvalidas();
             _logger.LogInformation("Obtém jogo por id: {Id}", id);
             var jogo = await _jogoService.ObtemJogoPorId(id);
             if (jogo is null) return NotFound();
@@ -41,9 +41,12 @@ namespace FiapCloundGames.API.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<JogoResponse>>> ObtemCatalogoDeJogos()
         {
+            await _jogoService.DesativaPromocoesInvalidas();
             _logger.LogInformation("Recupera catálogo de jogos");
-            var jogos = await _jogoService.ObtemCatalagoJogos();
-            if (!jogos.Any()) return NoContent();
+            var jogos = _mapper.Map<IEnumerable<JogoResponse>>(  await _jogoService.ObtemCatalagoJogos());
+            if (!jogos.Any()) 
+                return NotFound("Não foi encontrado jogos");
+
             return Ok(jogos);
         }
 
@@ -51,8 +54,23 @@ namespace FiapCloundGames.API.Controller
         [ProducesResponseType(typeof(IEnumerable<JogoResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<JogoResponse>>> ListarPorGenero(GeneroJogo genero)
-        {            
-            var jogos = await _jogoService.ObtemPorGenero(genero);
+        {
+            await _jogoService.DesativaPromocoesInvalidas();
+            var jogos = _mapper.Map<IEnumerable<JogoResponse>>(await _jogoService.ObtemPorGenero(genero));
+            if (!jogos.Any())
+                return NotFound("Não foi encontrado jogos");
+
+            return Ok(jogos);
+        }
+
+        [HttpGet("busca-jogos-com-promocao")]
+        public async Task<ActionResult<JogoResponse>> ObtemJogosComPromocao()
+        {
+            await _jogoService.DesativaPromocoesInvalidas();
+            var jogos = _mapper.Map<IEnumerable<JogoResponse>>( await _jogoService.ObtemJogosPromovidos());
+            if (jogos == null)
+                return NotFound("Não foi encontrado nenhum jogo com promoções");
+
             return Ok(jogos);
         }
     }
