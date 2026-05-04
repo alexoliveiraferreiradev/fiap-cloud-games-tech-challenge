@@ -8,7 +8,7 @@ namespace FiapCloundGames.API.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Tags("Gerenciamento de Jogos (Admin)")]
+    [Tags("Gerenciamento de Jogos")]
     [Authorize(Roles = "AdminRole")]
     public class JogoController : ControllerBase
     {
@@ -29,7 +29,7 @@ namespace FiapCloundGames.API.Controller
         public async Task<ActionResult<JogoResponse>> ObterJogoPorId(Guid id)
         {
             _logger.LogInformation("Obtém jogo por id: {Id}", id);
-            var jogo = await _jogoService.ObtemJogoPorId(id);
+            var jogo = _mapper.Map<JogoResponse>(  await _jogoService.ObtemJogoPorId(id));
             if (jogo is null) return NotFound();
 
             return Ok(_mapper.Map<JogoResponse>(jogo));
@@ -42,7 +42,7 @@ namespace FiapCloundGames.API.Controller
         {
             _logger.LogInformation("Recebida requisição para adicionar o jogo: {NomeJogo}", jogoRequest.Nome);
 
-            var jogo = await _jogoService.AdicionaJogo(jogoRequest);
+            var jogo = _mapper.Map<JogoResponse>( await _jogoService.AdicionaJogo(jogoRequest));
             return  CreatedAtAction(nameof(ObterJogoPorId), new { id = jogo.Id }, jogo);
         }
 
