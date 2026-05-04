@@ -53,24 +53,23 @@ namespace FiapCloundGames.API.Controller
         }
 
         [HttpGet("buscar-por-genero/{genero}")]
-        [ProducesResponseType(typeof(IEnumerable<JogoResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<JogoResponse>>> ListarPorGenero(GeneroJogo genero)
+        [ProducesResponseType(typeof(PagedResult<JogoResponse>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<JogoResponse>>> ListarPorGenero(GeneroJogo genero, [FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
         {
             await _jogoService.DesativaPromocoesInvalidas();
-            var jogos =await _jogoService.ObtemPorGenero(genero);
-            if (!jogos.Any())
+            var jogos =await _jogoService.ObtemPorGeneroPaginacao(genero);
+            if (!jogos.Items.Any())
                 return NotFound("Não foi encontrado jogos");
 
             return Ok(jogos);
         }
 
         [HttpGet("busca-jogos-com-promocao")]
-        public async Task<ActionResult<JogoResponse>> ObtemJogosComPromocao()
+        public async Task<ActionResult<JogoResponse>> ObtemJogosComPromocao([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
         {
             await _jogoService.DesativaPromocoesInvalidas();
-            var jogos = await _jogoService.ObtemJogosPromovidos();
-            if (jogos == null)
+            var jogos = await _jogoService.ObtemJogosPromovidosPaginacao();
+            if (!jogos.Items.Any())
                 return NotFound("Não foi encontrado nenhum jogo com promoções");
 
             return Ok(jogos);
