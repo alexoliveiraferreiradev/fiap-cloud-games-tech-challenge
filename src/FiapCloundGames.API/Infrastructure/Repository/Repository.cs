@@ -12,30 +12,35 @@ namespace FiapCloundGames.API.Infrastructure.Repository
 
         protected Repository(ApplicationDbContext dbContext)
         {
-            _dbContext = dbContext; 
-            _dbSet = dbContext.Set<Entidade>(); 
+            _dbContext = dbContext;
+            _dbSet = dbContext.Set<Entidade>();
         }
 
         public async Task Adicionar(Entidade entity)
         {
             _dbSet.Add(entity);
-            await _dbContext.SaveChangesAsync();
+            await SaveChanges();
         }
 
         public async Task Atualizar(Entidade entity)
         {
-           _dbSet.Update(entity);
-            await _dbContext.SaveChangesAsync();    
+            _dbSet.Update(entity);
+            await SaveChanges();
         }
 
         public async Task<Entidade> ObterPorId(Guid id)
         {
-            return await _dbSet.Where(x=>x.Id ==  id).FirstOrDefaultAsync();
+            return await _dbSet.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Entidade>> ObterTodos()
         {
             return await _dbSet.ToListAsync();
+        }
+
+        public async Task SaveChanges()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
