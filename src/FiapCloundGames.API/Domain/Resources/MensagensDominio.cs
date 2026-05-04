@@ -31,6 +31,7 @@
         public static string NomeUsuarioJaCadastrado = "O nome de usuário já foi cadastrado.";
         public static string OperacaoDesativarInvalida = "Operação inválida: você não pode deletar seu próprio perfil.";
         public static string OperacaoRebaixarInvalida = "Operação inválida: você não pode rebaixar seu próprio perfil.";
+        public static string OperacaoDesativarAdminInvalida = "Não é possível desativar o último administrador.";
         #endregion
 
         #region Jogos
