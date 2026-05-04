@@ -23,7 +23,28 @@ namespace FiapCloundGames.API.Controller
             _tokenConfiguration = tokeConfiguration;
         }
 
+        /// <summary>
+        /// Autentica um usuário e gera um token de acesso.
+        /// </summary>
+        /// <remarks>
+        /// Exemplo de requisição:
+        /// 
+        ///     POST /login
+        ///     {
+        ///        "email": "usuario@exemplo.com",
+        ///        "senha": "SenhaForte123!"
+        ///     }
+        /// 
+        /// </remarks>
+        /// <param name="loginRequest">Objeto contendo as credenciais de acesso (E-mail e Senha).</param>
+        /// <returns>Retorna os dados do perfil do usuário e o Token JWT gerado.</returns>
+        /// <response code="200">Retorna o token de acesso e os dados básicos do usuário.</response>
+        /// <response code="400">Dados de entrada inválidos (ex: formato de e-mail incorreto).</response>
+        /// <response code="401">Credenciais inválidas (e-mail ou senha incorretos).</response>
         [HttpPost("login")]
+        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<LoginResponse>> Login(LoginRequest loginRequest)
         {
             var usuario = await _usuarioService.Autenticar(loginRequest);
