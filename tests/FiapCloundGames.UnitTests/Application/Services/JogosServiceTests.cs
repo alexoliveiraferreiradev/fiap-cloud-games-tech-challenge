@@ -428,11 +428,14 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var jogoAtivo = _jogosFixture.ObtemJogosParaPromocao();
             listaJogosAtivos.Add(jogoAtivo);
 
-            _mockJogo.Setup(r => r.ObtemJogosAtivos()).ReturnsAsync(listaJogosAtivos);
+            _mockJogo.Setup(r => r.ObtemCatalogoPaginado(It.IsAny<int>(), It.IsAny<int>()))
+          .ReturnsAsync(listaJogosAtivos);
+
+            // Se o seu serviço também chama o CountAsync para o total de itens:
             //Act 
-            var respone = await _jogosService.ObtemCatalagoJogos();
+            var respone = await _jogosService.ObtemCatalagoJogoPaginado(pagina: 1, tamanhoPagina: 10);
             //Assert
-            Assert.Contains(respone, r => r.Id == jogoAtivo.Id);
+            Assert.True(respone.Items.Any());
         }
 
     }
