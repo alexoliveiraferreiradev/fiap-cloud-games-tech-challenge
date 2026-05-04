@@ -110,7 +110,8 @@ namespace FiapCloundGames.API.Application.Services
                 j.Nome.Valor,
                 j.Descricao.Valor,
                 j.PrecoBase.Valor,
-                j.ObterPrecoAtual().Valor
+                j.ObterPrecoAtual().Valor,
+                j.Genero
             ));
         }
         public async Task<IEnumerable<JogoResponse>> ObtemPorGenero(GeneroJogo generoJogo)
@@ -122,7 +123,8 @@ namespace FiapCloundGames.API.Application.Services
                 j.Nome.Valor,
                 j.Descricao.Valor,
                 j.PrecoBase.Valor,
-                j.ObterPrecoAtual().Valor
+                j.ObterPrecoAtual().Valor,
+                j.Genero
             ));
         }
 
