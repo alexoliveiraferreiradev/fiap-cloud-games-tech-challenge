@@ -10,14 +10,14 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task<Usuario> RebaixarParaJogador(Guid id,Guid idOperador);
         Task<Usuario> CadastrarUsuario(CriaUsuarioRequest request);
         Task<Usuario> AtualizarUsuario(Guid usuarioId, UpdateUsuarioRequest updateUsuarioRequest);
-        Task Desativar(DeleteUsuarioRequest deleteUsuarioRequest,Guid idOperador);
-        Task DesativarConta(DeleteUsuarioRequest deleteUsuarioRequest);
-
+        Task Desativar(DesativaUsuarioRequest deleteUsuarioRequest,Guid idOperador);
+        Task DesativarConta(Guid id);
         Task Reativar(Guid usuarioId);
         Task<Usuario> Autenticar(LoginRequest loginRequest);
         Task<Usuario> ObterPorId(Guid usuarioId);
         Task<IEnumerable<Usuario>> ObterTodos();
         Task<Usuario?> ObterPorEmail(string emailUsuario);
+        Task<bool> VerificaAdminCadastrado();
 
     }
 }
