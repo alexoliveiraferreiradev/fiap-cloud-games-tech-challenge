@@ -173,7 +173,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
 
             // Assert
             Assert.Equal("Finalizado", result.Status.ToString()); 
-            Assert.Equal(50.0m, result.ValorTotal.Valor);
+            Assert.Equal(50.0m, result.ValorTotal);
 
             // Verifica se o pedido foi realmente adicionado ao repositório
             _pedidoMock.Verify(p => p.Adicionar(It.IsAny<Pedido>()), Times.Once);
