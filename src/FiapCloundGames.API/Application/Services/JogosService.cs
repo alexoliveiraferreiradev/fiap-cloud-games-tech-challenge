@@ -29,7 +29,7 @@ namespace FiapCloundGames.API.Application.Services
             var descricaoVO = new Descricao(request.Descricao);
             var jogos = new Jogo(nomeJogoVO, descricaoVO, preco, request.Genero);
             await _jogoRepository.Adicionar(jogos);
-            return _mapper.Map<JogoResponse>( jogos);
+            return _mapper.Map<JogoResponse>(jogos);
         }
 
 
@@ -104,9 +104,11 @@ namespace FiapCloundGames.API.Application.Services
             await _jogoRepository.Atualizar(jogo);
         }
 
-        public async Task<IEnumerable<JogoResponse>> ObtemCatalagoJogos()
+        public async Task<PagedResult<JogoResponse>> ObtemCatalagoJogoPaginado(int pagina = 1, int tamanhoPagina = 10)
         {
-            return _mapper.Map<IEnumerable<JogoResponse>>(await _jogoRepository.ObtemJogosAtivos());
+            var totalRegistros = (await _jogoRepository.ObtemJogosAtivos()).Count();
+            var jogoResponse = _mapper.Map<IEnumerable<JogoResponse>>(await _jogoRepository.ObtemCatalogoPaginado());
+            return new PagedResult<JogoResponse>(jogoResponse, pagina, tamanhoPagina, totalRegistros);
         }
         public async Task<IEnumerable<JogoResponse>> ObtemPorGenero(GeneroJogo generoJogo)
         {
