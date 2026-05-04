@@ -67,6 +67,13 @@ namespace FiapCloundGames.API.Domain.Entities
             DataAlteracao = DateTime.UtcNow;
             MotivoDesativacao = motivo;
         }
+        public void DesativarConta()
+        {
+            if (!Ativo) throw new DomainException(MensagensDominio.UsuarioJaDesativado);
+
+            Ativo = false;
+            DataAlteracao = DateTime.UtcNow;
+        }
 
         public void Atualizar(Nome novoNome, Email novoEmail, Senha novaSenha)
         {
