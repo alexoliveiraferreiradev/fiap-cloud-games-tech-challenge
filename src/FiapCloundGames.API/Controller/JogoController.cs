@@ -24,6 +24,7 @@ namespace FiapCloundGames.API.Controller
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(JogoResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<JogoResponse>> ObterJogoPorId(Guid id)
         {
@@ -34,13 +35,12 @@ namespace FiapCloundGames.API.Controller
             return Ok(_mapper.Map<JogoResponse>(jogo));
         }
         [HttpPost]
-        [ProducesResponseType(typeof(JogoResponse), StatusCodes.Status201Created)]        
+        [ProducesResponseType(typeof(JogoResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<JogoResponse>> Adicionar(CriarJogoRequest jogoRequest)
         {
             _logger.LogInformation("Recebida requisição para adicionar o jogo: {NomeJogo}", jogoRequest.Nome);
-
-            await _jogoService.VerificaDuplicidadeNome(jogoRequest.Nome);
 
             var jogo = await _jogoService.AdicionaJogo(jogoRequest);
             return  CreatedAtAction(nameof(ObterJogoPorId), new { id = jogo.Id }, jogo);
@@ -48,6 +48,7 @@ namespace FiapCloundGames.API.Controller
 
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Desativar(Guid id)
         {
@@ -61,6 +62,7 @@ namespace FiapCloundGames.API.Controller
 
         [HttpPut("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<JogoResponse>> Atualizar(Guid id, UpdateJogoRequest updateRequest)
         {
