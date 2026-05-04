@@ -6,6 +6,7 @@ namespace FiapCloundGames.API.Domain.Repositories
     public interface IBibliotecaRepository : IRepository<Biblioteca>
     {
         Task<bool> VerificaSeUsuarioPossuiJogo(Guid usuarioId, Guid jogoId);
-        Task<IEnumerable<BibliotecaResponse>> ObterJogosPorUsuario(Guid usuarioId);
+        Task<IEnumerable<Biblioteca>> ObterJogosPorUsuario(Guid usuarioId);
+        Task<IEnumerable<Guid>> ObterIdsJogosDoUsuario(Guid usuarioId);
     }
 }
