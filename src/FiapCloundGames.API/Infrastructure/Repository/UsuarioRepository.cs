@@ -33,7 +33,8 @@ namespace FiapCloundGames.API.Infrastructure.Repository
 
         public async Task<bool> VerificaMaisDeUmAdminCadastrado()
         {
-            return await _dbContext.Usuarios.Where(x=>x.Perfil == TipoUsuario.Administrador).CountAsync() > 1;
+            return await _dbContext.Usuarios
+         .CountAsync(x => x.Perfil == TipoUsuario.Administrador && x.Ativo) > 1;
         }
 
         public async Task<bool> VerificaNomeCadastrado(string nomeCadastrado)
