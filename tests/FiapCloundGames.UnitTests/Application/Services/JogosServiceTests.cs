@@ -51,7 +51,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result =   await _jogosService.AdicionaJogo(request);
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(request.Nome, result.Nome.Valor);
+            Assert.Equal(request.Nome, result.Nome);
 
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Once);
         }

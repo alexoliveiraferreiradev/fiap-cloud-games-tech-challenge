@@ -20,7 +20,7 @@ namespace FiapCloundGames.API.Application.Services
             _jogoRepository = jogoRepository;
             _mapper = mapper;
         }
-        public async Task<Jogo> AdicionaJogo(CriarJogoRequest request)
+        public async Task<JogoResponse> AdicionaJogo(CriarJogoRequest request)
         {
             await VerificaDuplicidadeNome(request.Nome);
             var preco = new Preco(request.Preco);
@@ -28,11 +28,11 @@ namespace FiapCloundGames.API.Application.Services
             var descricaoVO = new Descricao(request.Descricao);
             var jogos = new Jogo(nomeJogoVO, descricaoVO, preco, request.Genero);
             await _jogoRepository.Adicionar(jogos);
-            return jogos;
+            return _mapper.Map<JogoResponse>( jogos);
         }
 
 
-        public async Task<Jogo> AtualizarJogo(Guid id, UpdateJogoRequest updateJogosRequest)
+        public async Task<JogoResponse> AtualizarJogo(Guid id, UpdateJogoRequest updateJogosRequest)
         {
             var jogo = await _jogoRepository.ObterPorId(id);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
@@ -41,7 +41,7 @@ namespace FiapCloundGames.API.Application.Services
             var descricaoJogoVO = new Descricao(updateJogosRequest.NovaDescricao);
             jogo.Atualizar(nomeJogoVO, descricaoJogoVO, precoVO, updateJogosRequest.NovoGenero);
             await _jogoRepository.Atualizar(jogo);
-            return jogo;
+            return _mapper.Map<JogoResponse>(jogo);
         }
 
         public async Task Desativar(Guid jogoId)
@@ -103,30 +103,30 @@ namespace FiapCloundGames.API.Application.Services
             await _jogoRepository.Atualizar(jogo);
         }
 
-        public async Task<IEnumerable<Jogo>> ObtemCatalagoJogos()
+        public async Task<IEnumerable<JogoResponse>> ObtemCatalagoJogos()
         {
-            return await _jogoRepository.ObtemJogosAtivos();
+            return _mapper.Map<IEnumerable<JogoResponse>>(await _jogoRepository.ObtemJogosAtivos());
         }
-        public async Task<IEnumerable<Jogo>> ObtemPorGenero(GeneroJogo generoJogo)
+        public async Task<IEnumerable<JogoResponse>> ObtemPorGenero(GeneroJogo generoJogo)
         {
-            return await _jogoRepository.ObtemPorGenero(generoJogo);
+            return _mapper.Map<IEnumerable<JogoResponse>>(await _jogoRepository.ObtemPorGenero(generoJogo));
         }
-        public async Task<Jogo> ObtemJogoPorId(Guid jogoId)
+        public async Task<JogoResponse> ObtemJogoPorId(Guid jogoId)
         {
-            return await _jogoRepository.ObterPorId(jogoId);
+            return _mapper.Map<JogoResponse>(await _jogoRepository.ObterPorId(jogoId));
         }
-        public async Task<IEnumerable<Jogo>> ObtemJogosPromovidos()
+        public async Task<IEnumerable<JogoResponse>> ObtemJogosPromovidos()
         {
-            return await _jogoRepository.ObtemJogosPromovidos();
+            return _mapper.Map<IEnumerable<JogoResponse>>(await _jogoRepository.ObtemJogosPromovidos());
         }
         public async Task DesativaPromocoesInvalidas()
         {
             await _jogoRepository.DesativaPromocoesInvalidas();
         }
 
-        public async Task<Promocao?> ObtemPromocaoPorId(Guid promocaoId)
+        public async Task<PromocaoResponse?> ObtemPromocaoPorId(Guid promocaoId)
         {
-            return await _jogoRepository.ObterPromocaoPorId(promocaoId);
+            return _mapper.Map<PromocaoResponse>(await _jogoRepository.ObterPromocaoPorId(promocaoId));
         }
     }
 }
