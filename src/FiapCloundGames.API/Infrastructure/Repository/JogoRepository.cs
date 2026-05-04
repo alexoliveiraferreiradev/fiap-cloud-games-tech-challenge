@@ -19,12 +19,22 @@ namespace FiapCloundGames.API.Infrastructure.Repository
             return await _dbContext.Jogos.Where(x => x.Ativo == true).ToListAsync();
         }
 
-        public async Task<IEnumerable<Jogo>> ObtemJogosPromovidos()
+        public async Task<int> TotalJogosPromovidos()
+        {
+            var agora = DateTime.UtcNow;
+            return (await _dbContext.Jogos
+                .Where(x => x.Promocoes.Any(p => p.Ativo && p.Periodo.DataInicio <= agora && p.Periodo.DataFim >= agora))
+                .Include(x => x.Promocoes.Where(p => p.Ativo && p.Periodo.DataInicio <= agora && p.Periodo.DataFim >= agora))
+                .ToListAsync()).Count();
+        }
+        public async Task<IEnumerable<Jogo>> ObtemJogosPromovidosPaginacao(int pagina = 1, int tamanhoPagina = 10)
         {
             var agora = DateTime.UtcNow;
             return await _dbContext.Jogos
                 .Where(x => x.Promocoes.Any(p => p.Ativo && p.Periodo.DataInicio <= agora && p.Periodo.DataFim >= agora))
                 .Include(x => x.Promocoes.Where(p => p.Ativo && p.Periodo.DataInicio <= agora && p.Periodo.DataFim >= agora))
+                .Skip((pagina - 1) * tamanhoPagina)
+                .Take(tamanhoPagina)
                 .ToListAsync();
         }
         public async Task DesativaPromocoesInvalidas()
@@ -36,9 +46,20 @@ namespace FiapCloundGames.API.Infrastructure.Repository
                 .ExecuteUpdateAsync(s => s.SetProperty(p => p.Ativo, false).SetProperty(p => p.DataAlteracao, DateTime.UtcNow));
         }
 
-        public async Task<IEnumerable<Jogo>> ObtemPorGenero(GeneroJogo generoJogo)
+        public async Task<IEnumerable<Jogo>> ObtemPorGeneroPaginado(GeneroJogo generoJogo, int pagina = 1, int tamanhoPagina = 10)
         {
-            return await _dbContext.Jogos.Where(x => x.Ativo == true && x.Genero == generoJogo).ToListAsync();
+            return await _dbContext.Jogos.
+                Where(x => x.Ativo == true && x.Genero == generoJogo)
+                .Skip((pagina - 1) * tamanhoPagina)
+                .Take(tamanhoPagina)
+                .ToListAsync();
+        }
+        public async Task<int> TotalJogoPorGenero(GeneroJogo generoJogo)
+        {
+            return (await _dbContext.Jogos.
+                Where(x => x.Ativo == true && x.Genero == generoJogo)
+                .AsNoTracking()
+                .ToListAsync()).Count();
         }
 
         public async Task<Jogo?> ObtemPorNome(string nomeJogo)
