@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FiapCloundGames.API.Application.Dtos.Pedido;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
@@ -14,7 +15,6 @@ namespace FiapCloundGames.API.Application.Services
         private readonly IJogoRepository _jogoRepository;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IMapper _mapper;
-        private List<string> errors;
         public PedidoService(IPedidoRepository pedidoRepository, IJogoRepository jogosRepository,
             IUsuarioRepository usuarioRepository, IBibliotecaService bibliotecaService, IMapper mapper)
         {
@@ -22,28 +22,21 @@ namespace FiapCloundGames.API.Application.Services
             _jogoRepository = jogosRepository;
             _usuarioRepository = usuarioRepository;
             _bibliotecaService = bibliotecaService;
-            errors = new List<string>();
             _mapper = mapper;
+        }      
+
+        public async Task<IEnumerable<PedidoResponse>> ObtemHistoricoPorUsuario(Guid usuarioId)
+        {
+            return _mapper.Map<IEnumerable<PedidoResponse>>( await _pedidoRepository.ObtemHistoricoPorUsuario(usuarioId));
         }
 
-        public IEnumerable<string> ObtemErrosDoPedido()
+        public async Task<PedidoResponse> ObterPedidoPorId(Guid id)
         {
-            return errors;
+            return  _mapper.Map<PedidoResponse>( await _pedidoRepository.ObterPorId(id));              
         }
 
-        public async Task<IEnumerable<Pedido>> ObtemHistoricoPorUsuario(Guid usuarioId)
+        public async Task<PedidoResponse> RealizarPedido(Guid usuarioId, List<Guid> jogosIds)
         {
-            return await _pedidoRepository.ObtemHistoricoPorUsuario(usuarioId);
-        }
-
-        public async Task<Pedido> ObterPedidoPorId(Guid id)
-        {
-            return await _pedidoRepository.ObterPorId(id);              
-        }
-
-        public async Task<Pedido> RealizarPedido(Guid usuarioId, List<Guid> jogosIds)
-        {
-            errors = new List<string>();
             var usuario = await _usuarioRepository.ObterPorId(usuarioId);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
 
@@ -51,6 +44,7 @@ namespace FiapCloundGames.API.Application.Services
             var bibliotecaUsuario = await _bibliotecaService.ObterIdsJogosDoUsuario(usuarioId);
 
             var pedido = new Pedido(usuario.Id);
+            var errors = new List<string>();
             foreach(var idSolicitado in jogosIds)
             {
                 var jogo = jogosNoBanco.FirstOrDefault(j => j.Id == idSolicitado);
@@ -83,8 +77,9 @@ namespace FiapCloundGames.API.Application.Services
             pedido.FinalizarPedido();
             await _pedidoRepository.Adicionar(pedido);
             await _bibliotecaService.LiberarJogosAposPedido(usuario.Id,jogosIds);
-
-            return pedido;
+            var response = _mapper.Map<PedidoResponse>(pedido);
+            response.MensagensInformativas = errors;
+            return response;
         }
 
 
