@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FiapCloundGames.API.Application.Dtos.Jogos;
+﻿using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -15,12 +14,11 @@ namespace FiapCloundGames.API.Controller
     {
         private readonly ILogger<CatalogoController> _logger;
         private readonly IJogosService _jogoService;
-        private readonly IMapper _mapper;
-        public CatalogoController(ILogger<CatalogoController> logger, IJogosService jogosService, IMapper mapper)
+        public CatalogoController(ILogger<CatalogoController> logger, 
+            IJogosService jogosService)
         {
             _logger = logger;
             _jogoService = jogosService;
-            _mapper = mapper;
         }
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(JogoResponse), StatusCodes.Status200OK)]
@@ -33,7 +31,7 @@ namespace FiapCloundGames.API.Controller
             var jogo = await _jogoService.ObtemJogoPorId(id);
             if (jogo is null) return NotFound();
 
-            return Ok(_mapper.Map<JogoResponse>(jogo));
+            return Ok(jogo);
         }
 
         [HttpGet]
@@ -43,7 +41,7 @@ namespace FiapCloundGames.API.Controller
         {
             await _jogoService.DesativaPromocoesInvalidas();
             _logger.LogInformation("Recupera catálogo de jogos");
-            var jogos = _mapper.Map<IEnumerable<JogoResponse>>(  await _jogoService.ObtemCatalagoJogos());
+            var jogos = await _jogoService.ObtemCatalagoJogos();
             if (!jogos.Any()) 
                 return NotFound("Não foi encontrado jogos");
 
@@ -56,7 +54,7 @@ namespace FiapCloundGames.API.Controller
         public async Task<ActionResult<IEnumerable<JogoResponse>>> ListarPorGenero(GeneroJogo genero)
         {
             await _jogoService.DesativaPromocoesInvalidas();
-            var jogos = _mapper.Map<IEnumerable<JogoResponse>>(await _jogoService.ObtemPorGenero(genero));
+            var jogos =await _jogoService.ObtemPorGenero(genero);
             if (!jogos.Any())
                 return NotFound("Não foi encontrado jogos");
 
@@ -67,7 +65,7 @@ namespace FiapCloundGames.API.Controller
         public async Task<ActionResult<JogoResponse>> ObtemJogosComPromocao()
         {
             await _jogoService.DesativaPromocoesInvalidas();
-            var jogos = _mapper.Map<IEnumerable<JogoResponse>>( await _jogoService.ObtemJogosPromovidos());
+            var jogos = await _jogoService.ObtemJogosPromovidos();
             if (jogos == null)
                 return NotFound("Não foi encontrado nenhum jogo com promoções");
 
