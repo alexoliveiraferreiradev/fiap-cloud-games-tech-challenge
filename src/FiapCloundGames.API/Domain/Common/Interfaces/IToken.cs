@@ -7,7 +7,7 @@ namespace FiapCloundGames.API.Domain.Common.Interfaces
     public interface IToken
     {
         string TokenGenerate(IEnumerable<Claim> claims);
-        Task<IEnumerable<Claim>> ObtemClaims(Usuario usuario);
-        Task<LoginResponse> RetornaJwt(Usuario usuario);
+        Task<IEnumerable<Claim>> ObtemClaims(UsuarioResponse usuario);
+        Task<LoginResponse> RetornaJwt(UsuarioResponse usuario);
     }
 }

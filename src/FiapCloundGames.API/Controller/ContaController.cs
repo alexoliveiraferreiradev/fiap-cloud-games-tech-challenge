@@ -1,12 +1,6 @@
-﻿using AutoMapper;
-using FiapCloundGames.API.Application.Dtos.Usuario;
+﻿using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Domain.Common.Interfaces;
-using FiapCloundGames.API.Domain.Entities;
-using FiapCloundGames.API.Domain.Enum;
-using FiapCloundGames.API.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -18,23 +12,19 @@ namespace FiapCloundGames.API.Controller
     [Tags("Minha Conta")]
     public class ContaController : ControllerBase
     {
-        private readonly IMapper _mapper;
         private readonly IUsuarioService _usuarioService;
         private readonly ILogger<ContaController> _logger;
-        private readonly IToken _tokenConfiguration;
-        public ContaController(IMapper mapper, IUsuarioService usuarioService,
-            ILogger<ContaController> logger,IToken tokenConfiguration)
-        {
-            _mapper = mapper;
+        public ContaController(IUsuarioService usuarioService,
+            ILogger<ContaController> logger)
+        {         
             _usuarioService = usuarioService;
             _logger = logger;
-            _tokenConfiguration = tokenConfiguration;
         }
 
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<UsuarioResponse>> AtualizarUsuario(Guid id, UpdateUsuarioRequest updateUsuarioRequest)
         {
-            var usuarioAtualizado = _mapper.Map<UsuarioResponse>(await _usuarioService.AtualizarUsuario(id, updateUsuarioRequest));
+            var usuarioAtualizado = await _usuarioService.AtualizarUsuario(id, updateUsuarioRequest);
             return Ok(usuarioAtualizado);
         }
 

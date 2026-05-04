@@ -1,4 +1,6 @@
-﻿using FiapCloundGames.API.Application.Services.Interfaces;
+﻿using AutoMapper;
+using FiapCloundGames.API.Application.Dtos.Biblioteca;
+using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Repositories;
@@ -11,12 +13,14 @@ namespace FiapCloundGames.API.Application.Services
         private readonly IBibliotecaRepository _bibliotecaRepository;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IJogoRepository _jogoRepository;
+        private readonly IMapper _mapper;
         public BibliotecaService(IBibliotecaRepository bibliotecaRepository, IUsuarioRepository usuarioRepository,
-            IJogoRepository jogosRepository)
+            IJogoRepository jogosRepository, IMapper mapper)
         {
             _bibliotecaRepository = bibliotecaRepository;
             _usuarioRepository = usuarioRepository;
             _jogoRepository = jogosRepository;
+            _mapper = mapper;
         }
         public async Task LiberarJogosAposPedido(Guid usuarioId, List<Guid> jogosIds)
         {
@@ -29,8 +33,8 @@ namespace FiapCloundGames.API.Application.Services
                 var jogo = await _jogoRepository.ObterPorId(jogoId);
                 if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
                 if (!jogo.Ativo) throw new DomainException(MensagensDominio.JogoInvalido);
-                               
-                var possuiJogo = await _bibliotecaRepository.VerificaSeUsuarioPossuiJogo(usuario.Id,jogoId);
+
+                var possuiJogo = await _bibliotecaRepository.VerificaSeUsuarioPossuiJogo(usuario.Id, jogoId);
                 if (possuiJogo) throw new DomainException(MensagensDominio.BibliotecaJogoRepetido);
 
                 var bibliotecaItem = new Biblioteca(usuario.Id, jogo.Id);
@@ -43,9 +47,9 @@ namespace FiapCloundGames.API.Application.Services
             return await _bibliotecaRepository.VerificaSeUsuarioPossuiJogo(usuarioId, jogoId);
         }
 
-        public async Task<IEnumerable<Biblioteca>> ObterJogosPorUsuario(Guid usuarioId)
+        public async Task<IEnumerable<BibliotecaResponse>> ObterJogosPorUsuario(Guid usuarioId)
         {
-            return   await _bibliotecaRepository.ObterJogosPorUsuario(usuarioId);
+            return _mapper.Map<IEnumerable<BibliotecaResponse>>(await _bibliotecaRepository.ObterJogosPorUsuario(usuarioId));
         }
 
         public async Task<IEnumerable<Guid>> ObterIdsJogosDoUsuario(Guid usuarioId)

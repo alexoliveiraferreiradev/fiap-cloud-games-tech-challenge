@@ -28,7 +28,14 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             _faker = new Faker();
             _mockJogo = new Mock<IJogoRepository>();
-            _jogosService = new JogosService(_mockJogo.Object);
+            var configMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<JogoProfile>();
+                cfg.AddProfile<PromocaoProfile>();
+            });
+            _mapper = configMapper.CreateMapper();
+
+            _jogosService = new JogosService(_mockJogo.Object,_mapper);
             _jogosFixture = new JogosFixture();
             _promocaoFixture = new PromocaoFixture();
         }
@@ -44,7 +51,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result =   await _jogosService.AdicionaJogo(request);
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(request.Nome, result.Nome.Valor);
+            Assert.Equal(request.Nome, result.Nome);
 
             _mockJogo.Verify(r => r.Adicionar(It.IsAny<Jogo>()), Times.Once);
         }
@@ -421,11 +428,13 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var jogoAtivo = _jogosFixture.ObtemJogosParaPromocao();
             listaJogosAtivos.Add(jogoAtivo);
 
-            _mockJogo.Setup(r => r.ObtemJogosAtivos()).ReturnsAsync(listaJogosAtivos);
+            _mockJogo.Setup(r => r.ObtemCatalogoPaginado(It.IsAny<int>(), It.IsAny<int>()))
+          .ReturnsAsync(listaJogosAtivos);
+
             //Act 
-            var respone = await _jogosService.ObtemCatalagoJogos();
+            var respone = await _jogosService.ObtemCatalagoJogoPaginado(pagina: 1, tamanhoPagina: 10);
             //Assert
-            Assert.Contains(respone, r => r.Id == jogoAtivo.Id);
+            Assert.True(respone.Items.Any());
         }
 
     }

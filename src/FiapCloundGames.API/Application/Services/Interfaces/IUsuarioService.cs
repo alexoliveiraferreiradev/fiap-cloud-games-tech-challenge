@@ -6,17 +6,17 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
 {
     public interface IUsuarioService  
     {
-        Task<Usuario> PromoverParaAdmin(Guid id);
-        Task<Usuario> RebaixarParaJogador(Guid id,Guid idOperador);
-        Task<Usuario> CadastrarUsuario(CriaUsuarioRequest request);
-        Task<Usuario> AtualizarUsuario(Guid usuarioId, UpdateUsuarioRequest updateUsuarioRequest);
+        Task<UsuarioResponse> PromoverParaAdmin(Guid id);
+        Task<UsuarioResponse> RebaixarParaJogador(Guid id,Guid idOperador);
+        Task<UsuarioResponse> CadastrarUsuario(CriaUsuarioRequest request);
+        Task<UsuarioResponse> AtualizarUsuario(Guid usuarioId, UpdateUsuarioRequest updateUsuarioRequest);
         Task Desativar(DesativaUsuarioRequest deleteUsuarioRequest,Guid idOperador);
         Task DesativarConta(Guid id);
         Task Reativar(Guid usuarioId);
-        Task<Usuario> Autenticar(LoginRequest loginRequest);
-        Task<Usuario> ObterPorId(Guid usuarioId);
-        Task<IEnumerable<Usuario>> ObterTodos();
-        Task<Usuario?> ObterPorEmail(string emailUsuario);
+        Task<UsuarioResponse> Autenticar(LoginRequest loginRequest);
+        Task<UsuarioResponse> ObterPorId(Guid usuarioId);
+        Task<IEnumerable<UsuarioResponse>> ObterTodos();
+        Task<UsuarioResponse?> ObterPorEmail(string emailUsuario);
         Task<bool> VerificaAdminCadastrado();
 
     }

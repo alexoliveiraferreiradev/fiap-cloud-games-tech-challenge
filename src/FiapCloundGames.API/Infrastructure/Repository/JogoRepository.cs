@@ -59,5 +59,15 @@ namespace FiapCloundGames.API.Infrastructure.Repository
         {
             return await _dbContext.Jogos.Where(x => jogosIds.Contains(x.Id)).ToListAsync();
         }
+
+        public async Task<IEnumerable<Jogo>> ObtemCatalogoPaginado(int pagina = 1, int tamanhoPagina = 10)
+        {
+           return await _dbContext.Jogos.AsNoTracking() 
+                        .Where(j => j.Ativo)
+                        .OrderBy(j => j.Nome.Valor) 
+                        .Skip((pagina - 1) * tamanhoPagina)
+                        .Take(tamanhoPagina)
+                        .ToListAsync();
+        }
     }
 }

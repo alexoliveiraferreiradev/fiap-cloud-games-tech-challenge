@@ -14,12 +14,10 @@ namespace FiapCloundGames.API.Controller
     {
         private readonly ILogger<JogoController> _logger;
         private readonly IJogosService _jogoService;
-        private readonly IMapper _mapper;
-        public JogoController(ILogger<JogoController> logger, IJogosService jogosService, IMapper mapper)
+        public JogoController(ILogger<JogoController> logger, IJogosService jogosService)
         {
             _logger = logger;
             _jogoService = jogosService;
-            _mapper = mapper;
         }
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(JogoResponse), StatusCodes.Status200OK)]
@@ -29,10 +27,10 @@ namespace FiapCloundGames.API.Controller
         public async Task<ActionResult<JogoResponse>> ObterJogoPorId(Guid id)
         {
             _logger.LogInformation("Obtém jogo por id: {Id}", id);
-            var jogo = _mapper.Map<JogoResponse>(  await _jogoService.ObtemJogoPorId(id));
+            var jogo =  await _jogoService.ObtemJogoPorId(id);
             if (jogo is null) return NotFound();
 
-            return Ok(_mapper.Map<JogoResponse>(jogo));
+            return Ok(jogo);
         }
         [HttpPost]
         [ProducesResponseType(typeof(JogoResponse), StatusCodes.Status201Created)]
@@ -42,7 +40,7 @@ namespace FiapCloundGames.API.Controller
         {
             _logger.LogInformation("Recebida requisição para adicionar o jogo: {NomeJogo}", jogoRequest.Nome);
 
-            var jogo = _mapper.Map<JogoResponse>( await _jogoService.AdicionaJogo(jogoRequest));
+            var jogo = await _jogoService.AdicionaJogo(jogoRequest);
             return  CreatedAtAction(nameof(ObterJogoPorId), new { id = jogo.Id }, jogo);
         }
 
@@ -71,7 +69,7 @@ namespace FiapCloundGames.API.Controller
             if(jogo == null)
                 return NotFound();
 
-            return _mapper.Map<JogoResponse>(await _jogoService.AtualizarJogo(id,updateRequest));            
+            return await _jogoService.AtualizarJogo(id, updateRequest);            
         }
     }
 }

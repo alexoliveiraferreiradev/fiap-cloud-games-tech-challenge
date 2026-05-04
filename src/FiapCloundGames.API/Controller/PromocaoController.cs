@@ -2,9 +2,7 @@
 using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Dtos.Promocao;
 using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FiapCloundGames.API.Controller
@@ -17,12 +15,10 @@ namespace FiapCloundGames.API.Controller
     {
         private readonly ILogger<PromocaoController> _logger;
         private readonly IJogosService _jogoService;
-        private readonly IMapper _mapper;
-        public PromocaoController(ILogger<PromocaoController> logger, IJogosService jogoService, IMapper mapper)
+        public PromocaoController(ILogger<PromocaoController> logger, IJogosService jogoService)
         {
             _logger = logger;
             _jogoService = jogoService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -33,21 +29,17 @@ namespace FiapCloundGames.API.Controller
             if (jogos == null)
                 return NotFound("Não foi encontrado nenhum jogo com promoções");
 
-            return Ok(_mapper.Map<IEnumerable<JogoResponse>>(jogos));
+            return Ok(jogos);
         }
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<PromocaoResponse>> ObtemPromocaoPorId(Guid id)
         {
             await _jogoService.DesativaPromocoesInvalidas();
-            var promocao = await _jogoService.ObtemPromocaoPorId(id);
-            if (promocao == null)
-                return NotFound("Não foi encotrada nenhuma promocao com este ID");
+            var promocaoResponse = await _jogoService.ObtemPromocaoPorId(id);
+            if (promocaoResponse == null)
+                return NotFound("Não foi encotrada nenhuma promocao com este ID");           
            
-            var jogo = await _jogoService.ObtemJogoPorId(promocao.JogoId);
-
-            var promocaResponse = _mapper.Map<PromocaoResponse>(promocao);
-            _mapper.Map(jogo, promocaResponse); 
-            return Ok(promocaResponse);
+            return Ok(promocaoResponse);
         }
 
         [HttpPost("/nova-promocao")]

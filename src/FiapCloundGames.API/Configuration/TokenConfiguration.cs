@@ -22,7 +22,7 @@ namespace FiapCloundGames.API.Configuration
             _jwtSettings = jwtSettings.Value;
             _logger = logger;
         }
-        public async Task<LoginResponse> RetornaJwt(Usuario usuario)
+        public async Task<LoginResponse> RetornaJwt(UsuarioResponse usuario)
         {
             _logger.LogInformation("Iniciando geração de token. ID: {id}", usuario.Id);
             var claims = await ObtemClaims(usuario);
@@ -33,7 +33,7 @@ namespace FiapCloundGames.API.Configuration
                 AcessToken = acessToken,
                 ExpiresIn = TimeSpan.FromHours(_jwtSettings.ExpiracaoHoras).TotalSeconds,
                 Id = usuario.Id.ToString(),
-                Email = usuario.EmailUsuario.Valor,
+                Email = usuario.Email,
                 Claims = claims.Select(c => new ClaimResponse { Type = c.Type, Value = c.Value })
             };
         }
@@ -58,17 +58,17 @@ namespace FiapCloundGames.API.Configuration
             return tokenHandler.WriteToken(tokenDescriptor);
         }
 
-        public async Task<IEnumerable<Claim>> ObtemClaims(Usuario usuario)
+        public async Task<IEnumerable<Claim>> ObtemClaims(UsuarioResponse usuario)
         {
             var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, usuario.NomeUsuario.Valor));
+            claims.Add(new Claim(ClaimTypes.Name, usuario.Nome));
             claims.Add(new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()));
-            claims.Add(new Claim(ClaimTypes.Email, usuario.EmailUsuario.Valor));
+            claims.Add(new Claim(ClaimTypes.Email, usuario.Email));
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
-            if (usuario.Perfil == TipoUsuario.Administrador) claims.Add(new Claim(ClaimTypes.Role, "AdminRole"));
-            if (usuario.Perfil == TipoUsuario.Jogador) claims.Add(new Claim(ClaimTypes.Role, "JogadorRole"));
+            if (usuario.PerfilUsuario == TipoUsuario.Administrador) claims.Add(new Claim(ClaimTypes.Role, "AdminRole"));
+            if (usuario.PerfilUsuario == TipoUsuario.Jogador) claims.Add(new Claim(ClaimTypes.Role, "JogadorRole"));
             return claims;
         }
 
