@@ -1,11 +1,8 @@
-﻿using FiapCloundGames.API.Application.Dtos.Biblioteca;
-using FiapCloundGames.API.Application.Services.Interfaces;
+﻿using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
-using FiapCloundGames.API.Domain.Enum;
 using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Domain.Resources;
-using FiapCloundGames.API.Domain.ValueObjects;
 
 namespace FiapCloundGames.API.Application.Services
 {
@@ -32,8 +29,8 @@ namespace FiapCloundGames.API.Application.Services
                 var jogo = await _jogoRepository.ObterPorId(jogoId);
                 if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
                 if (!jogo.Ativo) throw new DomainException(MensagensDominio.JogoInvalido);
-
-                var possuiJogo = await _bibliotecaRepository.VerificaSeUsuarioPossuiJogo(usuario.Id, jogo.Id);
+                               
+                var possuiJogo = await _bibliotecaRepository.VerificaSeUsuarioPossuiJogo(usuario.Id,jogoId);
                 if (possuiJogo) throw new DomainException(MensagensDominio.BibliotecaJogoRepetido);
 
                 var bibliotecaItem = new Biblioteca(usuario.Id, jogo.Id);
@@ -41,9 +38,19 @@ namespace FiapCloundGames.API.Application.Services
             }
         }
 
-        public async Task<IEnumerable<BibliotecaResponse>> ObterJogosPorUsuario(Guid usuarioId)
+        public async Task<bool> VerificaSeUsuarioPossuiJogo(Guid usuarioId, Guid jogoId)
         {
-            return await _bibliotecaRepository.ObterJogosPorUsuario(usuarioId);
+            return await _bibliotecaRepository.VerificaSeUsuarioPossuiJogo(usuarioId, jogoId);
+        }
+
+        public async Task<IEnumerable<Biblioteca>> ObterJogosPorUsuario(Guid usuarioId)
+        {
+            return   await _bibliotecaRepository.ObterJogosPorUsuario(usuarioId);
+        }
+
+        public async Task<IEnumerable<Guid>> ObterIdsJogosDoUsuario(Guid usuarioId)
+        {
+            return await _bibliotecaRepository.ObterIdsJogosDoUsuario(usuarioId);
         }
     }
 }
