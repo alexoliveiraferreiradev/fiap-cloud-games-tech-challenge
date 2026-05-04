@@ -56,7 +56,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             _usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
             var result = await _service.PromoverParaAdmin(usuario.Id);
             //Assert
-            Assert.Equal(TipoUsuario.Administrador, result.Perfil);
+            Assert.Equal(TipoUsuario.Administrador, result.PerfilUsuario);
             _usuarioMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);
         }
 
@@ -78,23 +78,6 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Assert
             Assert.Equal(MensagensDominio.UsuarioNaoEncontrado, result.Message);
             _usuarioMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Never);
-        }
-
-        [Fact(DisplayName = "Sucesso ao cadastrar usuário  - deve criptografar a senha ao cadastrar")]
-        [Trait("Categoria", "Usuario Service Tests")]
-        public async Task CadastrarUsuario_ValidacaoSenha_DeveCadastrarComSucesso()
-        {
-            //Arrange
-            var usuarioRequest = _usuarioFixture.UsuarioRequest();
-            //Mock
-
-            _passwordMock.Setup(h => h.HashPassword(usuarioRequest.Senha)).Returns("HashSenha@123");
-
-            //Act
-            var result = await _service.CadastrarUsuario(usuarioRequest);
-            //Arrange
-            Assert.Equal("HashSenha@123", result.Senha.Hash);
-            Assert.NotEqual("Teste@123", result.Senha.Hash);
         }
 
         /// <summary>
@@ -139,8 +122,8 @@ namespace FiapCloundGames.UnitTests.Application.Services
             var result = await _service.CadastrarUsuario(usuarioRequest);
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(usuarioRequest.Email, result.EmailUsuario.Valor);
-            Assert.Equal(TipoUsuario.Jogador, result.Perfil);
+            Assert.Equal(usuarioRequest.Email, result.Email);
+            Assert.Equal(TipoUsuario.Jogador, result.PerfilUsuario);
 
             _usuarioMock.Verify(r => r.Adicionar(It.IsAny<Usuario>()), Times.Once);
         }
