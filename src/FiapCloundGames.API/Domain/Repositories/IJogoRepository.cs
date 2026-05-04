@@ -12,5 +12,6 @@ namespace FiapCloundGames.API.Domain.Repositories
         Task<IEnumerable<Jogo>> ObtemPorGenero(GeneroJogo generoJogo);
         Task<IEnumerable<Jogo>> ObterJogosPorIds(IEnumerable<Guid> jogosIds);
         Task DesativaPromocoesInvalidas();
+        Task<IEnumerable<Jogo>> ObtemCatalogoPaginado(int pagina = 1, int tamanhoPagina = 10);
     }
 }
