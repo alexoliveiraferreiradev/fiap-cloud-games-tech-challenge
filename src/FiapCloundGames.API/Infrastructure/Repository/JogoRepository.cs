@@ -22,10 +22,11 @@ namespace FiapCloundGames.API.Infrastructure.Repository
         public async Task<int> TotalJogosPromovidos()
         {
             var agora = DateTime.UtcNow;
-            return (await _dbContext.Jogos
+            return await _dbContext.Jogos
                 .Where(x => x.Promocoes.Any(p => p.Ativo && p.Periodo.DataInicio <= agora && p.Periodo.DataFim >= agora))
                 .Include(x => x.Promocoes.Where(p => p.Ativo && p.Periodo.DataInicio <= agora && p.Periodo.DataFim >= agora))
-                .ToListAsync()).Count();
+                .AsNoTracking() 
+                .CountAsync();
         }
         public async Task<IEnumerable<Jogo>> ObtemJogosPromovidosPaginacao(int pagina = 1, int tamanhoPagina = 10)
         {
@@ -35,6 +36,7 @@ namespace FiapCloundGames.API.Infrastructure.Repository
                 .Include(x => x.Promocoes.Where(p => p.Ativo && p.Periodo.DataInicio <= agora && p.Periodo.DataFim >= agora))
                 .Skip((pagina - 1) * tamanhoPagina)
                 .Take(tamanhoPagina)
+                .AsNoTracking()
                 .ToListAsync();
         }
         public async Task DesativaPromocoesInvalidas()
@@ -52,14 +54,15 @@ namespace FiapCloundGames.API.Infrastructure.Repository
                 Where(x => x.Ativo == true && x.Genero == generoJogo)
                 .Skip((pagina - 1) * tamanhoPagina)
                 .Take(tamanhoPagina)
+                .AsNoTracking()
                 .ToListAsync();
         }
         public async Task<int> TotalJogoPorGenero(GeneroJogo generoJogo)
         {
-            return (await _dbContext.Jogos.
+            return await _dbContext.Jogos.
                 Where(x => x.Ativo == true && x.Genero == generoJogo)
                 .AsNoTracking()
-                .ToListAsync()).Count();
+                .CountAsync();
         }
 
         public async Task<Jogo?> ObtemPorNome(string nomeJogo)
@@ -88,6 +91,7 @@ namespace FiapCloundGames.API.Infrastructure.Repository
                         .OrderBy(j => j.Nome.Valor) 
                         .Skip((pagina - 1) * tamanhoPagina)
                         .Take(tamanhoPagina)
+                        .AsNoTracking()
                         .ToListAsync();
         }
     }
