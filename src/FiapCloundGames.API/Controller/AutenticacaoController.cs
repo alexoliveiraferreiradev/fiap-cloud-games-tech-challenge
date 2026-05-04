@@ -47,13 +47,13 @@ namespace FiapCloundGames.API.Controller
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<LoginResponse>> Login(LoginRequest loginRequest)
         {
-            var usuario = await _usuarioService.Autenticar(loginRequest);
-            if (usuario == null)
+            var usuarioResponse = await _usuarioService.Autenticar(loginRequest);
+            if (usuarioResponse == null)
             {
                 _logger.LogInformation("Usuário não foi encontrado no banco de dados. EMAIL: {email}", loginRequest.Email);
                 return NotFound("Usuário não encotrado.");
             }
-            return await _tokenConfiguration.RetornaJwt(usuario);
+            return await _tokenConfiguration.RetornaJwt(usuarioResponse);
         }    
         
         [HttpPost("cadastrar")]
