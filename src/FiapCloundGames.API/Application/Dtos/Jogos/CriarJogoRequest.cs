@@ -6,14 +6,26 @@ namespace FiapCloundGames.API.Application.Dtos.Jogos
 {
     public class CriarJogoRequest
     {
+        /// <summary>
+        /// Nome do Jogo
+        /// </summary>
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         [StringLength(100, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 2)]
         public string Nome { get; set; }
+        /// <summary>
+        /// Descrição do Jogo
+        /// </summary>
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         [StringLength(500, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 7)]
         public string Descricao { get; set; }
+        /// <summary>
+        /// Preço do Jogo
+        /// </summary>
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         public decimal Preco { get; set; }
+        /// <summary>
+        /// Gênero do Jogo
+        /// </summary>
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         public GeneroJogo Genero { get; set; }
 
