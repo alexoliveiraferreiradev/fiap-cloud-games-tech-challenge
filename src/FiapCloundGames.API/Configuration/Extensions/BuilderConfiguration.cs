@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 
 namespace FiapCloundGames.API.Configuration.Extensions
 {
-    public static class ApiConfiguration
+    public static class BuilderConfiguration
     {
         private static string connectionString;
         public static WebApplicationBuilder AddApiConfiguration(this WebApplicationBuilder builder)
