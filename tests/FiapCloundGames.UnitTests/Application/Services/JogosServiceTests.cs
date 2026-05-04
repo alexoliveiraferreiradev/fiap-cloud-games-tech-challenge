@@ -431,7 +431,6 @@ namespace FiapCloundGames.UnitTests.Application.Services
             _mockJogo.Setup(r => r.ObtemCatalogoPaginado(It.IsAny<int>(), It.IsAny<int>()))
           .ReturnsAsync(listaJogosAtivos);
 
-            // Se o seu serviço também chama o CountAsync para o total de itens:
             //Act 
             var respone = await _jogosService.ObtemCatalagoJogoPaginado(pagina: 1, tamanhoPagina: 10);
             //Assert
