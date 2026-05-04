@@ -1,4 +1,5 @@
-﻿using FiapCloundGames.API.Application.Dtos.Jogos;
+﻿using AutoMapper;
+using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Dtos.Promocao;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
@@ -24,14 +25,10 @@ namespace FiapCloundGames.API.Application.Services
             var nomeJogoVO = new NomeJogo(request.Nome);
             var descricaoVO = new Descricao(request.Descricao);
             var jogos = new Jogo(nomeJogoVO, descricaoVO, preco, request.Genero);
-            await Adicionar(jogos);
+            await _jogoRepository.Adicionar(jogos);
             return jogos;
         }
 
-        private async Task Adicionar(Jogo jogos)
-        {
-            await _jogoRepository.Adicionar(jogos);
-        }
 
         public async Task<Jogo> AtualizarJogo(Guid id, UpdateJogoRequest updateJogosRequest)
         {
@@ -40,7 +37,6 @@ namespace FiapCloundGames.API.Application.Services
             var precoVO = new Preco(updateJogosRequest.NovoPreco);
             var nomeJogoVO = new NomeJogo(updateJogosRequest.NovoNome);
             var descricaoJogoVO = new Descricao(updateJogosRequest.NovaDescricao);
-
             jogo.Atualizar(nomeJogoVO, descricaoJogoVO, precoVO, updateJogosRequest.NovoGenero);
             await _jogoRepository.Atualizar(jogo);
             return jogo;
@@ -72,65 +68,63 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task AdicionarPromocao(CriaPromocaoRequest promocaoRequest)
         {
+            var periodoVO = new Periodo(promocaoRequest.DataInicio, promocaoRequest.DataFim);
             var jogo = await _jogoRepository.ObterPorId(promocaoRequest.JogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+
             var valorPromocaoVO = new Preco(promocaoRequest.ValorPromocao);
-            var periodoVO = new Periodo(promocaoRequest.DataFim);
+
             jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
             await _jogoRepository.Atualizar(jogo);
         }
 
-        public async Task AtualizaPromocao(Guid promocaoId,UpdatePromocaoRequest promocaoRequest)
-        {            
+        public async Task AtualizaPromocao(Guid promocaoId, UpdatePromocaoRequest promocaoRequest)
+        {
             var jogo = await _jogoRepository.ObterPorId(promocaoRequest.JogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
             var novoPrecoPromocao = new Preco(promocaoRequest.NovoValorPromocao);
             var novaDataPromocao = new Periodo(promocaoRequest.NovaDataFim);
             if (!jogo.Promocoes.Any()) throw new DomainException(MensagensDominio.JogoSemPromocoes);
             var promocao = await _jogoRepository.ObterPromocaoPorId(promocaoId);
-            if (promocao == null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);                        
+            if (promocao == null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);
             jogo.AlteraPromocao(promocao.Id, new Preco(promocaoRequest.NovoValorPromocao), promocaoRequest.NovaDataFim);
             await _jogoRepository.Atualizar(jogo);
         }
 
-        public async Task DesativarPromocao(Guid jogoId, Guid promocaoId)
+        public async Task DesativarPromocao(Guid promocaoId)
         {
-            var jogo = await _jogoRepository.ObterPorId(jogoId);
+            var promocao = await _jogoRepository.ObterPromocaoPorId(promocaoId);
+            if (promocao == null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);
+            var jogo = await _jogoRepository.ObterPorId(promocao.JogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
             jogo.DesativarPromocao(promocaoId);
             await _jogoRepository.Atualizar(jogo);
         }
 
-        public async Task<IEnumerable<JogoResponse>> ObtemCatalagoJogos()
+        public async Task<IEnumerable<Jogo>> ObtemCatalagoJogos()
         {
-            var jogos = await _jogoRepository.ObtemJogosAtivos();
-            return jogos.Select(j => new JogoResponse
-            (
-                j.Id,
-                j.Nome.Valor,
-                j.Descricao.Valor,
-                j.PrecoBase.Valor,
-                j.ObterPrecoAtual().Valor,
-                j.Genero
-            ));
+            return await _jogoRepository.ObtemJogosAtivos();
         }
-        public async Task<IEnumerable<JogoResponse>> ObtemPorGenero(GeneroJogo generoJogo)
+        public async Task<IEnumerable<Jogo>> ObtemPorGenero(GeneroJogo generoJogo)
         {
-            var jogos = await _jogoRepository.ObtemPorGenero(generoJogo);
-            return jogos.Select(j => new JogoResponse
-            (
-                j.Id,
-                j.Nome.Valor,
-                j.Descricao.Valor,
-                j.PrecoBase.Valor,
-                j.ObterPrecoAtual().Valor,
-                j.Genero
-            ));
+            return await _jogoRepository.ObtemPorGenero(generoJogo);
         }
-
         public async Task<Jogo> ObtemJogoPorId(Guid jogoId)
         {
             return await _jogoRepository.ObterPorId(jogoId);
+        }
+        public async Task<IEnumerable<Jogo>> ObtemJogosPromovidos()
+        {
+            return await _jogoRepository.ObtemJogosPromovidos();
+        }
+        public async Task DesativaPromocoesInvalidas()
+        {
+            await _jogoRepository.DesativaPromocoesInvalidas();
+        }
+
+        public async Task<Promocao?> ObtemPromocaoPorId(Guid promocaoId)
+        {
+            return await _jogoRepository.ObterPromocaoPorId(promocaoId);
         }
     }
 }
