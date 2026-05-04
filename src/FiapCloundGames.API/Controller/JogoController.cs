@@ -47,7 +47,9 @@ namespace FiapCloundGames.API.Controller
         /// * **Validação de Nome do Jogo:** Obrigatório, entre 3 e 100 caracteres.
         /// * **Validação de Descrição do Jogo:** Obrigatório, entre 5 e 500 caracteres.
         /// * **Validação de Preco:** Obrigatório, não sendo negativo.
+        ///
         /// Exemplo de requisição:
+        /// 
         /// 
         ///     POST /api/jogos
         ///     {
@@ -55,6 +57,9 @@ namespace FiapCloundGames.API.Controller
         ///        "preco": 49.90,
         ///        "genero": 1
         ///     }
+        /// 
+        ///     
+        /// 
         /// </remarks>
         /// <param name="jogoRequest">Dados necessários para a criação do jogo.</param>
         /// <response code="201">Criado. O jogo foi inserido com sucesso.</response>
@@ -71,7 +76,7 @@ namespace FiapCloundGames.API.Controller
         }
 
         /// <summary>
-        /// Desativa um jogo do catálogo (Exclusão Lógica).
+        /// Desativa um jogo do catálogo.
         /// </summary>
         /// <remarks>
         /// O jogo não é removido fisicamente do banco de dados, mas deixa de ser listado no catálogo ativo.
@@ -94,10 +99,12 @@ namespace FiapCloundGames.API.Controller
 
         /// <summary>
         /// Atualiza as informações de um jogo existente.
+        /// </summary>
+        /// 
         /// * **Validação de Nome do Jogo:** Obrigatório, entre 3 e 100 caracteres.
         /// * **Validação de Descrição do Jogo:** Obrigatório, entre 5 e 500 caracteres.
         /// * **Validação de Preco:** Obrigatório, não sendo negativo.
-        /// </summary>
+        /// 
         /// <param name="id">O identificador único do jogo.</param>
         /// <param name="updateRequest">Novos dados para o jogo (Nome, Preço, etc.).</param>
         /// <response code="200">Sucesso. Retorna o objeto do jogo com as informações atualizadas.</response>
