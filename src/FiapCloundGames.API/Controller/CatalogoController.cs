@@ -34,15 +34,19 @@ namespace FiapCloundGames.API.Controller
             return Ok(jogo);
         }
 
+        /// <summary>
+        /// Obtém o catálogo de jogos ativos de forma paginada.
+        /// </summary>
+        /// <param name="pagina">Número da página desejada (Inicia em 1).</param>
+        /// <param name="tamanhoPagina">Quantidade de jogos por página.</param>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<JogoResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<JogoResponse>>> ObtemCatalogoDeJogos()
+        [ProducesResponseType(typeof(PagedResult<JogoResponse>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<JogoResponse>>> ObtemCatalogoDeJogos([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
         {
             await _jogoService.DesativaPromocoesInvalidas();
             _logger.LogInformation("Recupera catálogo de jogos");
-            var jogos = await _jogoService.ObtemCatalagoJogos();
-            if (!jogos.Any()) 
+            var jogos = await _jogoService.ObtemCatalagoJogoPaginado(pagina,tamanhoPagina);
+            if (!jogos.Items.Any()) 
                 return NotFound("Não foi encontrado jogos");
 
             return Ok(jogos);
