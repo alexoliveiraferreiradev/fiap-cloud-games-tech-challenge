@@ -110,17 +110,21 @@ namespace FiapCloundGames.API.Application.Services
             var jogoResponse = _mapper.Map<IEnumerable<JogoResponse>>(await _jogoRepository.ObtemCatalogoPaginado(pagina,tamanhoPagina));
             return new PagedResult<JogoResponse>(jogoResponse, pagina, tamanhoPagina, totalRegistros);
         }
-        public async Task<IEnumerable<JogoResponse>> ObtemPorGenero(GeneroJogo generoJogo)
+        public async Task<PagedResult<JogoResponse>> ObtemPorGeneroPaginacao(GeneroJogo generoJogo, int pagina = 1, int tamanhoPagina = 10)
         {
-            return _mapper.Map<IEnumerable<JogoResponse>>(await _jogoRepository.ObtemPorGenero(generoJogo));
+            var totalRegistros = (await _jogoRepository.TotalJogoPorGenero(generoJogo));
+            var jogoResponse = _mapper.Map<IEnumerable<JogoResponse>>( await _jogoRepository.ObtemPorGeneroPaginado(generoJogo, pagina, tamanhoPagina));
+            return new PagedResult<JogoResponse>(jogoResponse, pagina, tamanhoPagina, totalRegistros);
         }
         public async Task<JogoResponse> ObtemJogoPorId(Guid jogoId)
         {
             return _mapper.Map<JogoResponse>(await _jogoRepository.ObterPorId(jogoId));
         }
-        public async Task<IEnumerable<JogoResponse>> ObtemJogosPromovidos()
+        public async Task<PagedResult<JogoResponse>> ObtemJogosPromovidosPaginacao(int pagina =1, int tamanhoPagina = 10)
         {
-            return _mapper.Map<IEnumerable<JogoResponse>>(await _jogoRepository.ObtemJogosPromovidos());
+            var totalRegistros = await _jogoRepository.TotalJogosPromovidos();
+            var jogoResponse = _mapper.Map<IEnumerable<JogoResponse>>(await _jogoRepository.ObtemJogosPromovidosPaginacao(pagina, tamanhoPagina));
+            return new PagedResult<JogoResponse>(jogoResponse, pagina, tamanhoPagina, totalRegistros);
         }
         public async Task DesativaPromocoesInvalidas()
         {

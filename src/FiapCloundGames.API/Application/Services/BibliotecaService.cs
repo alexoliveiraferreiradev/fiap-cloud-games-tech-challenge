@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using FiapCloundGames.API.Application.Dtos.Biblioteca;
+using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Domain.Resources;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FiapCloundGames.API.Application.Services
 {
@@ -47,9 +49,11 @@ namespace FiapCloundGames.API.Application.Services
             return await _bibliotecaRepository.VerificaSeUsuarioPossuiJogo(usuarioId, jogoId);
         }
 
-        public async Task<IEnumerable<BibliotecaResponse>> ObterJogosPorUsuario(Guid usuarioId)
+        public async Task<PagedResult<BibliotecaResponse>> ObtemBibliotecaDoUsuarioPaginacao(Guid usuarioId, int pagina = 1, int tamanhoPagina = 10)
         {
-            return _mapper.Map<IEnumerable<BibliotecaResponse>>(await _bibliotecaRepository.ObterJogosPorUsuario(usuarioId));
+            var totalRegistros = await _bibliotecaRepository.TotalJogosPorUsuario(usuarioId);
+            var bibliotecaResponse = _mapper.Map<IEnumerable<BibliotecaResponse>>(await _bibliotecaRepository.ObterJogosPorUsuarioPaginacao(usuarioId, pagina, tamanhoPagina));
+            return new PagedResult<BibliotecaResponse>(bibliotecaResponse, pagina, tamanhoPagina, totalRegistros);
         }
 
         public async Task<IEnumerable<Guid>> ObterIdsJogosDoUsuario(Guid usuarioId)

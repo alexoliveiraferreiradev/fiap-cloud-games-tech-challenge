@@ -55,10 +55,10 @@ namespace FiapCloundGames.API.Application.Services
             if (await _usuarioRepository.VerificaNomeCadastrado(request.Nome)) throw new DomainException(MensagensDominio.NomeUsuarioJaCadastrado);
             ValidaSenhas(request.Senha, request.ConfirmacaoSenha);
 
-            var senhaCifrada = _passwordHasher.HashPassword(request.Senha);
-            var senhaCifradaVO = new Senha(senhaCifrada);
+            var senha = new Senha(request.Senha);
+            var senhaCifrada = new Senha( _passwordHasher.HashPassword(request.Senha));
 
-            var usuario = new Usuario(nomeVO, emailVO, senhaCifradaVO);
+            var usuario = new Usuario(nomeVO, emailVO, senhaCifrada);
             await _usuarioRepository.Adicionar(usuario);
             return _mapper.Map<UsuarioResponse>(usuario);
         }
