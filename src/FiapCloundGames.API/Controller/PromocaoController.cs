@@ -25,8 +25,8 @@ namespace FiapCloundGames.API.Controller
         public async Task<ActionResult<IEnumerable<JogoResponse>>> ObtemJogosComPromocao()
         {
             await _jogoService.DesativaPromocoesInvalidas();
-            var jogos = await _jogoService.ObtemJogosPromovidos();
-            if (jogos == null)
+            var jogos = await _jogoService.ObtemJogosPromovidosPaginacao();
+            if (!jogos.Items.Any())
                 return NotFound("Não foi encontrado nenhum jogo com promoções");
 
             return Ok(jogos);
