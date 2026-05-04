@@ -15,6 +15,7 @@ namespace FiapCloundGames.API.Controller
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Policy = "AcessoGeral")]
+    [Tags("Minha Conta")]
     public class ContaController : ControllerBase
     {
         private readonly IMapper _mapper;
