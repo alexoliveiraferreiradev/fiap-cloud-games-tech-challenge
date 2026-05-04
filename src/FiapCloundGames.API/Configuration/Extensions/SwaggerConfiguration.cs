@@ -22,6 +22,10 @@ namespace FiapCloundGames.API.Configuration.Extensions
                     }
                 });
 
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+
                 options.SchemaFilter<EnumSchemaFilter>();
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
