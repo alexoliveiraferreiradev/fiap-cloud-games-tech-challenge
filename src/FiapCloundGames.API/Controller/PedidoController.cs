@@ -17,13 +17,11 @@ namespace FiapCloundGames.API.Controller
     {
         private readonly IPedidoService _pedidoService;
         private readonly ILogger<PedidoController> _logger;
-        private readonly IMapper _mapper;
 
-        public PedidoController(IPedidoService pedidoService, ILogger<PedidoController> logger, IMapper mapper)
+        public PedidoController(IPedidoService pedidoService, ILogger<PedidoController> logger)
         {
             _pedidoService = pedidoService;
             _logger = logger;
-            _mapper = mapper;
         }
 
         [HttpGet("historico-pedido")]
@@ -37,7 +35,7 @@ namespace FiapCloundGames.API.Controller
             if(!pedidos.Any()) 
                 return NotFound("Não foi encontrado nenhum pedido para este usuário");
 
-            return Ok(_mapper.Map<IEnumerable<PedidoResponse>>(pedidos));
+            return Ok(pedidos);
         }
 
         [HttpGet("{id:guid}")]
@@ -47,7 +45,7 @@ namespace FiapCloundGames.API.Controller
             if(pedidos ==null) 
                 return NotFound("Não foi encontrado nenhum pedido para este usuário");
 
-            return Ok(_mapper.Map<PedidoResponse>(pedidos));
+            return Ok(pedidos);
         }
 
         [HttpPost]
@@ -57,9 +55,9 @@ namespace FiapCloundGames.API.Controller
             if (string.IsNullOrEmpty(currentUserIdClaim)) return Unauthorized();
 
             var currentUserId = Guid.Parse(currentUserIdClaim);
-            var pedidoItemResponse = _mapper.Map<PedidoResponse>(await _pedidoService.RealizarPedido(currentUserId, jogosIds));
-            pedidoItemResponse.MensagensInformativas = _pedidoService.ObtemErrosDoPedido().ToList();
-            return Ok();
+            var pedidoItemResponse = await _pedidoService.RealizarPedido(currentUserId, jogosIds);
+            
+            return Ok(pedidoItemResponse);
         }
     }
 }
