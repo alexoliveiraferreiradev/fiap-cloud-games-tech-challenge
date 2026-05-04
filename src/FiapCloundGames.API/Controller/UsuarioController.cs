@@ -11,7 +11,7 @@ namespace FiapCloundGames.API.Controller
     [ApiController]
     [Route("api/[controller]")]
     [Authorize(Roles = "AdminRole")]
-    [Tags("Gerenciamento de Usuários (Admin)")]
+    [Tags("Gerenciamento de Usuários")]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
@@ -52,6 +52,13 @@ namespace FiapCloundGames.API.Controller
             }
 
             var usuario = await _usuarioService.RebaixarParaJogador(id,currentUserId);
+            return NoContent();
+        }
+
+        [HttpPut("reativar-jogador/{id:guid}")]
+        public async Task<IActionResult> ReativarJogador(Guid id)
+        {
+            await _usuarioService.Reativar(id);
             return NoContent();
         }
 
