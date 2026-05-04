@@ -71,8 +71,21 @@ namespace FiapCloundGames.API.Controller
         /// <remarks>
         /// * **Validação de Preco:** Obrigatório, não sendo negativo.
         /// * **Validação de Período da promoção:** Obrigatório, data final deve ser maior que inicial.
+        /// 
         /// O valor da promoção deve ser inferior ao preço original do jogo. 
         /// A data de expiração define quando a oferta deixará de ser listada automaticamente.
+        /// 
+        /// Exemplo de requisição:
+        /// 
+        ///     POST /nova-promocao
+        ///     {
+        ///        "jogoId": "id do jogo",
+        ///        "valorPromocao": "valor da promocao",
+        ///        "dataInicio": "data de início da promoção - vem por padrão hoje",
+        ///        "dataFinal": "data final da promoção"
+        ///     }
+        /// 
+        /// 
         /// </remarks>
         /// <param name="promocaoRequest">Dados da nova promoção (JogoId, Valor e Data Fim).</param>
         /// <response code="201">Criado. Promoção registrada com sucesso.</response>
