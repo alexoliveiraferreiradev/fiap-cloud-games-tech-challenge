@@ -1,26 +1,26 @@
-using FiapCloundGames.API.Infrastructure.Persistance.Context;
-using Microsoft.EntityFrameworkCore;
+using FiapCloundGames.API.Configuration.Extensions;
+using FiapCloundGames.API.Configuration.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddApiConfiguration()
+       .AddDependecyInjectionConfiguration()
+       .AddSwaggerConfiguration();
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(connectionString);
-});
 
 var app = builder.Build();
-
-
-// Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fiap Cloud Games V1");
+    });
 }
 
+app.MapControllers();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.Run();

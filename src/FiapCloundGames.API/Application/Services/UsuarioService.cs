@@ -21,24 +21,19 @@ namespace FiapCloundGames.API.Application.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<Usuario> CadastrarAdministrador(CriaUsuarioRequest request, bool hasPermision, string token)
+        public async Task<Usuario> PromoverParaAdmin(Guid id)
         {
-            ValidaSenhas(request.Senha, request.ConfirmacaoSenha);
-            var emailUsuarioValueObject = new Email(request.Email);
-            var nomeUsuarioValueObject = new Nome(request.Nome);
-            var senhaUsuarioValueObject = new Senha(request.Senha);
-            var usuario = new Usuario(nomeUsuarioValueObject, emailUsuarioValueObject, senhaUsuarioValueObject);
-            if (!ValidaPermissoesAdministrador(hasPermision, token)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
+            var usuario = await _usuarioRepository.ObterPorId(id);
+            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);            
             usuario.PromoverPerfil(usuario);
             await _usuarioRepository.Atualizar(usuario);
             return usuario;
         }
 
-        public async Task RebaixarPerfil(Guid idUsuarioRebaixar, Guid idAdminExecutor)
+        public async Task<Usuario> RebaixarParaJogador(Guid idUsuarioRebaixar, Guid idOperador)
         {
-            var adminExecutor = await _usuarioRepository.ObterPorId(idAdminExecutor);
-            if (adminExecutor == null || !adminExecutor.Perfil.Equals(TipoUsuario.Administrador)) throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
-
+            if (idUsuarioRebaixar == idOperador) throw new DomainException(MensagensDominio.OperacaoRebaixarInvalida);
+            
             var usuario = await _usuarioRepository.ObterPorId(idUsuarioRebaixar);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
             if (usuario.Perfil.Equals(TipoUsuario.Jogador)) throw new DomainException(MensagensDominio.UsuarioPerfilRebaixarInvalido);
@@ -46,39 +41,19 @@ namespace FiapCloundGames.API.Application.Services
             usuario.RebaixarPerfil();
 
             await _usuarioRepository.Atualizar(usuario);
-        }
-
-
-        private bool ValidaPermissoesAdministrador(bool hasPermision, string token)
-        {
-            if (!hasPermision || !IsValidToken(token))
-            {
-                throw new DomainException(MensagensDominio.PermissaoNegadaCriarAdministrador);
-            }
-            return true;
-        }
-
-        private bool IsValidToken(string token)
-        {
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                return false;
-            }
-            return true;
+            return usuario;
         }
 
         public async Task<Usuario> CadastrarUsuario(CriaUsuarioRequest request)
         {
+            var nomeVO = new Nome(request.Nome);
+            var emailVO = new Email(request.Email);
             if (await _usuarioRepository.VerificaEmailCadastrado(request.Email)) throw new DomainException(MensagensDominio.EmailJaCadastrado);
             if (await _usuarioRepository.VerificaNomeCadastrado(request.Nome)) throw new DomainException(MensagensDominio.NomeUsuarioJaCadastrado);
-
             ValidaSenhas(request.Senha, request.ConfirmacaoSenha);
 
             var senhaCifrada = _passwordHasher.HashPassword(request.Senha);
-
-            var nomeVO = new Nome(request.Nome);
-            var emailVO = new Email(request.Email);
-            var senhaCifradaVO = new Senha(senhaCifrada);
+            var senhaCifradaVO = new Senha(senhaCifrada);            
 
             var usuario = new Usuario(nomeVO, emailVO, senhaCifradaVO);
             await _usuarioRepository.Adicionar(usuario);
@@ -90,11 +65,15 @@ namespace FiapCloundGames.API.Application.Services
             AssertionConcern.AssertArgumentEquals(senhaRequest, confirmacaoSenhaRequest, MensagensDominio.UsuarioSenhaConfirmacaoDiferente);
         }
 
-        public async Task AtualizarUsuario(Guid id, UpdateUsuarioRequest request)
+        public async Task<Usuario> AtualizarUsuario(Guid id, UpdateUsuarioRequest request)
         {
-            ValidaSenhas(request.SenhaUsuario, request.ConfirmacaoSenha);
             var usuario = await _usuarioRepository.ObterPorId(id);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
+
+            if (await _usuarioRepository.VerificaEmailCadastradoParaAlteracao(id,request.EmailUsuario)) throw new DomainException(MensagensDominio.EmailJaCadastrado);
+            if (await _usuarioRepository.VerificaNomeCadastradoParaAlteracao(id,request.NomeUsuario)) throw new DomainException(MensagensDominio.NomeUsuarioJaCadastrado);
+
+            ValidaSenhas(request.SenhaUsuario, request.ConfirmacaoSenha);
 
             var novaSenhaCriptografa = _passwordHasher.HashPassword(request.SenhaUsuario);
             var novoUsuarioVO = new Nome(request.NomeUsuario);
@@ -103,6 +82,7 @@ namespace FiapCloundGames.API.Application.Services
 
             usuario.Atualizar(novoUsuarioVO, novoEmailUsuarioVO, novaSenhaUsuarioVO);
             await _usuarioRepository.Atualizar(usuario);
+            return usuario;
         }
 
         public async Task<Usuario> ObterPorId(Guid id)
@@ -110,16 +90,35 @@ namespace FiapCloundGames.API.Application.Services
             return await _usuarioRepository.ObterPorId(id);
         }
 
-        public Task<IEnumerable<Usuario>> ObterTodos()
+        public async Task<IEnumerable<Usuario>> ObterTodos()
         {
-            throw new NotImplementedException();
+            return await _usuarioRepository.ObterTodos();
         }
 
-        public async Task Desativar(DeleteUsuarioRequest deletaUsuarioRequest)
+        public async Task Desativar(DesativaUsuarioRequest deletaUsuarioRequest,Guid idOperador)
         {
+            if (idOperador == deletaUsuarioRequest.Id) throw new DomainException(MensagensDominio.OperacaoDesativarInvalida);
+            var admin = await _usuarioRepository.ObterPorId(idOperador);
+            if (admin == null) throw new DomainException(MensagensDominio.AdminNaoEncontrado);
             var usuario = await _usuarioRepository.ObterPorId(deletaUsuarioRequest.Id);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
             usuario.Desativar(deletaUsuarioRequest.MotivoDelecao);
+            await _usuarioRepository.Atualizar(usuario);
+        }
+
+        public async Task DesativarConta(Guid id)
+        {
+            var usuario = await _usuarioRepository.ObterPorId(id);
+            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
+            if(usuario.Perfil == TipoUsuario.Administrador)
+            {
+                var existeOutroAdmin = await _usuarioRepository.VerificaMaisDeUmAdminCadastrado();
+                if (!existeOutroAdmin)
+                {
+                    throw new DomainException(MensagensDominio.OperacaoDesativarAdminInvalida);
+                }
+            }
+            usuario.DesativarConta();
             await _usuarioRepository.Atualizar(usuario);
         }
 
@@ -139,6 +138,17 @@ namespace FiapCloundGames.API.Application.Services
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
             usuario.Reativar();
             await _usuarioRepository.Atualizar(usuario);
+        }
+
+        public async Task<Usuario?> ObterPorEmail(string emailUsuario)
+        {
+            var email = new Email(emailUsuario);
+            return await _usuarioRepository.ObterPorEmail(email.Valor);
+        }
+
+        public async Task<bool> VerificaAdminCadastrado()
+        {
+            return await _usuarioRepository.VerificaMaisDeUmAdminCadastrado();
         }
     }
 }

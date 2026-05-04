@@ -1,5 +1,4 @@
-﻿using FiapCloundGames.API.Application.Dtos.Biblioteca;
-using FiapCloundGames.API.Domain.Entities;
+﻿using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Infrastructure.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
@@ -13,18 +12,18 @@ namespace FiapCloundGames.API.Infrastructure.Repository
         {
             _dbContext = dbContext;
         }
-        public async Task<IEnumerable<BibliotecaResponse>> ObterJogosPorUsuario(Guid usuarioId)
+
+        public async Task<IEnumerable<Guid>> ObterIdsJogosDoUsuario(Guid usuarioId)
+        {
+            return await _dbContext.Bibliotecas.Where(x => x.UsuarioId == usuarioId).Select(x => x.Id).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Biblioteca>> ObterJogosPorUsuario(Guid usuarioId)
         {
             return await _dbContext.Bibliotecas
                      .AsNoTracking() 
-                    .Where(b => b.UsuarioId == usuarioId)
-                    .Select(b => new BibliotecaResponse
-                    {
-                        JogoId = b.JogoId,
-                        Descricao = b.Jogo.Descricao.Valor,
-                        DataAquisicao = b.DataCadastro,
-                        Genero = b.Jogo.Genero.ToString()
-                    }).ToListAsync();
+                     .Include(b=>b.Jogo)
+                    .Where(b => b.UsuarioId == usuarioId).ToListAsync();
         }
 
         public async Task<bool> VerificaSeUsuarioPossuiJogo(Guid usuarioId, Guid jogoId)

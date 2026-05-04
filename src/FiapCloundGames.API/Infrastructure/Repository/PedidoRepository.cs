@@ -18,6 +18,7 @@ namespace FiapCloundGames.API.Infrastructure.Repository
             return await _dbContext.Pedidos
                  .AsNoTracking()
                  .Include(p=>p.Jogos)
+                 .ThenInclude(pj=>pj.Jogo)
                  .Where(x => x.UsuarioId == usuarioId)
                  .OrderByDescending(x=>x.DataCadastro)
                  .ToListAsync();

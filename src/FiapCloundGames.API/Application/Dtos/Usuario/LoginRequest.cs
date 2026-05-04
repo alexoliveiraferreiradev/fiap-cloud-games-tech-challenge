@@ -6,6 +6,7 @@ namespace FiapCloundGames.API.Application.Dtos.Usuario
     public class LoginRequest {
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         [EmailAddress(ErrorMessage = DataAnnotationMessage.ErroFormato)]
+        [RegularExpression(@"^(?!.*@example\.com$).*", ErrorMessage = DataAnnotationMessage.ErroEmail)]
         [StringLength(100, ErrorMessage = DataAnnotationMessage.ErroCaracteres, MinimumLength = 7)]
         public string Email { get; set; }
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]

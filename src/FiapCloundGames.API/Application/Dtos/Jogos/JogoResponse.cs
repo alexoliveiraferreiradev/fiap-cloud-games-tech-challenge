@@ -1,4 +1,6 @@
-﻿namespace FiapCloundGames.API.Application.Dtos.Jogos
+﻿using FiapCloundGames.API.Domain.Enum;
+
+namespace FiapCloundGames.API.Application.Dtos.Jogos
 {
     public class JogoResponse
     {
@@ -7,15 +9,16 @@
         public string Descricao { get; set; }
         public decimal PrecoOriginal { get; set; }
         public decimal PrecoAtual { get; set; }
+        public GeneroJogo Genero { get; set; }
         public bool TemDesconto => PrecoAtual < PrecoOriginal;
 
         public JogoResponse()
         {            
         }
 
-        public JogoResponse(Guid jogoId, string nomeJogo, string descricaoJogo, decimal precoOriginal, decimal precoAtual)
+        public JogoResponse(Guid jogoId, string nomeJogo, string descricaoJogo, decimal precoOriginal, decimal precoAtual,GeneroJogo generoJogo)
         {
-            Id = jogoId; Nome = nomeJogo; Descricao = descricaoJogo; PrecoOriginal = precoOriginal; PrecoAtual = precoAtual;
+            Id = jogoId; Nome = nomeJogo; Descricao = descricaoJogo; PrecoOriginal = precoOriginal; PrecoAtual = precoAtual; Genero = generoJogo;
         }
 
     }

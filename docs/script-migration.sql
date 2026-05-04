@@ -100,7 +100,7 @@ IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Ativ
 IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Ativo', N'DataAlteracao', N'DataCadastro', N'MotivoDesativacao', N'Perfil', N'Email', N'Nome', N'Senha') AND [object_id] = OBJECT_ID(N'[Usuarios]'))
     SET IDENTITY_INSERT [Usuarios] ON;
 INSERT INTO [Usuarios] ([Id], [Ativo], [DataAlteracao], [DataCadastro], [MotivoDesativacao], [Perfil], [Email], [Nome], [Senha])
-VALUES ('aea0b4f3-d220-4c8d-aba8-d868be7ca593', CAST(1 AS bit), '2026-05-02T00:00:00.0000000', '2026-05-02T00:00:00.0000000', NULL, 2, N'admin@fiapcloudgames.com.br', N'Administrador Sistema', N'$2a$11$Soy4TsNUDtuazT6CJulPleFnp82cF5BkICiOmF9sk19x0X6pMAic.');
+VALUES ('aea0b4f3-d220-4c8d-aba8-d868be7ca593', CAST(1 AS bit), '2026-05-02T00:00:00.0000000', '2026-05-02T00:00:00.0000000', NULL, 1, N'admin@fiapcloudgames.com.br', N'Administrador Sistema', N'$2a$11$Soy4TsNUDtuazT6CJulPleFnp82cF5BkICiOmF9sk19x0X6pMAic.');
 IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Id', N'Ativo', N'DataAlteracao', N'DataCadastro', N'MotivoDesativacao', N'Perfil', N'Email', N'Nome', N'Senha') AND [object_id] = OBJECT_ID(N'[Usuarios]'))
     SET IDENTITY_INSERT [Usuarios] OFF;
 
@@ -117,7 +117,7 @@ CREATE INDEX [IX_Pedidos_UsuarioId] ON [Pedidos] ([UsuarioId]);
 CREATE INDEX [IX_PromocaoJogos_JogoId] ON [PromocaoJogos] ([JogoId]);
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20260503012338_Primeira_Migration', N'9.0.15');
+VALUES (N'20260504015100_Primeira_Migration', N'9.0.15');
 
 COMMIT;
 GO

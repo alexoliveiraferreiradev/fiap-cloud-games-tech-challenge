@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FiapCloundGames.API.Infrastructure.Persistance.Migrations
+namespace FiapCloundGames.API.Infrastructure.Persistance
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -227,7 +227,7 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Migrations
                             Ativo = true,
                             DataAlteracao = new DateTime(2026, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DataCadastro = new DateTime(2026, 5, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Perfil = 2
+                            Perfil = 1
                         });
                 });
 
@@ -330,7 +330,6 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Migrations
                     b.OwnsMany("FiapCloundGames.API.Domain.Entities.Promocao", "Promocoes", b1 =>
                         {
                             b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<bool>("Ativo")

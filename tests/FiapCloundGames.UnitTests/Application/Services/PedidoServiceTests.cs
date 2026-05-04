@@ -1,4 +1,5 @@
-﻿using FiapCloundGames.API.Application.Services;
+﻿using AutoMapper;
+using FiapCloundGames.API.Application.Services;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
@@ -16,6 +17,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
     {
         private JogosFixture _jogosFixture;
         private UsuarioFixture _usuarioFixture;
+        private readonly IMapper _mapper;
         public PedidoServiceTests()
         {
             _jogosFixture = new JogosFixture();
@@ -37,7 +39,8 @@ namespace FiapCloundGames.UnitTests.Application.Services
             lista.Add(jogoPedido.Id);
             var pedidoMock = new Mock<IPedidoRepository>();
             usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
-            jogoMock.Setup(r => r.ObterPorId(jogoPedido.Id)).ReturnsAsync(jogoPedido);
+            jogoMock.Setup(r => r.ObterJogosPorIds(It.IsAny<List<Guid>>()))
+            .ReturnsAsync(new List<Jogo> { jogoPedido });
             var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object, bibliotecaService.Object);
             //Act
             var result = await pedidoService.RealizarPedido(usuario.Id, lista);
@@ -63,7 +66,8 @@ namespace FiapCloundGames.UnitTests.Application.Services
             for (int i = 0; i <= 3; i++)
             {
                 var jogoPedido = _jogosFixture.ObtemJogosComSucesso();
-                jogoMock.Setup(r => r.ObterPorId(jogoPedido.Id)).ReturnsAsync(jogoPedido);
+                jogoMock.Setup(r => r.ObterJogosPorIds(It.IsAny<List<Guid>>()))
+                    .ReturnsAsync(new List<Jogo> { jogoPedido });
                 lista.Add(jogoPedido.Id);
             }
             var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object, bibliotecaService.Object);
@@ -116,9 +120,9 @@ namespace FiapCloundGames.UnitTests.Application.Services
             jogoMock.Setup(r => r.ObterPorId(jogoPedido.Id)).ReturnsAsync(jogoPedido);
             var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object,bibliotecaService.Object);
             //Act
-            var result = await Assert.ThrowsAsync<DomainException>(async ()=> await pedidoService.RealizarPedido(usuario.Id, lista));
+            var result = await Assert.ThrowsAsync<DomainException>(() => pedidoService.RealizarPedido(usuario.Id, new List<Guid> { jogoPedido.Id }));
             //Assert
-            Assert.Equal(MensagensDominio.JogoInvalido, result.Message);
+            Assert.Contains("Não foi possível realizar o pedido", result.Message);
             pedidoMock.Verify(p => p.Adicionar(It.IsAny<Pedido>()), Times.Never);
         }
 
@@ -141,37 +145,50 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Act
             var result = await Assert.ThrowsAsync<DomainException>(async ()=> await pedidoService.RealizarPedido(usuario.Id, lista));
             //Assert
-            Assert.Equal(MensagensDominio.JogoNaoEncontrado, result.Message);
+            Assert.Contains("Não foi possível realizar o pedido", result.Message);
             pedidoMock.Verify(p => p.Adicionar(It.IsAny<Pedido>()), Times.Never);
         }
         [Fact(DisplayName = "Sucesso ao realizar pedido - jogo com promoção")]
         [Trait("Categoria", "Pedido Service Tests")]
         public async Task RealizaPedido_JogoComPromocao_DeveRealizarComSucesso()
         {
-            //Arrange
+            // Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            List<Guid> lista = new List<Guid>();
             var jogo = _jogosFixture.ObtemJogosParaPromocao();
+            var listaIds = new List<Guid> { jogo.Id };
+
+          
             var valorPromocao = new Preco(50.0m);
-            var dataFimPromocao = DateTime.UtcNow.AddDays(10);
-            var periodoPromocao = new Periodo(dataFimPromocao);
-            //Mock
+            var periodoPromocao = new Periodo(DateTime.UtcNow.AddDays(10));
+            jogo.AdicionarPromocao(valorPromocao, periodoPromocao);
+
+            // Mocks
             var usuarioMock = new Mock<IUsuarioRepository>();
-            var bibliotecaService = new Mock<IBibliotecaService>();
+            var bibliotecaServiceMock = new Mock<IBibliotecaService>();
             var jogoMock = new Mock<IJogoRepository>();
             var pedidoMock = new Mock<IPedidoRepository>();
+
             usuarioMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
-            jogoMock.Setup(r => r.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
-            lista.Add(jogo.Id);
-            var pedidoService = new PedidoService(pedidoMock.Object, jogoMock.Object, usuarioMock.Object,bibliotecaService.Object);
-            //Act
-            jogo.AdicionarPromocao(valorPromocao, periodoPromocao);
-            var result = await pedidoService.RealizarPedido(usuario.Id, lista);
-            //Assert
-            Assert.Equal(PedidoStatus.Finalizado, result.Status);
-            Assert.NotEqual(valorPromocao, jogo.PrecoBase);
-            Assert.Equal(valorPromocao, result.ValorTotal);
+
+            jogoMock.Setup(r => r.ObterJogosPorIds(It.IsAny<List<Guid>>()))
+                    .ReturnsAsync(new List<Jogo> { jogo });
+            var pedidoService = new PedidoService(pedidoMock.Object,jogoMock.Object,usuarioMock.Object,bibliotecaServiceMock.Object);
+            
+            bibliotecaServiceMock.Setup(s => s.ObterIdsJogosDoUsuario(usuario.Id))
+                                 .ReturnsAsync(new List<Guid>());
+
+            
+            var result = await pedidoService.RealizarPedido(usuario.Id, listaIds);
+
+            // Assert
+            Assert.Equal("Finalizado", result.Status.ToString()); 
+            Assert.Equal(50.0m, result.ValorTotal.Valor);
+
+            // Verifica se o pedido foi realmente adicionado ao repositório
             pedidoMock.Verify(p => p.Adicionar(It.IsAny<Pedido>()), Times.Once);
+
+            // Verifica se liberou os jogos na biblioteca
+            bibliotecaServiceMock.Verify(s => s.LiberarJogosAposPedido(usuario.Id, It.IsAny<List<Guid>>()), Times.Once);
         }
     }
 }

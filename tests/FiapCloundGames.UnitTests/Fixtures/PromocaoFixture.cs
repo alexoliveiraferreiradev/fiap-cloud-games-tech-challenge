@@ -11,7 +11,7 @@ namespace FiapCloundGames.UnitTests.Fixtures
 
         public CriaPromocaoRequest ObtemPromacaoRequest(Guid jogoId)
         {
-            return new CriaPromocaoRequest(jogoId, 90.00m, DateTime.UtcNow.AddDays(10));
+            return new CriaPromocaoRequest(jogoId, 90.00m, DateTime.UtcNow, DateTime.UtcNow.AddDays(10));
         }
     }
 }

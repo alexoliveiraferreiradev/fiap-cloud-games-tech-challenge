@@ -1,0 +1,13 @@
+﻿using FiapCloundGames.API.Domain.Resources;
+
+namespace FiapCloundGames.API.Application.Dtos.Promocao
+{
+    public class PromocaoResponse
+    {
+        public Guid JogoId { get; set; }
+        public decimal ValorPromocao { get; set; }
+        public string NomeJogo { get; set; }
+        public string DescricaoJogo { get; set; }
+        public DateTime DataFim { get; set; }
+    }
+}

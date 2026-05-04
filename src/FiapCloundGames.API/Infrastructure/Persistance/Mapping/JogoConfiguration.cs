@@ -14,6 +14,7 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
             builder.HasKey(p => p.Id);
 
             builder.Property(p => p.Ativo).HasDefaultValue(true);
+                       
 
             builder.OwnsOne(j => j.Nome, n =>
             {
@@ -173,7 +174,7 @@ namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
             {
                 p.ToTable("PromocaoJogos");
                 p.HasKey(p => p.Id);
-
+                p.Property(p => p.Id).ValueGeneratedNever();
                 p.OwnsOne(x => x.Periodo, d =>
                 {
                     d.Property(pp => pp.DataInicio)
