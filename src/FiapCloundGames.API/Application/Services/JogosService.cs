@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Dtos.Promocao;
 using FiapCloundGames.API.Application.Services.Interfaces;
@@ -126,7 +127,13 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<PromocaoResponse?> ObtemPromocaoPorId(Guid promocaoId)
         {
-            return _mapper.Map<PromocaoResponse>(await _jogoRepository.ObterPromocaoPorId(promocaoId));
+            var promocao = await _jogoRepository.ObterPromocaoPorId(promocaoId);
+            if (promocao == null) throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);
+            var jogo = await _jogoRepository.ObterPorId(promocao.JogoId);
+            if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+            var promocaResponse = _mapper.Map<PromocaoResponse>(promocao);
+            _mapper.Map(jogo, promocaResponse);
+            return promocaResponse;
         }
     }
 }
