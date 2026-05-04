@@ -18,12 +18,23 @@ namespace FiapCloundGames.API.Infrastructure.Repository
             return await _dbContext.Bibliotecas.Where(x => x.UsuarioId == usuarioId).Select(x => x.Id).ToListAsync();
         }
 
-        public async Task<IEnumerable<Biblioteca>> ObterJogosPorUsuario(Guid usuarioId)
+        public async Task<IEnumerable<Biblioteca>> ObterJogosPorUsuarioPaginacao(Guid usuarioId, int pagina =1, int tamanhoPagina = 10)
         {
             return await _dbContext.Bibliotecas
                      .AsNoTracking() 
                      .Include(b=>b.Jogo)
-                    .Where(b => b.UsuarioId == usuarioId).ToListAsync();
+                    .Where(b => b.UsuarioId == usuarioId)
+                     .Skip((pagina - 1) * tamanhoPagina)
+                    .Take(tamanhoPagina)
+                    .ToListAsync();
+        }
+
+        public async Task<int> TotalJogosPorUsuario(Guid usuarioId)
+        {
+            return await _dbContext.Bibliotecas
+                    .AsNoTracking()
+                    .Include(b => b.Jogo)
+                   .Where(b => b.UsuarioId == usuarioId).CountAsync();
         }
 
         public async Task<bool> VerificaSeUsuarioPossuiJogo(Guid usuarioId, Guid jogoId)
