@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Services.Interfaces;
+using FiapCloundGames.API.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,6 +41,30 @@ namespace FiapCloundGames.API.Controller
             _logger.LogInformation("Jogo recuperado com sucesso. JogoId: {JogoId}, Nome: {NomeJogo}", jogo.Id, jogo.Nome);
             return Ok(jogo);
         }
+        /// <summary>
+        /// Obtém a listagem completa de todos os jogos disponíveis no catálogo ativos ou inativos.
+        /// </summary>
+        /// <remarks>
+        /// Este endpoint é público e retorna todos os jogos ativos, incluindo nome, descrição e preço.
+        /// </remarks>
+        /// <response code="200">Retorna a lista de jogos cadastrados com sucesso.</response>
+        /// <response code="404">Caso não existam jogos cadastrados ou ativos no sistema.</response>
+        [HttpGet("/obter-todos-jogos")]
+        [ProducesResponseType(typeof(IEnumerable<JogoResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<JogoResponse>> ObterJogos()
+        {
+            _logger.LogInformation("Iniciando consulta ao catálogo completo de jogos.");
+            var jogos = await _jogoService.ObtemTodosJogo();
+            if (jogos is null || !jogos.Any())
+            {
+                _logger.LogWarning("Consulta ao catálogo finalizada: Nenhum jogo encontrado ou ativo no banco de dados.");
+                return NotFound();
+            }
+            _logger.LogInformation("Consulta ao catálogo finalizada com sucesso. Total de jogos encontrados: {QuantidadeJogos}.", jogos.Count());
+            return Ok(jogos);
+        }
+
         /// <summary>
         /// Realiza o cadastro de um novo jogo no catálogo.
         /// </summary>
