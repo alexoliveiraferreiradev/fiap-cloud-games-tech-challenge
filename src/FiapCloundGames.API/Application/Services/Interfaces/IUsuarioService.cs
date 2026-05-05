@@ -17,7 +17,6 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task<UsuarioResponse> ObterPorId(Guid usuarioId);
         Task<IEnumerable<UsuarioResponse>> ObterTodos();
         Task<UsuarioResponse?> ObterPorEmail(string emailUsuario);
-        Task<bool> VerificaAdminCadastrado();
 
     }
 }
