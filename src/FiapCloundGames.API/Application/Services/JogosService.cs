@@ -128,12 +128,15 @@ namespace FiapCloundGames.API.Application.Services
             return false;
         }
 
-        public async Task AdicionarPromocao(CriaPromocaoRequest promocaoRequest)
+        public async Task<PromocaoResponse> AdicionarPromocao(CriaPromocaoRequest promocaoRequest)
         {
             _logger.LogInformation("Iniciando a adição de promoção para o jogo {JogoId}.", promocaoRequest.JogoId);
             var periodoVO = new Periodo(promocaoRequest.DataInicio, promocaoRequest.DataFim);
             var jogo = await _jogoRepository.ObterPorId(promocaoRequest.JogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+
+            if (jogo.Promocoes.Any())
+                throw new DomainException(MensagensDominio.JogoPromocoes);
 
             var valorPromocaoVO = new Preco(promocaoRequest.ValorPromocao);
 
@@ -147,6 +150,8 @@ namespace FiapCloundGames.API.Application.Services
             await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de adição de promoção ao jogo {JogoId} concluído com sucesso.", promocaoRequest.JogoId);
+
+            return _mapper.Map<PromocaoResponse>( jogo.Promocoes.First());
         }
 
         public async Task AtualizaPromocao(Guid promocaoId, UpdatePromocaoRequest promocaoRequest)

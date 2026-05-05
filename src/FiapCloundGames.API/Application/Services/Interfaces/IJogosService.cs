@@ -13,7 +13,7 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task Desativar(Guid jogoId);
         Task Reativar(Guid jogoId);
         Task<bool> VerificaDuplicidadeNome(string nomeJogo);
-        Task AdicionarPromocao(CriaPromocaoRequest criaPromocaoRequest);
+        Task<PromocaoResponse> AdicionarPromocao(CriaPromocaoRequest criaPromocaoRequest);
         Task AtualizaPromocao(Guid promocaoId,UpdatePromocaoRequest criaPromocaoRequest);
         Task DesativarPromocao(Guid promocaoId);
         Task<PagedResult<JogoResponse>> ObtemCatalagoJogoPaginado(int pagina =1,int tamanhoPagina = 10);
