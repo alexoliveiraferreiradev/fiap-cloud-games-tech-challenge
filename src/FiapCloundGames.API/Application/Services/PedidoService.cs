@@ -89,6 +89,7 @@ namespace FiapCloundGames.API.Application.Services
 
             await _bibliotecaService.LiberarJogosAposPedido(usuario.Id,jogosIds);
             var response = _mapper.Map<PedidoResponse>(pedido);
+            
             response.MensagensInformativas = errors;
 
             _logger.LogInformation("Processo do pedido {PedidoId} concluído e jogos liberados na biblioteca do usuário {UsuarioId}.", pedido.Id, usuario.Id);
