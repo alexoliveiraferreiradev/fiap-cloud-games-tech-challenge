@@ -23,7 +23,7 @@ services:
     image: redis/redisinsight:latest
     container_name: fiap-cloud-games-insight
     ports:
-      - "8001:8001" 
+      - "8001:5540" 
     networks:
       - fiap-network
 
