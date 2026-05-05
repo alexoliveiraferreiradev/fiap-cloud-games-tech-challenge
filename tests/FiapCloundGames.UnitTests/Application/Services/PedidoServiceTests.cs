@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Castle.Core.Logging;
 using FiapCloundGames.API.Application.Services;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Configuration.Mapping;
@@ -9,6 +10,8 @@ using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.UnitTests.Fixtures;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using System.Net.NetworkInformation;
 
@@ -24,6 +27,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         private readonly Mock<IBibliotecaService> _bibliotecaMock;
         private readonly Mock<IPedidoRepository> _pedidoMock;
         private readonly PedidoService _service;
+        private readonly ILogger<PedidoService> _logger;
 
         public PedidoServiceTests()
         {
@@ -39,8 +43,10 @@ namespace FiapCloundGames.UnitTests.Application.Services
             _usuarioRepositoryMock = new Mock<IUsuarioRepository>();
             _jogoMock = new Mock<IJogoRepository>();
             _pedidoMock = new Mock<IPedidoRepository>();
+            _logger = NullLogger<PedidoService>.Instance;
+
             _service = new PedidoService(_pedidoMock.Object,_jogoMock.Object,
-                _usuarioRepositoryMock.Object,_bibliotecaMock.Object,_mapper);
+                _usuarioRepositoryMock.Object,_bibliotecaMock.Object,_mapper,_logger);
         }
         [Fact(DisplayName = "Sucesso ao realizar pedido - pedido criado com sucesso")]
         [Trait("Categoria", "Pedido Service Tests")]
