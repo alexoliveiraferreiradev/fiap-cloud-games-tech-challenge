@@ -70,7 +70,10 @@
         public static string DataFimInvalida = "A data final deve ser no futuro.";
         public static string SenhaTamanhoInvalido = "O tamanho da senha é inválido.";
         public static string EmailTamanhoInvalido = "O tamanho do email é inválido.";
-        
+        public static string NomeNaoReal = "Por favor, informe o seu nome real.";
+        public static string EmailNaoReal = "Por favor, informe um email real.";
+        public static string NomeJogoNaoReal = "Por favor, informe um nome de jogo real.";
+        public static string DescricaoJogoNaoReal = "Por favor, informe um descrição de jogo real.";
         #endregion
 
         #region Biblioteca
