@@ -173,6 +173,7 @@ namespace FiapCloundGames.API.Domain.Common
                 if (email.Contains("..")) throw new DomainException(message);
                 if (emailAddress.Address != email) throw new DomainException(message);
                 if (!email.Contains(".")) throw new DomainException(message);
+                if(!email.Contains("usuario@")) throw new DomainException(message);
             }
             catch
             {
