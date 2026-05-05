@@ -33,6 +33,15 @@ namespace FiapCloundGames.API.Application.Services
             if (usuario == null)
                 throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
 
+            if (!usuario.Ativo)
+                throw new DomainException(MensagensDominio.UsuarioInativo);
+
+            if (usuario.Perfil.Equals(TipoUsuario.Administrador))
+            {
+                _logger.LogWarning("Operação abortada: O usuário alvo {IdUsuarioRebaixar} já possui o perfil base de adminitrado.", id);
+                throw new DomainException(MensagensDominio.UsuarioPerfilRebaixarInvalido);
+            }
+
             usuario.PromoverPerfil(usuario);
 
             await _usuarioRepository.Atualizar(usuario);
@@ -59,6 +68,9 @@ namespace FiapCloundGames.API.Application.Services
 
             if (usuario == null)
                 throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
+
+            if(!usuario.Ativo)
+                throw new DomainException(MensagensDominio.UsuarioInativo);
 
             if (usuario.Perfil.Equals(TipoUsuario.Jogador))
             {
