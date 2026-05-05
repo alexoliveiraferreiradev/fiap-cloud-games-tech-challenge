@@ -1,6 +1,8 @@
 # FIAP Cloud Games - Tech Challenge 1
 
-Este projeto é uma API de um **Plataforma de venda de jogos digitais e gestão de servidores para partidas online** desenvolvida como parte do Tech Challenge da pós-graduação em **Arquitetura de Sistemas .NET** na **FIAP**. A solução foi desenhada com foco em escalabilidade, manutenibilidade e separação de responsabilidades.
+Este projeto é uma API de um **Plataforma de venda de jogos digitais e gestão de servidores para partidas online**. 
+
+Desenvolvida como parte do Tech Challenge da pós-graduação em **Arquitetura de Sistemas .NET** na **FIAP**. A solução foi desenhada com foco em escalabilidade, manutenibilidade e separação de responsabilidades.
 
 ## 🚀 Como Executar o Projeto
 
