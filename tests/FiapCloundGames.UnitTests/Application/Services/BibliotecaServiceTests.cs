@@ -108,5 +108,29 @@ namespace FiapCloundGames.UnitTests.Application.Services
             Assert.Equal(MensagensDominio.JogoNaoEncontrado, result.Message);
             _bibliotecaMock.Verify(r => r.Adicionar(It.IsAny<Biblioteca>()), Times.Never);
         }
+
+
+        [Fact(DisplayName = "Falha ao adicionar jogo na biblioteca - ja possui o jogo")]
+        [Trait("Categoria", "Biblioteca Services")]
+        public async Task BibliotecaJogo_VerificaSePossuiJogo_DeveLancarExcecao()
+        {
+            //Arrage
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var jogosIds = new List<Guid> ();
+            //Mock
+            _usuarioMock.Setup(u => u.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            for (int i = 0; i <= 3; i++)
+            {
+                var jogo = _jogoFixture.ObtemJogosComSucesso();
+                _jogoMock.Setup(j => j.ObterPorId(jogo.Id)).ReturnsAsync(jogo);
+                _bibliotecaMock.Setup(b => b.VerificaSeUsuarioPossuiJogo(usuario.Id, jogo.Id)).ReturnsAsync(true);
+                jogosIds.Add(jogo.Id);
+            }
+            //Act
+            var result = await Assert.ThrowsAsync<DomainException>(async () => await _service.LiberarJogosAposPedido(usuario.Id, jogosIds));
+            //Assert
+            Assert.Equal(MensagensDominio.BibliotecaJogoRepetido, result.Message);
+            _bibliotecaMock.Verify(r => r.Adicionar(It.IsAny<Biblioteca>()), Times.Never);
+        }
     }
 }
