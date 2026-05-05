@@ -33,11 +33,11 @@ namespace FiapCloundGames.API.Controller
         [HttpGet]
         [ProducesResponseType(typeof(PagedResult<JogoResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PagedResult<JogoResponse>>> ObtemJogosComPromocao()
+        public async Task<ActionResult<PagedResult<JogoResponse>>> ObtemJogosComPromocao([FromQuery] int pagina =1, [FromQuery] int tamanhoPagina = 10)
         {
             _logger.LogInformation("Iniciando consulta de jogos em promoção.");
             await _jogoService.DesativaPromocoesInvalidas();
-            var jogos = await _jogoService.ObtemJogosPromovidosPaginacao();
+            var jogos = await _jogoService.ObtemJogosPromovidosPaginacao(1,10);
             if ( jogos == null|| !jogos.Items.Any())
             {
                 _logger.LogInformation("Consulta finalizada. Nenhuma promoção ativa encontrada no momento.");
@@ -95,8 +95,8 @@ namespace FiapCloundGames.API.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<JogoResponse>> CriaPromocao(CriaPromocaoRequest promocaoRequest)
         {
-            await _jogoService.AdicionarPromocao(promocaoRequest);
-            return CreatedAtAction(nameof(ObtemPromocaoPorId), new { id = promocaoRequest.JogoId }, promocaoRequest);
+           var response = await _jogoService.AdicionarPromocao(promocaoRequest);
+            return CreatedAtAction(nameof(ObtemPromocaoPorId),new { id = response.PromocaoId },response);
         }
 
         /// <summary>
