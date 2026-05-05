@@ -27,6 +27,22 @@ As migrations e o Seed Data (populando o catálogo inicial de jogos) são execut
 
 ---
 
+## 📊 Configurando o Redis Insight
+
+Para visualizar as chaves de cache e monitorar a performance da API em tempo real, siga os passos abaixo para conectar o Redis Insight ao container do Redis:
+
+1.  Acesse no seu navegador: **http://localhost:8001**
+2.  Clique em **"Add Redis Database"**.
+3.  Preencha os campos de conexão com os seguintes dados:
+    *   **Host:** `redis` (Utilizamos o nome do serviço definido no Docker Compose para comunicação interna).
+    *   **Port:** `6379`
+    *   **Database Name:** `FIAP-Cloud-Games-Cache` (ou nome de sua preferência).
+4.  Clique em **"Add Redis Database"** no final do formulário.
+
+> **Nota Técnica:** Como o Redis Insight e o Redis estão rodando na mesma rede virtual do Docker (`fiap-network`), o Host deve ser o nome do serviço (`redis`) e não `localhost`, permitindo que os containers se comuniquem através do DNS interno do Docker.
+
+---
+
 ## 🔐 Credenciais de Teste (Admin)
 
 Para facilitar a avaliação das funcionalidades administrativas (como a criação de jogos, jogadores e promoções), utilize o usuário pré-configurado:
