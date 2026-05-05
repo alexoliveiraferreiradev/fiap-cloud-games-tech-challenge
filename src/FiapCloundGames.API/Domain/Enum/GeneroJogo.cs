@@ -15,6 +15,7 @@
         MundoAberto = 11,
         Plataforma = 12,
         Corrida = 13,
-        Indie = 14
+        Indie = 14,
+        Esportes = 15
     }
 }
