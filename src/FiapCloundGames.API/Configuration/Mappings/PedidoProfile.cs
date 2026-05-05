@@ -16,6 +16,7 @@ namespace FiapCloundGames.API.Configuration.Mapping
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Jogos))
             .ForMember(dest => dest.ValorTotal, opt => opt.MapFrom(src => src.ValorTotal.Valor));
             CreateMap<PedidoJogo, PedidoItemResponse>()
+            .ForMember(dest => dest.JogoId, opt => opt.MapFrom(src => src.Jogo.Id))
             .ForMember(dest => dest.NomeJogo, opt => opt.MapFrom(src => src.Jogo.Nome.Valor))
             .ForMember(dest => dest.PrecoOriginal, opt => opt.MapFrom(src => src.Jogo.PrecoBase.Valor))
             .ForMember(dest => dest.PrecoPago, opt => opt.MapFrom(src => src.Jogo.ObterPrecoAtual().Valor));
