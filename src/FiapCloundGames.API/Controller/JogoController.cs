@@ -41,7 +41,7 @@ namespace FiapCloundGames.API.Controller
             return Ok(jogo);
         }
         /// <summary>
-        /// Realiza o cadastro de um novo jogo no catálogo do marketplace.
+        /// Realiza o cadastro de um novo jogo no catálogo.
         /// </summary>
         /// <remarks>
         /// * **Validação de Nome do Jogo:** Obrigatório, entre 3 e 100 caracteres.
