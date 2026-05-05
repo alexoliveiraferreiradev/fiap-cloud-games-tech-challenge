@@ -150,6 +150,28 @@ namespace FiapCloundGames.UnitTests.Application.Services
             Assert.Contains("Não foi possível realizar o pedido", result.Message);
             _pedidoMock.Verify(p => p.Adicionar(It.IsAny<Pedido>()), Times.Never);
         }
+
+        [Fact(DisplayName = "Falha ao realizar pedido - usuário ja possui o jogo")]
+        [Trait("Categoria", "Pedido Service Tests")]
+        public async Task RealizaPedido_JogoRepetido_DeveLancarComExcecao()
+        {
+            //Arrange
+            var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var jogo = _jogosFixture.ObtemJogosComSucesso();
+            List<Guid> lista = new List<Guid>();
+            
+            //Mock
+            _usuarioRepositoryMock.Setup(r => r.ObterPorId(usuario.Id)).ReturnsAsync(usuario);
+            _jogoMock.Setup(r => r.ObterJogosPorIds(It.IsAny<List<Guid>>()))
+                   .ReturnsAsync(new List<Jogo> { jogo });
+            _bibliotecaMock.Setup(b => b.ObterIdsJogosDoUsuario(usuario.Id)).ReturnsAsync(lista);
+            lista.Add(jogo.Id);
+            //Act
+            var result = await Assert.ThrowsAsync<DomainException>(async ()=> await _service.RealizarPedido(usuario.Id, lista));
+            //Assert
+            Assert.Contains("Não foi possível realizar o pedido", result.Message);
+            _pedidoMock.Verify(p => p.Adicionar(It.IsAny<Pedido>()), Times.Never);
+        }
         [Fact(DisplayName = "Sucesso ao realizar pedido - jogo com promoção")]
         [Trait("Categoria", "Pedido Service Tests")]
         public async Task RealizaPedido_JogoComPromocao_DeveRealizarComSucesso()
