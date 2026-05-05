@@ -22,12 +22,12 @@ namespace FiapCloundGames.API.Application.Dtos.Pedido
     {
         public string NomeJogo { get; set; }
         public decimal PrecoOriginal { get; set; }
-        public decimal Desconto { get; set; }
+        public decimal Desconto => PrecoOriginal - PrecoPago;
         public decimal PrecoPago { get; set; }
 
         public PedidoItemResponse()
         {
-            Desconto = PrecoOriginal - PrecoPago;
+            
         }
     }
 }
