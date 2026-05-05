@@ -12,6 +12,9 @@ using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.UnitTests.Fixtures;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace FiapCloundGames.UnitTests.Application.Services
@@ -24,6 +27,8 @@ namespace FiapCloundGames.UnitTests.Application.Services
         private readonly JogosFixture _jogosFixture;
         private readonly PromocaoFixture _promocaoFixture;
         private readonly IMapper _mapper;
+        private readonly ILogger<JogosService> _logger;
+        private readonly Mock<IDistributedCache> _cacheMock;
         public JogosServiceTests()
         {
             _faker = new Faker();
@@ -33,9 +38,10 @@ namespace FiapCloundGames.UnitTests.Application.Services
                 cfg.AddProfile<JogoProfile>();
                 cfg.AddProfile<PromocaoProfile>();
             });
+            _cacheMock = new Mock<IDistributedCache>(); 
             _mapper = configMapper.CreateMapper();
-
-            _jogosService = new JogosService(_mockJogo.Object,_mapper);
+            _logger = NullLogger<JogosService>.Instance;
+            _jogosService = new JogosService(_mockJogo.Object,_mapper, _cacheMock.Object,_logger);
             _jogosFixture = new JogosFixture();
             _promocaoFixture = new PromocaoFixture();
         }
