@@ -26,6 +26,7 @@
         public static string UsuarioNaoEncontrado = "O usuário não foi encontrado.";
         public static string AdminNaoEncontrado = "O administrador não foi encontrado.";
         public static string UsuarioPerfilRebaixarInvalido = "O perfil do usuário não pode ser rebaixado para jogador, pois ele já é um jogador.";
+        public static string UsuarioPerfilAdministradoInvalido = "O perfil do usuário pode ser promovido para administrador, pois ele já é um administrador.";
         public static string CrendenciasInvalidas = "Credenciais inválidas.";
         public static string EmailJaCadastrado = "O email já foi cadastrado.";
         public static string NomeUsuarioJaCadastrado = "O nome de usuário já foi cadastrado.";
@@ -45,6 +46,7 @@
         public static string JogoAtivo = "O jogo já está ativo.";
         public static string JogoMesmoNomeExistente = "Já existe um jogo com esse nome.";
         public static string JogoSemPromocoes = "Não há promoções para este jogo.";
+        public static string JogoPromocoes = "Já há promoções para este jogo.";
         #endregion
 
         #region Pedido
@@ -57,7 +59,7 @@
 
         #region Promoção
         public static string PeriodoObrigatorio = "O período da promoção é obrigatório.";
-        public static string PromocaoNaoEncontrada = "Promoção não encontrada para este jogo.";
+        public static string PromocaoNaoEncontrada = "Promoção não encontrada.";
         public static string PromocaoValorMaior = "O valor promocional deve ser menor que o preço base.";
         public static string PromocaoInativa = "A promoção já está desativada.";
         #endregion
@@ -70,7 +72,10 @@
         public static string DataFimInvalida = "A data final deve ser no futuro.";
         public static string SenhaTamanhoInvalido = "O tamanho da senha é inválido.";
         public static string EmailTamanhoInvalido = "O tamanho do email é inválido.";
-        
+        public static string NomeNaoReal = "Por favor, informe o seu nome real.";
+        public static string EmailNaoReal = "Por favor, informe um email real.";
+        public static string NomeJogoNaoReal = "Por favor, informe um nome de jogo real.";
+        public static string DescricaoJogoNaoReal = "Por favor, informe um descrição de jogo real.";
         #endregion
 
         #region Biblioteca

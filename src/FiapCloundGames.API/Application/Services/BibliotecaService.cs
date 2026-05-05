@@ -16,16 +16,19 @@ namespace FiapCloundGames.API.Application.Services
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IJogoRepository _jogoRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<BibliotecaService> _logger;
         public BibliotecaService(IBibliotecaRepository bibliotecaRepository, IUsuarioRepository usuarioRepository,
-            IJogoRepository jogosRepository, IMapper mapper)
+            IJogoRepository jogosRepository, IMapper mapper, ILogger<BibliotecaService> logger)
         {
             _bibliotecaRepository = bibliotecaRepository;
             _usuarioRepository = usuarioRepository;
             _jogoRepository = jogosRepository;
             _mapper = mapper;
+            _logger = logger;
         }
         public async Task LiberarJogosAposPedido(Guid usuarioId, List<Guid> jogosIds)
         {
+            _logger.LogInformation("Iniciando a liberação de {QuantidadeJogos} jogo(s) na biblioteca do usuário {UsuarioId}.", jogosIds.Count, usuarioId);
             var usuario = await _usuarioRepository.ObterPorId(usuarioId);
             if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
             if (!usuario.Ativo) throw new DomainException(MensagensDominio.UsuarioInativo);
@@ -41,7 +44,9 @@ namespace FiapCloundGames.API.Application.Services
 
                 var bibliotecaItem = new Biblioteca(usuario.Id, jogo.Id);
                 await _bibliotecaRepository.Adicionar(bibliotecaItem);
+                _logger.LogInformation("Jogo {JogoId} liberado com sucesso na biblioteca do usuário {UsuarioId}.", jogo.Id, usuario.Id);
             }
+            _logger.LogInformation("Processo de liberação finalizado com sucesso para o usuário {UsuarioId}.", usuario.Id);
         }
 
         public async Task<bool> VerificaSeUsuarioPossuiJogo(Guid usuarioId, Guid jogoId)

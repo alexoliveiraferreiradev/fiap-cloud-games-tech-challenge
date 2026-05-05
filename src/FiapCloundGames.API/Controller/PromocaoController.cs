@@ -33,11 +33,11 @@ namespace FiapCloundGames.API.Controller
         [HttpGet]
         [ProducesResponseType(typeof(PagedResult<JogoResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PagedResult<JogoResponse>>> ObtemJogosComPromocao()
+        public async Task<ActionResult<PagedResult<JogoResponse>>> ObtemJogosComPromocao([FromQuery] int pagina =1, [FromQuery] int tamanhoPagina = 10)
         {
             _logger.LogInformation("Iniciando consulta de jogos em promoção.");
             await _jogoService.DesativaPromocoesInvalidas();
-            var jogos = await _jogoService.ObtemJogosPromovidosPaginacao();
+            var jogos = await _jogoService.ObtemJogosPromovidosPaginacao(1,10);
             if ( jogos == null|| !jogos.Items.Any())
             {
                 _logger.LogInformation("Consulta finalizada. Nenhuma promoção ativa encontrada no momento.");
@@ -69,8 +69,23 @@ namespace FiapCloundGames.API.Controller
         /// Registra uma nova oferta para um jogo específico no sistema.
         /// </summary>
         /// <remarks>
+        /// * **Validação de Preco:** Obrigatório, não sendo negativo.
+        /// * **Validação de Período da promoção:** Obrigatório, data final deve ser maior que inicial.
+        /// 
         /// O valor da promoção deve ser inferior ao preço original do jogo. 
         /// A data de expiração define quando a oferta deixará de ser listada automaticamente.
+        /// 
+        /// Exemplo de requisição:
+        /// 
+        ///     POST /nova-promocao
+        ///     {
+        ///        "jogoId": "id do jogo",
+        ///        "valorPromocao": "valor da promocao",
+        ///        "dataInicio": "data de início da promoção - vem por padrão hoje",
+        ///        "dataFinal": "data final da promoção"
+        ///     }
+        /// 
+        /// 
         /// </remarks>
         /// <param name="promocaoRequest">Dados da nova promoção (JogoId, Valor e Data Fim).</param>
         /// <response code="201">Criado. Promoção registrada com sucesso.</response>
@@ -80,8 +95,8 @@ namespace FiapCloundGames.API.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<JogoResponse>> CriaPromocao(CriaPromocaoRequest promocaoRequest)
         {
-            await _jogoService.AdicionarPromocao(promocaoRequest);
-            return CreatedAtAction(nameof(ObtemPromocaoPorId), new { id = promocaoRequest.JogoId }, promocaoRequest);
+           var response = await _jogoService.AdicionarPromocao(promocaoRequest);
+            return CreatedAtAction(nameof(ObtemPromocaoPorId),new { id = response.PromocaoId },response);
         }
 
         /// <summary>

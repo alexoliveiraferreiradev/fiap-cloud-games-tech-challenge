@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Application.Services.Interfaces;
+using FiapCloundGames.API.Configuration.Exceptions;
 using FiapCloundGames.API.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,7 +50,7 @@ namespace FiapCloundGames.API.Controller
                 _logger.LogInformation("Consulta finalizada. A base de usuários está vazia.");
                 return Ok(Enumerable.Empty<UsuarioResponse>());
             }
-                       
+
             _logger.LogInformation("Listagem de usuários realizada com sucesso. Total de registros: {QuantidadeUsuarios}",
                 usuarios.Count());
 
@@ -69,11 +70,30 @@ namespace FiapCloundGames.API.Controller
             _logger.LogInformation("Solicitação de promoção para Administrador recebida. TargetUserId: {TargetUserId}", id);
 
             var currentUserIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            
-            var usuario = await _usuarioService.PromoverParaAdmin(id);
 
-            _logger.LogWarning("SEGURANÇA: Usuário {TargetUserId} promovido a Administrador. Ação realizada por: {AdminId}",
-         id, currentUserIdClaim ?? "Sistema/Manual");
+            if (string.IsNullOrEmpty(currentUserIdClaim))
+                return Unauthorized();
+
+            var adminId = Guid.Parse(currentUserIdClaim);
+
+            if (id == adminId)
+            {
+                _logger.LogWarning("Tentativa de autopromoção bloqueada para o usuário {AdminId}.", adminId);
+                return BadRequest("Um administrador não pode promover a si próprio (regra de segregação de funções).");
+            }
+
+            _logger.LogInformation("Iniciando processo de promoção. Alvo: {TargetUserId} | Solicitante: {AdminId}", id, adminId);
+
+            var sucesso = await _usuarioService.PromoverParaAdmin(id);
+
+            if (sucesso == null)
+            {
+                _logger.LogWarning("Falha na promoção: Usuário {TargetUserId} não encontrado ou já é administrador.", id);
+                return NotFound("Usuário não encontrado.");
+            }
+
+            _logger.LogWarning("SEGURANÇA: Nível de acesso elevado. Usuário {TargetUserId} promovido a Administrador por {AdminId}.", id, adminId);
+
             return NoContent();
         }
 
@@ -101,7 +121,7 @@ namespace FiapCloundGames.API.Controller
                 return BadRequest("Você não possui permissão para rebaixar a própria conta enquanto logado");
             }
 
-            var usuario = await _usuarioService.RebaixarParaJogador(id,currentUserId);
+            var usuario = await _usuarioService.RebaixarParaJogador(id, currentUserId);
             return NoContent();
         }
 
@@ -114,28 +134,33 @@ namespace FiapCloundGames.API.Controller
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> ReativarJogador(Guid id)
         {
-            _logger.LogInformation("Solicitação para rebaixar usuário para Jogador recebida. TargetUserId: {TargetUserId}", id);
+            _logger.LogInformation("Solicitação de reativação recebida para o usuário {TargetUserId}.", id);
             var currentUserIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(currentUserIdClaim))
             {
-                _logger.LogWarning("Tentativa de rebaixamento sem identificação de usuário (Claim ausente). TargetUserId: {TargetUserId}", id);
+                _logger.LogWarning("Tentativa de reativar o usuário {TargetUserId} sem um Token JWT válido.", id);
                 return Unauthorized();
             }
 
             var currentUserId = Guid.Parse(currentUserIdClaim);
 
             if (id == currentUserId)
-            {                
-                _logger.LogWarning("Operação bloqueada: Administrador {AdminId} tentou rebaixar a própria conta.", currentUserId);
-                return BadRequest("Você não possui permissão para rebaixar a própria conta enquanto logado");
+            {
+                _logger.LogWarning("Auto-reativação detectada para o usuário {UserId}.", currentUserId);
             }
 
-            var usuario = await _usuarioService.RebaixarParaJogador(id, currentUserId);
-            
-            _logger.LogWarning("SEGURANÇA: Usuário {TargetUserId} rebaixado para Jogador. Ação realizada pelo Administrador: {AdminId}",
-                id, currentUserId);
+            try
+            {
+                await _usuarioService.Reativar(id);
 
+                _logger.LogInformation("Usuário {TargetUserId} reativado com sucesso pelo administrador {AdminId}.", id, currentUserId);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Erro ao tentar reativar o usuário {TargetUserId} solicitado por {AdminId}.", id, currentUserId);
+                throw;
+            }
             return NoContent();
         }
 
@@ -170,7 +195,7 @@ namespace FiapCloundGames.API.Controller
             }
 
             if (id == currentUserId)
-            {                
+            {
                 _logger.LogWarning("Operação bloqueada: Administrador {AdminId} tentou desativar a própria conta administrativa.", currentUserId);
                 return BadRequest("Você não possui permissão para desativar a própria conta enquanto logado.");
             }

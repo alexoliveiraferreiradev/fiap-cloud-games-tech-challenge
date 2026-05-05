@@ -1,11 +1,6 @@
-﻿using AutoMapper;
-using Azure;
-using FiapCloundGames.API.Application.Dtos.Pedido;
+﻿using FiapCloundGames.API.Application.Dtos.Pedido;
 using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Domain.Entities;
-using FiapCloundGames.API.Domain.ValueObjects;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 

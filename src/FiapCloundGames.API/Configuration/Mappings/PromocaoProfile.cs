@@ -9,6 +9,7 @@ namespace FiapCloundGames.API.Configuration.Mapping
         public PromocaoProfile()
         {
             CreateMap<Promocao, PromocaoResponse>()
+                .ForMember(dest=>dest.PromocaoId,opt=>opt.MapFrom(src=>src.Id))
                 .ForMember(dest=>dest.JogoId,opt=>opt.MapFrom(src=>src.JogoId))
                 .ForMember(dest=>dest.ValorPromocao,opt=>opt.MapFrom(src=>src.ValorPromocao.Valor))
                 .ForMember(dest=>dest.DataFim,opt=>opt.MapFrom(src=>src.Periodo.DataFim));

@@ -14,6 +14,7 @@ namespace FiapCloundGames.API.Domain.Entities
             Ativo = true;
             Periodo = periodo;
             DataCadastro = DateTime.UtcNow;
+            DataAlteracao = DataCadastro;
             ValidarEntidade();
         }
         protected Promocao() { }

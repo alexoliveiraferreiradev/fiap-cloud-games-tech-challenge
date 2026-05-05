@@ -1,5 +1,6 @@
 ﻿using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Resources;
+using System.Drawing;
 using System.Text.RegularExpressions;
 
 namespace FiapCloundGames.API.Domain.Common
@@ -201,6 +202,26 @@ namespace FiapCloundGames.API.Domain.Common
         public static void AssertArgumentRange(int value, int minimum, int maximum, string message)
         {
             if (value < minimum || value > maximum)
+            {
+                throw new DomainException(message);
+            }
+        }
+
+        public static void AssertArgumentRealValues(string value, string message)
+        {
+            if (value.Trim().Equals("Nome do Usuário", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new DomainException(message);
+            }
+            if (value.Trim().Equals("usuario@email.com.br", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new DomainException(message);
+            }
+            if (value.Trim().Equals("Nome do Jogo", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new DomainException(message);
+            }
+            if (value.Trim().Equals("Descrição do Jogo", StringComparison.OrdinalIgnoreCase))
             {
                 throw new DomainException(message);
             }

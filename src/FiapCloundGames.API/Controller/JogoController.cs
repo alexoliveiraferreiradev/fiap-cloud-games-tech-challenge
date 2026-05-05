@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Services.Interfaces;
+using FiapCloundGames.API.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,10 +42,39 @@ namespace FiapCloundGames.API.Controller
             return Ok(jogo);
         }
         /// <summary>
-        /// Realiza o cadastro de um novo jogo no catálogo do marketplace.
+        /// Obtém a listagem completa de todos os jogos disponíveis no catálogo ativos ou inativos.
         /// </summary>
         /// <remarks>
+        /// Este endpoint é público e retorna todos os jogos ativos, incluindo nome, descrição e preço.
+        /// </remarks>
+        /// <response code="200">Retorna a lista de jogos cadastrados com sucesso.</response>
+        /// <response code="404">Caso não existam jogos cadastrados ou ativos no sistema.</response>
+        [HttpGet("/obter-todos-jogos")]
+        [ProducesResponseType(typeof(IEnumerable<JogoResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<JogoResponse>> ObterJogos()
+        {
+            _logger.LogInformation("Iniciando consulta ao catálogo completo de jogos.");
+            var jogos = await _jogoService.ObtemTodosJogo();
+            if (jogos is null || !jogos.Any())
+            {
+                _logger.LogWarning("Consulta ao catálogo finalizada: Nenhum jogo encontrado ou ativo no banco de dados.");
+                return NotFound();
+            }
+            _logger.LogInformation("Consulta ao catálogo finalizada com sucesso. Total de jogos encontrados: {QuantidadeJogos}.", jogos.Count());
+            return Ok(jogos);
+        }
+
+        /// <summary>
+        /// Realiza o cadastro de um novo jogo no catálogo.
+        /// </summary>
+        /// <remarks>
+        /// * **Validação de Nome do Jogo:** Obrigatório, entre 3 e 100 caracteres.
+        /// * **Validação de Descrição do Jogo:** Obrigatório, entre 5 e 500 caracteres.
+        /// * **Validação de Preco:** Obrigatório, não sendo negativo.
+        ///
         /// Exemplo de requisição:
+        /// 
         /// 
         ///     POST /api/jogos
         ///     {
@@ -52,6 +82,9 @@ namespace FiapCloundGames.API.Controller
         ///        "preco": 49.90,
         ///        "genero": 1
         ///     }
+        /// 
+        ///     
+        /// 
         /// </remarks>
         /// <param name="jogoRequest">Dados necessários para a criação do jogo.</param>
         /// <response code="201">Criado. O jogo foi inserido com sucesso.</response>
@@ -68,7 +101,7 @@ namespace FiapCloundGames.API.Controller
         }
 
         /// <summary>
-        /// Desativa um jogo do catálogo (Exclusão Lógica).
+        /// Desativa um jogo do catálogo.
         /// </summary>
         /// <remarks>
         /// O jogo não é removido fisicamente do banco de dados, mas deixa de ser listado no catálogo ativo.
@@ -92,6 +125,11 @@ namespace FiapCloundGames.API.Controller
         /// <summary>
         /// Atualiza as informações de um jogo existente.
         /// </summary>
+        /// 
+        /// * **Validação de Nome do Jogo:** Obrigatório, entre 3 e 100 caracteres.
+        /// * **Validação de Descrição do Jogo:** Obrigatório, entre 5 e 500 caracteres.
+        /// * **Validação de Preco:** Obrigatório, não sendo negativo.
+        /// 
         /// <param name="id">O identificador único do jogo.</param>
         /// <param name="updateRequest">Novos dados para o jogo (Nome, Preço, etc.).</param>
         /// <response code="200">Sucesso. Retorna o objeto do jogo com as informações atualizadas.</response>

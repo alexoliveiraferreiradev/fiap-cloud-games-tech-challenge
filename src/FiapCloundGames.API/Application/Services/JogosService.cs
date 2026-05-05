@@ -30,21 +30,31 @@ namespace FiapCloundGames.API.Application.Services
         }
         public async Task<JogoResponse> AdicionaJogo(CriarJogoRequest request)
         {
+            _logger.LogInformation("Iniciando o cadastro de um novo jogo. Nome: {NomeJogo}, Gênero: {Genero}", request.Nome, request.Genero);
+            
             await VerificaDuplicidadeNome(request.Nome);
+
             var preco = new Preco(request.Preco);
             var nomeJogoVO = new NomeJogo(request.Nome);
             var descricaoVO = new Descricao(request.Descricao);
             var jogo = new Jogo(nomeJogoVO, descricaoVO, preco, request.Genero);
 
             await _jogoRepository.Adicionar(jogo);
+
+            _logger.LogInformation("Jogo {JogoId} salvo no banco de dados com sucesso. Invalidando caches de vitrine...", jogo.Id);
+
             await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
+            await _cache.RemoveAsync("jogos:todos");
             await _cache.RemoveAsync($"jogos:catalogo:genero:{jogo.Genero}:pagina:1:tamanho:10");
+
+            _logger.LogInformation("Cadastro do jogo {JogoId} concluído e caches atualizados.", jogo.Id);
             return _mapper.Map<JogoResponse>(jogo);
         }
 
 
         public async Task<JogoResponse> AtualizarJogo(Guid id, UpdateJogoRequest updateJogosRequest)
         {
+            _logger.LogInformation("Iniciando a atualização do jogo {JogoId}.", id);
             var jogo = await _jogoRepository.ObterPorId(id);
             if (jogo == null) 
                 throw new DomainException(MensagensDominio.JogoNaoEncontrado);
@@ -54,38 +64,59 @@ namespace FiapCloundGames.API.Application.Services
             var descricaoJogoVO = new Descricao(updateJogosRequest.NovaDescricao);
 
             jogo.Atualizar(nomeJogoVO, descricaoJogoVO, precoVO, updateJogosRequest.NovoGenero);
+
+            _logger.LogInformation("Jogo {JogoId} atualizado no banco de dados. Procedendo com a invalidação dos caches...", id);
+
             await _jogoRepository.Atualizar(jogo);
             await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
             await _cache.RemoveAsync($"jogos:catalogo:genero:{jogo.Genero}:pagina:1:tamanho:10");
             await _cache.RemoveAsync($"jogos:detalhes:{id}");
+            await _cache.RemoveAsync("jogos:todos");
+
+            _logger.LogInformation("Processo de atualização do jogo {JogoId} finalizado com sucesso.", id);
+
             return _mapper.Map<JogoResponse>(jogo);
         }
 
         public async Task Desativar(Guid jogoId)
         {
+            _logger.LogInformation("Iniciando a inativação do jogo {JogoId}.", jogoId);
             var jogo = await _jogoRepository.ObterPorId(jogoId);
             if (jogo == null) 
                 throw new DomainException(MensagensDominio.JogoNaoEncontrado);
 
             jogo.Desativar();
             await _jogoRepository.Atualizar(jogo);
+
+            _logger.LogInformation("Jogo {JogoId} inativado no banco de dados. Invalidando caches das vitrines...", jogoId);
+
             await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
             await _cache.RemoveAsync("jogos:catalogo:genero:pagina:1:tamanho:10");
             await _cache.RemoveAsync("jogos:promocoes:v1:pagina:1:tamanho:10");
             await _cache.RemoveAsync($"jogos:detalhes:{jogoId}");
+            await _cache.RemoveAsync("jogos:todos");
+
+            _logger.LogInformation("Processo de inativação do jogo {JogoId} finalizado com sucesso e caches limpos.", jogoId);
         }
 
         public async Task Reativar(Guid jogoId)
         {
+            _logger.LogInformation("Iniciando a reativação do jogo {JogoId}.", jogoId);
             var jogo = await _jogoRepository.ObterPorId(jogoId);
             if (jogo == null) 
                 throw new DomainException(MensagensDominio.JogoNaoEncontrado);
 
             jogo.Reativar();
             await _jogoRepository.Atualizar(jogo);
+
+            _logger.LogInformation("Jogo {JogoId} reatviado no banco de dados. Invalidando caches das vitrines...", jogoId);
+
             await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
             await _cache.RemoveAsync("jogos:catalogo:genero:pagina:1:tamanho:10");
             await _cache.RemoveAsync($"jogos:detalhes:{jogoId}");
+            await _cache.RemoveAsync("jogos:todos");
+
+            _logger.LogInformation("Processo de reativação do jogo {JogoId} finalizado com sucesso e caches limpos.", jogoId);
         }
 
         public async Task<bool> VerificaDuplicidadeNome(string nomeJogo)
@@ -97,22 +128,35 @@ namespace FiapCloundGames.API.Application.Services
             return false;
         }
 
-        public async Task AdicionarPromocao(CriaPromocaoRequest promocaoRequest)
+        public async Task<PromocaoResponse> AdicionarPromocao(CriaPromocaoRequest promocaoRequest)
         {
+            _logger.LogInformation("Iniciando a adição de promoção para o jogo {JogoId}.", promocaoRequest.JogoId);
             var periodoVO = new Periodo(promocaoRequest.DataInicio, promocaoRequest.DataFim);
             var jogo = await _jogoRepository.ObterPorId(promocaoRequest.JogoId);
             if (jogo == null) throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+
+            if (jogo.Promocoes.Any())
+                throw new DomainException(MensagensDominio.JogoPromocoes);
 
             var valorPromocaoVO = new Preco(promocaoRequest.ValorPromocao);
 
             jogo.AdicionarPromocao(valorPromocaoVO, periodoVO);
             await _jogoRepository.Atualizar(jogo);
+
+            _logger.LogInformation("Promoção adicionada ao jogo {JogoId} no banco de dados. Invalidando caches...", promocaoRequest.JogoId);
+
             await _cache.RemoveAsync("jogos:promocoes:pagina:1:tamanho:10");
             await _cache.RemoveAsync($"jogo:detalhes:{promocaoRequest.JogoId}");
+            await _cache.RemoveAsync("jogos:todos");
+
+            _logger.LogInformation("Processo de adição de promoção ao jogo {JogoId} concluído com sucesso.", promocaoRequest.JogoId);
+
+            return _mapper.Map<PromocaoResponse>( jogo.Promocoes.First());
         }
 
         public async Task AtualizaPromocao(Guid promocaoId, UpdatePromocaoRequest promocaoRequest)
         {
+            _logger.LogInformation("Iniciando atualização da promoção {PromocaoId} vinculada ao jogo {JogoId}.", promocaoId, promocaoRequest.JogoId);
             var jogo = await _jogoRepository.ObterPorId(promocaoRequest.JogoId);
             if (jogo == null) 
                 throw new DomainException(MensagensDominio.JogoNaoEncontrado);
@@ -128,16 +172,27 @@ namespace FiapCloundGames.API.Application.Services
             if (promocao == null)
                 throw new DomainException(MensagensDominio.PromocaoNaoEncontrada);
             
-            jogo.AlteraPromocao(promocao.Id, new Preco(promocaoRequest.NovoValorPromocao), promocaoRequest.NovaDataFim);
+            jogo.AlteraPromocao(promocao.Id, novoPrecoPromocao, promocaoRequest.NovaDataFim);
             
             await _jogoRepository.Atualizar(jogo);
 
+            _logger.LogInformation("Promoção {PromocaoId} atualizada no banco. Invalidando caches...", promocaoId);
+
             await _cache.RemoveAsync($"promocao:detalhes:{promocaoId}");
+
             await _cache.RemoveAsync("jogos:promocoes:pagina:1:tamanho:10");
+
+            await _cache.RemoveAsync($"jogos:detalhes:{promocaoRequest.JogoId}");
+
+            await _cache.RemoveAsync("jogos:todos");
+
+            _logger.LogInformation("Atualização da promoção {PromocaoId} concluída com sucesso.", promocaoId);
         }
 
         public async Task DesativarPromocao(Guid promocaoId)
         {
+            _logger.LogInformation("Iniciando a inativação da promoção {PromocaoId}.", promocaoId);
+
             var promocao = await _jogoRepository.ObterPromocaoPorId(promocaoId);
             
             if (promocao == null) 
@@ -151,8 +206,18 @@ namespace FiapCloundGames.API.Application.Services
             jogo.DesativarPromocao(promocaoId);
             
             await _jogoRepository.Atualizar(jogo);
+
+            _logger.LogInformation("Promoção {PromocaoId} inativada no banco de dados. Invalidando caches...", promocaoId);
+
             await _cache.RemoveAsync($"promocao:detalhes:{promocaoId}");
+
             await _cache.RemoveAsync("jogos:promocoes:pagina:1:tamanho:10");
+
+            await _cache.RemoveAsync($"jogos:detalhes:{promocao.JogoId}");
+
+            await _cache.RemoveAsync("jogos:todos");
+
+            _logger.LogInformation("Processo de inativação da promoção {PromocaoId} finalizado com sucesso.", promocaoId);
         }
 
         public async Task<PagedResult<JogoResponse>> ObtemCatalagoJogoPaginado(int pagina = 1, int tamanhoPagina = 10)
@@ -188,6 +253,7 @@ namespace FiapCloundGames.API.Application.Services
 
             return new PagedResult<JogoResponse>(jogoResponse, pagina, tamanhoPagina, totalRegistros);
         }
+
         public async Task<PagedResult<JogoResponse>> ObtemPorGeneroPaginacao(GeneroJogo generoJogo, int pagina = 1, int tamanhoPagina = 10)
         {
             var cacheKey = $"jogos:catalogo:genero:{generoJogo}:pagina:{pagina}:tamanho:{tamanhoPagina}";
@@ -276,8 +342,16 @@ namespace FiapCloundGames.API.Application.Services
         }
         public async Task DesativaPromocoesInvalidas()
         {
+            _logger.LogInformation("Iniciando varredura em lote para desativar promoções expiradas no banco de dados.");
+            
             await _jogoRepository.DesativaPromocoesInvalidas();
+
+            _logger.LogInformation("Varredura concluída. Invalidando cache da vitrine principal de promoções...");
+
             await _cache.RemoveAsync("jogos:promocoes:v1:pagina:1:tamanho:10");
+            await _cache.RemoveAsync("jogos:todos");
+
+            _logger.LogInformation("Processo de inativação de promoções expiradas finalizado com sucesso.");
         }
 
         public async Task<PromocaoResponse?> ObtemPromocaoPorId(Guid promocaoId)
@@ -316,6 +390,40 @@ namespace FiapCloundGames.API.Application.Services
             }
 
             return promocaResponse;
+        }
+
+        public async Task<IEnumerable<JogoResponse>> ObtemTodosJogo()
+        {
+            var cacheKey = "jogos:todos";
+            var dadosCache = await _cache.GetStringAsync(cacheKey);
+
+            var jsonOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            if (!string.IsNullOrEmpty(dadosCache))
+            {
+                return JsonSerializer.Deserialize<IEnumerable<JogoResponse>>(dadosCache);
+            }
+            
+            var jogos = await _jogoRepository.ObterTodos();
+            if (jogos == null)
+                throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+
+            var response = _mapper.Map<IEnumerable<JogoResponse>>(jogos);
+
+            if (response != null)
+            {
+                var cacheOptions = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+                };
+
+                await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(response, jsonOptions), cacheOptions);
+            }
+
+            return response;
         }
     }
 }

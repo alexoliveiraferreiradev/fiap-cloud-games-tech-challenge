@@ -21,19 +21,17 @@ namespace FiapCloundGames.API.Infrastructure.Repository
 
         public async Task<int> TotalJogosPromovidos()
         {
-            var agora = DateTime.UtcNow;
-            return await _dbContext.Jogos
-                .Where(x => x.Promocoes.Any(p => p.Ativo && p.Periodo.DataInicio <= agora && p.Periodo.DataFim >= agora))
-                .Include(x => x.Promocoes.Where(p => p.Ativo && p.Periodo.DataInicio <= agora && p.Periodo.DataFim >= agora))
-                .AsNoTracking() 
-                .CountAsync();
+            return  await _dbContext.Jogos
+                 .Where(x => x.Promocoes.Any(p => p.Ativo ))
+                 .Include(x => x.Promocoes.Where(p => p.Ativo ))
+                 .AsNoTracking()
+                 .CountAsync();
         }
         public async Task<IEnumerable<Jogo>> ObtemJogosPromovidosPaginacao(int pagina = 1, int tamanhoPagina = 10)
         {
-            var agora = DateTime.UtcNow;
             return await _dbContext.Jogos
-                .Where(x => x.Promocoes.Any(p => p.Ativo && p.Periodo.DataInicio <= agora && p.Periodo.DataFim >= agora))
-                .Include(x => x.Promocoes.Where(p => p.Ativo && p.Periodo.DataInicio <= agora && p.Periodo.DataFim >= agora))
+                .Where(x => x.Promocoes.Any(p => p.Ativo ))
+                .Include(x => x.Promocoes.Where(p => p.Ativo ))
                 .Skip((pagina - 1) * tamanhoPagina)
                 .Take(tamanhoPagina)
                 .AsNoTracking()
@@ -72,12 +70,12 @@ namespace FiapCloundGames.API.Infrastructure.Repository
 
         public async Task<Promocao?> ObterPromocaoPorId(Guid id)
         {
-            var jogosPorPromocao = await _dbContext.Jogos
-                .Include(j => j.Promocoes)
-                .FirstOrDefaultAsync(j => j.Promocoes.Any(p => p.Id == id));
+            var jogo = await _dbContext.Jogos.Include(j => j.Promocoes)
+                .FirstOrDefaultAsync(j => j.Promocoes.Any(p => p.Id == id)) ;
 
-            return jogosPorPromocao?.Promocoes.FirstOrDefault(p => p.Id == id);
+            return jogo?.Promocoes.FirstOrDefault(p => p.Id == id);
         }
+
 
         public async Task<IEnumerable<Jogo>> ObterJogosPorIds(IEnumerable<Guid> jogosIds)
         {
