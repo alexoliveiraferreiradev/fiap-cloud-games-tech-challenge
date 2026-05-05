@@ -18,10 +18,6 @@ namespace FiapCloundGames.API.Infrastructure.Repository
         {
             return await _dbContext.Jogos.Where(x => x.Ativo == true).ToListAsync();
         }
-        public async Task<Jogo?> ObtemJogoAtivo(Guid id)
-        {
-            return await _dbContext.Jogos.FirstOrDefaultAsync(x => x.Ativo == true && x.Id == id);
-        }
 
         public async Task<int> TotalJogosPromovidos()
         {

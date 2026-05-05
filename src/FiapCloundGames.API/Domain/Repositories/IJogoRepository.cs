@@ -7,7 +7,6 @@ namespace FiapCloundGames.API.Domain.Repositories
     {
         Task<Jogo?> ObtemPorNome(string nomeJogo);
         Task<IEnumerable<Jogo>> ObtemJogosAtivos();
-        Task<Jogo?> ObtemJogoAtivo(Guid id);
         Task<int> TotalJogosPromovidos();        
         Task<IEnumerable<Jogo>> ObtemJogosPromovidosPaginacao(int pagina =1, int tamanhoPagina = 10);        
         Task<Promocao?> ObterPromocaoPorId(Guid id);
