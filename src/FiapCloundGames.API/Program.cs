@@ -1,5 +1,5 @@
 using FiapCloundGames.API.Configuration.Extensions;
-using FiapCloundGames.API.Configuration.Middlewares;
+using FiapCloundGames.API.Infrastructure.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddApiConfiguration()
@@ -9,8 +9,9 @@ builder.AddApiConfiguration()
 
 var app = builder.Build();
 
-app.AddMigrationSeNaoExiste().
-    EnviromentConfiguration()
+app.SeedData();
+
+app.EnviromentConfiguration()
     .AddAppConfiguration();
 
 app.Run();
