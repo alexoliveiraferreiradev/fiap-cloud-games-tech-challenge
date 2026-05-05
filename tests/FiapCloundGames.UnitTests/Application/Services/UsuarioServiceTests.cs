@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bogus;
+using Castle.Core.Logging;
 using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Application.Services;
 using FiapCloundGames.API.Configuration.Mapping;
@@ -12,6 +13,8 @@ using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.API.Domain.ValueObjects;
 using FiapCloundGames.UnitTests.Fixtures;
 using Microsoft.CodeAnalysis.FlowAnalysis;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace FiapCloundGames.UnitTests.Application.Services
@@ -23,6 +26,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         private readonly Mock<IPasswordHasher> _passwordMock;
         private readonly Mock<IUsuarioRepository> _usuarioMock;
         private readonly UsuarioService _service;
+        private readonly ILogger<UsuarioService> _logger;
         private IMapper _mapper;
         public UsuarioServiceTests()
         {
@@ -35,7 +39,8 @@ namespace FiapCloundGames.UnitTests.Application.Services
             _mapper = config.CreateMapper();
             _usuarioMock = new Mock<IUsuarioRepository>();
             _passwordMock = new Mock<IPasswordHasher>();
-            _service = new UsuarioService(_usuarioMock.Object, _passwordMock.Object, _mapper);
+            _logger = NullLogger<UsuarioService>.Instance;
+            _service = new UsuarioService(_usuarioMock.Object, _passwordMock.Object, _mapper,_logger);
         }
 
         /// <summary>
