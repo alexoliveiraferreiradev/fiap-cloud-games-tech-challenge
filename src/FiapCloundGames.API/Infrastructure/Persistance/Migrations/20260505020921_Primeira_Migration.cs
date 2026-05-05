@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace FiapCloundGames.API.Infrastructure.Persistance
+namespace FiapCloundGames.API.Infrastructure.Persistance.Migrations
 {
     /// <inheritdoc />
     public partial class Primeira_Migration : Migration
