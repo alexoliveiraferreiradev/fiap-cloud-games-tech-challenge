@@ -18,6 +18,7 @@ namespace FiapCloundGames.API.Application.Services.Interfaces
         Task DesativarPromocao(Guid promocaoId);
         Task<PagedResult<JogoResponse>> ObtemCatalagoJogoPaginado(int pagina =1,int tamanhoPagina = 10);
         Task<JogoResponse> ObtemJogoPorId(Guid jogoId);
+        Task<IEnumerable<JogoResponse>> ObtemTodosJogo();
         Task<PromocaoResponse?> ObtemPromocaoPorId(Guid promocaoId);
         Task<PagedResult<JogoResponse>> ObtemPorGeneroPaginacao(GeneroJogo generoJogo, int pagina =1, int tamanhoPagina = 10);
         Task<PagedResult<JogoResponse>> ObtemJogosPromovidosPaginacao(int pagina =1, int tamanhoPagina = 10);
