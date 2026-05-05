@@ -37,7 +37,7 @@ namespace FiapCloundGames.API.Domain.Entities
 
         protected override void ValidarEntidade()
         {
-            AssertionConcern.AssertArgumentRange((int)Genero, 1, 15, MensagensDominio.JogoGeneroObrigatorio);           
+            AssertionConcern.AssertArgumentRange((int)Genero, 1, 20, MensagensDominio.JogoGeneroObrigatorio);           
         }
 
         public void Desativar()
