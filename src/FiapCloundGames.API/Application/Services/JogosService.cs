@@ -44,6 +44,7 @@ namespace FiapCloundGames.API.Application.Services
             _logger.LogInformation("Jogo {JogoId} salvo no banco de dados com sucesso. Invalidando caches de vitrine...", jogo.Id);
 
             await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
+            await _cache.RemoveAsync("jogos:todos");
             await _cache.RemoveAsync($"jogos:catalogo:genero:{jogo.Genero}:pagina:1:tamanho:10");
 
             _logger.LogInformation("Cadastro do jogo {JogoId} concluído e caches atualizados.", jogo.Id);
@@ -70,6 +71,7 @@ namespace FiapCloundGames.API.Application.Services
             await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
             await _cache.RemoveAsync($"jogos:catalogo:genero:{jogo.Genero}:pagina:1:tamanho:10");
             await _cache.RemoveAsync($"jogos:detalhes:{id}");
+            await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de atualização do jogo {JogoId} finalizado com sucesso.", id);
 
@@ -92,6 +94,7 @@ namespace FiapCloundGames.API.Application.Services
             await _cache.RemoveAsync("jogos:catalogo:genero:pagina:1:tamanho:10");
             await _cache.RemoveAsync("jogos:promocoes:v1:pagina:1:tamanho:10");
             await _cache.RemoveAsync($"jogos:detalhes:{jogoId}");
+            await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de inativação do jogo {JogoId} finalizado com sucesso e caches limpos.", jogoId);
         }
@@ -111,6 +114,7 @@ namespace FiapCloundGames.API.Application.Services
             await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
             await _cache.RemoveAsync("jogos:catalogo:genero:pagina:1:tamanho:10");
             await _cache.RemoveAsync($"jogos:detalhes:{jogoId}");
+            await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de reativação do jogo {JogoId} finalizado com sucesso e caches limpos.", jogoId);
         }
@@ -140,6 +144,7 @@ namespace FiapCloundGames.API.Application.Services
 
             await _cache.RemoveAsync("jogos:promocoes:pagina:1:tamanho:10");
             await _cache.RemoveAsync($"jogo:detalhes:{promocaoRequest.JogoId}");
+            await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de adição de promoção ao jogo {JogoId} concluído com sucesso.", promocaoRequest.JogoId);
         }
@@ -174,6 +179,8 @@ namespace FiapCloundGames.API.Application.Services
 
             await _cache.RemoveAsync($"jogos:detalhes:{promocaoRequest.JogoId}");
 
+            await _cache.RemoveAsync("jogos:todos");
+
             _logger.LogInformation("Atualização da promoção {PromocaoId} concluída com sucesso.", promocaoId);
         }
 
@@ -202,6 +209,8 @@ namespace FiapCloundGames.API.Application.Services
             await _cache.RemoveAsync("jogos:promocoes:pagina:1:tamanho:10");
 
             await _cache.RemoveAsync($"jogos:detalhes:{promocao.JogoId}");
+
+            await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de inativação da promoção {PromocaoId} finalizado com sucesso.", promocaoId);
         }
@@ -335,6 +344,7 @@ namespace FiapCloundGames.API.Application.Services
             _logger.LogInformation("Varredura concluída. Invalidando cache da vitrine principal de promoções...");
 
             await _cache.RemoveAsync("jogos:promocoes:v1:pagina:1:tamanho:10");
+            await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de inativação de promoções expiradas finalizado com sucesso.");
         }
@@ -375,6 +385,40 @@ namespace FiapCloundGames.API.Application.Services
             }
 
             return promocaResponse;
+        }
+
+        public async Task<IEnumerable<JogoResponse>> ObtemTodosJogo()
+        {
+            var cacheKey = "jogos:todos";
+            var dadosCache = await _cache.GetStringAsync(cacheKey);
+
+            var jsonOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            if (!string.IsNullOrEmpty(dadosCache))
+            {
+                return JsonSerializer.Deserialize<IEnumerable<JogoResponse>>(dadosCache);
+            }
+            
+            var jogos = await _jogoRepository.ObterTodos();
+            if (jogos == null)
+                throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+
+            var response = _mapper.Map<IEnumerable<JogoResponse>>(jogos);
+
+            if (response != null)
+            {
+                var cacheOptions = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+                };
+
+                await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(response, jsonOptions), cacheOptions);
+            }
+
+            return response;
         }
     }
 }
