@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Castle.Core.Logging;
 using FiapCloundGames.API.Application.Services;
 using FiapCloundGames.API.Configuration.Mappings;
 using FiapCloundGames.API.Domain.Common.Exceptions;
@@ -6,6 +7,8 @@ using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Domain.Resources;
 using FiapCloundGames.UnitTests.Fixtures;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace FiapCloundGames.UnitTests.Application.Services
@@ -18,6 +21,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         private readonly Mock<IUsuarioRepository> _usuarioMock;
         private readonly Mock<IJogoRepository> _jogoMock;
         private IMapper _mapper;
+        private readonly ILogger<BibliotecaService> _logger;
         private readonly BibliotecaService _service;
         public BibliotecaServiceTests()
         {
@@ -31,9 +35,10 @@ namespace FiapCloundGames.UnitTests.Application.Services
                 cfg.AddProfile<BibliotecaProfile>();
             });
             _mapper = congiMapper.CreateMapper();
+            _logger = NullLogger<BibliotecaService>.Instance;
 
             _service = new BibliotecaService(_bibliotecaMock.Object, _usuarioMock.Object,
-                _jogoMock.Object, _mapper);
+                _jogoMock.Object, _mapper, _logger);
 
         }
         [Fact(DisplayName = "Sucesso ao adicionar jogo na biblioteca - adiciona jogo com sucesso")]
