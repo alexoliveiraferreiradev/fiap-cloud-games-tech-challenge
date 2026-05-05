@@ -11,6 +11,7 @@ namespace FiapCloundGames.API.Domain.ValueObjects
 
         public Email(string valor)
         {
+            AssertionConcern.AssertArgumentRealValues(valor, MensagensDominio.EmailNaoReal);
             AssertionConcern.AssertArgumentEmpty(valor, MensagensDominio.UsuarioEmailObrigatorio);
             AssertionConcern.AssertArgumentEmailFormat(valor, MensagensDominio.EmailInvalido);
             AssertionConcern.AssertArgumentLength(valor, 7, 100, MensagensDominio.EmailTamanhoInvalido);

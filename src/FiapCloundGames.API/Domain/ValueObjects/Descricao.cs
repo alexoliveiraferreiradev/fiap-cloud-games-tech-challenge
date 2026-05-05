@@ -9,6 +9,7 @@ namespace FiapCloundGames.API.Domain.ValueObjects
 
         public Descricao(string valor)
         {
+            AssertionConcern.AssertArgumentRealValues(valor, MensagensDominio.DescricaoJogoNaoReal);
             AssertionConcern.AssertArgumentEmpty(valor, MensagensDominio.JogoDescricaoObrigatoria);
             AssertionConcern.AssertArgumentLength(valor, 5, 500, MensagensDominio.JogoDescricaoTamanhoInvalido);
             Valor = valor;
