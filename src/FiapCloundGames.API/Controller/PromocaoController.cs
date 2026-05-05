@@ -93,7 +93,7 @@ namespace FiapCloundGames.API.Controller
         [HttpPost("/nova-promocao")]
         [ProducesResponseType(typeof(PromocaoResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<JogoResponse>> CriaPromocao(CriaPromocaoRequest promocaoRequest)
+        public async Task<ActionResult<PromocaoResponse>> CriaPromocao(CriaPromocaoRequest promocaoRequest)
         {
            var response = await _jogoService.AdicionarPromocao(promocaoRequest);
             return CreatedAtAction(nameof(ObtemPromocaoPorId),new { id = response.PromocaoId },response);
