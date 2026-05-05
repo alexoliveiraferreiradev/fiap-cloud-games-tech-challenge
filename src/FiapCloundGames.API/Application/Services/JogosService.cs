@@ -151,7 +151,11 @@ namespace FiapCloundGames.API.Application.Services
 
             _logger.LogInformation("Processo de adição de promoção ao jogo {JogoId} concluído com sucesso.", promocaoRequest.JogoId);
 
-            return _mapper.Map<PromocaoResponse>( jogo.Promocoes.First());
+            var novaPromocao = jogo.Promocoes.First();
+
+            var response = _mapper.Map<PromocaoResponse>(jogo);
+
+            return _mapper.Map(novaPromocao,response);
         }
 
         public async Task AtualizaPromocao(Guid promocaoId, UpdatePromocaoRequest promocaoRequest)
@@ -375,9 +379,10 @@ namespace FiapCloundGames.API.Application.Services
             var jogo = await _jogoRepository.ObterPorId(promocao.JogoId);
             if (jogo == null)
                 throw new DomainException(MensagensDominio.JogoNaoEncontrado);
+
             
-            var promocaResponse = _mapper.Map<PromocaoResponse>(promocao);
-            _mapper.Map(jogo, promocaResponse);
+            var promocaResponse = _mapper.Map<PromocaoResponse>(jogo);
+            _mapper.Map(promocao, promocaResponse);
 
             if (promocaResponse != null)
             {
