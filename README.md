@@ -2,19 +2,6 @@
 
 Este projeto é uma API de um **Marketplace de Jogos** desenvolvida como parte do Tech Challenge da pós-graduação em **Arquitetura de Sistemas .NET** na **FIAP**. A solução foi desenhada com foco em escalabilidade, manutenibilidade e separação de responsabilidades.
 
-## 🛠️ Tecnologias e Frameworks
-
-*   **Runtime:** .NET 9
-*   **Web API:** ASP.NET Core com **Controllers**
-*   **Arquitetura:** Clean Architecture & Domain-Driven Design (DDD)
-*   **Banco de Dados:** SQL Server 2022 via Docker
-*   **Cache:** Redis via Docker
-*   **ORM:** Entity Framework Core
-*   **Testes:** Testes Unitários com **xUnit**
-*   **Documentação:** Swagger (OpenAPI)
-
----
-
 ## 🚀 Como Executar o Projeto
 
 ### Pré-requisitos
@@ -25,8 +12,9 @@ Este projeto é uma API de um **Marketplace de Jogos** desenvolvida como parte d
 Na raiz do projeto (onde está o arquivo `docker-compose.yml`), execute:
 ```bash
 docker-compose up -d
-Este comando inicializará o SQL Server na porta 1433 e o Redis na porta 6379
 ````
+Este comando inicializará o SQL Server na porta 1433 e o Redis na porta 6379
+
 #### 2. Rodar a API
 Pelo terminal na pasta da API ou pelo Visual Studio (F5):
 
@@ -34,6 +22,31 @@ Pelo terminal na pasta da API ou pelo Visual Studio (F5):
 dotnet run
 ```
 As migrations e o Seed Data (populando o catálogo inicial de jogos) são executados automaticamente no startup.
+
+---
+
+## 🔐 Credenciais de Teste (Admin)
+
+Para facilitar a avaliação das funcionalidades administrativas (como a criação de jogos, jogadores e promoções), utilize o usuário pré-configurado:
+
+*   E-mail: admin@fiapcloudgames.com.br
+
+*   Senha: SenhaAdmin@123
+
+Nota: Realize o login no endpoint /login para obter o Token JWT e utilize o botão Authorize do Swagger para enviar o cabeçalho de autorização.
+
+---
+
+## 🛠️ Tecnologias e Frameworks
+
+*   **Runtime:** .NET 9
+*   **Web API:** ASP.NET Core com **Controllers**
+*   **Arquitetura:** Clean Architecture & Domain-Driven Design (DDD)
+*   **Banco de Dados:** SQL Server 2022 via Docker
+*   **Cache:** Redis via Docker
+*   **ORM:** Entity Framework Core
+*   **Testes:** Testes Unitários com **xUnit**
+*   **Documentação:** Swagger (OpenAPI)
 
 ---
 
@@ -66,16 +79,6 @@ Você pode visualizar o desenho técnico completo e o fluxo de eventos através 
 
 ---
 
-## 🔐 Credenciais de Teste (Admin)
-
-Para facilitar a avaliação das funcionalidades administrativas (como reativação de jogadores e promoções), utilize o usuário pré-configurado:
-
-*   E-mail: admin@fiapcloudgames.com.br
-
-*   Senha: SenhaAdmin@123
-
-Nota: Realize o login no endpoint /login para obter o Token JWT e utilize o botão Authorize do Swagger para enviar o cabeçalho de autorização.
-
 ## 🧪 Testes
 
 Para garantir a integridade das regras de negócio, utilize o comando abaixo para rodar a suíte de testes unitários:
@@ -91,7 +94,3 @@ dotnet test
 
 ---
 Desenvolvedor: Alex Oliveira Ferreira
-
-
-
-
