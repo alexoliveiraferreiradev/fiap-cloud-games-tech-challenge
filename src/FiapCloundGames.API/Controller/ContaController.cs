@@ -44,23 +44,32 @@ namespace FiapCloundGames.API.Controller
         /// <response code="200">Sucesso. Retorna os dados do usuário atualizados.</response>
         /// <response code="400">Dados inválidos ou ID da URL diferente do ID do corpo da requisição.</response>
         /// <response code="404">Usuário não encontrado.</response>
-        [HttpPut("{id:guid}")]
+        [HttpPut]
         [ProducesResponseType(typeof(UsuarioResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UsuarioResponse>> AtualizarUsuario(Guid id, UpdateUsuarioRequest updateUsuarioRequest)
+        public async Task<ActionResult<UsuarioResponse>> AtualizarUsuario(UpdateUsuarioRequest updateUsuarioRequest)
         {
-            _logger.LogInformation("Iniciando atualização de perfil do usuário. UserId: {UserId}", id);
+            var currentId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var usuarioAtualizado = await _usuarioService.AtualizarUsuario(id, updateUsuarioRequest);
+            if (string.IsNullOrEmpty(currentId))
+            {                
+                return Unauthorized();
+            }
+
+            var usuarioId = Guid.Parse(currentId);
+
+            _logger.LogInformation("Iniciando atualização de perfil do usuário. UserId: {UserId}", usuarioId);
+
+            var usuarioAtualizado = await _usuarioService.AtualizarUsuario(usuarioId, updateUsuarioRequest);
 
             if (usuarioAtualizado == null)
             {                
-                _logger.LogInformation("Atualização cancelada. Usuário não encontrado na base de dados. UserId: {UserId}", id);
+                _logger.LogInformation("Atualização cancelada. Usuário não encontrado na base de dados. UserId: {UserId}", usuarioId);
                 return NotFound("Usuário não encontrado.");
             }
 
-            _logger.LogInformation("Perfil do usuário atualizado com sucesso. UserId: {UserId}", id);
+            _logger.LogInformation("Perfil do usuário atualizado com sucesso. UserId: {UserId}", usuarioId);
 
             return Ok(usuarioAtualizado);
         }
