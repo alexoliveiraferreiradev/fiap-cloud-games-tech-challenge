@@ -1,4 +1,6 @@
 ﻿using FiapCloundGames.API.Configuration.Middlewares;
+using FiapCloundGames.API.Infrastructure.Persistance;
+using Microsoft.EntityFrameworkCore;
 
 namespace FiapCloundGames.API.Configuration.Extensions
 {
@@ -14,6 +16,29 @@ namespace FiapCloundGames.API.Configuration.Extensions
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fiap Cloud Games V1");
                 });
+            }
+
+            return app;
+        }
+
+        public static WebApplication AddMigrationSeNaoExiste(this WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    
+                    context.Database.Migrate();
+
+                     var logger = services.GetRequiredService<ILogger<Program>>();
+                     logger.LogInformation("Banco de dados preparado com sucesso.");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Erro ao inicializar o banco de dados", ex);
+                }
             }
 
             return app;

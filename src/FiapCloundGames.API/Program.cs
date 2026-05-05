@@ -8,7 +8,9 @@ builder.AddApiConfiguration()
 
 
 var app = builder.Build();
-app.EnviromentConfiguration()
+
+app.AddMigrationSeNaoExiste().
+    EnviromentConfiguration()
     .AddAppConfiguration();
 
 app.Run();
