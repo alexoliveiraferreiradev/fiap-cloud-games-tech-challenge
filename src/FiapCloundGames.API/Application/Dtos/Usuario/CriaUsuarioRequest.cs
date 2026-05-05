@@ -17,7 +17,7 @@ namespace FiapCloundGames.API.Application.Dtos.Usuario
         /// <summary>
         /// Endereço de e-mail do usuário cadastrado.
         /// </summary>
-        /// <example>usuario@fiapgames.com.br</example>
+        /// <example>usuario@email.com.br</example>
         [Required(ErrorMessage = DataAnnotationMessage.ErroRequired)]
         [EmailAddress(ErrorMessage = DataAnnotationMessage.ErroFormato)]
         [RegularExpression(@"^(?!.*@example\.com$).*", ErrorMessage = DataAnnotationMessage.ErroEmail)]
