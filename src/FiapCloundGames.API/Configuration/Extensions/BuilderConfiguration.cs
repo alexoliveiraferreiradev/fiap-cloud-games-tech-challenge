@@ -1,4 +1,5 @@
-﻿using FiapCloundGames.API.Infrastructure.Persistance.Context;
+﻿using FiapCloundGames.API.Infrastructure.Caching;
+using FiapCloundGames.API.Infrastructure.Persistance;
 using FiapCloundGames.API.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +10,13 @@ using System.Text.Json.Serialization;
 
 namespace FiapCloundGames.API.Configuration.Extensions
 {
-    public static class ApiConfiguration
+    public static class BuilderConfiguration
     {
         private static string connectionString;
         public static WebApplicationBuilder AddApiConfiguration(this WebApplicationBuilder builder)
         {
             builder.Services.AddOpenApi();
+            AddRedisConfiguration(builder); 
             AddDbContextConfig(builder);
             AddControllConfiguration(builder);
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -24,6 +26,15 @@ namespace FiapCloundGames.API.Configuration.Extensions
             return builder;
         }
 
+        private static void AddRedisConfiguration(WebApplicationBuilder builder)
+        {
+            var redisConfig = builder.Configuration.GetSection("Redis").Get<RedisConfiguration>();
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisConfig.Configuration;
+                options.InstanceName = redisConfig.InstanceName;
+            });
+        }
         private static void AddDbContextConfig(WebApplicationBuilder builder)
         {
             connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

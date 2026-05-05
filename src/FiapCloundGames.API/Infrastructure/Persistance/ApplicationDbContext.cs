@@ -1,7 +1,7 @@
 ﻿using FiapCloundGames.API.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace FiapCloundGames.API.Infrastructure.Persistance.Context
+namespace FiapCloundGames.API.Infrastructure.Persistance
 {
     public class ApplicationDbContext : DbContext
     {

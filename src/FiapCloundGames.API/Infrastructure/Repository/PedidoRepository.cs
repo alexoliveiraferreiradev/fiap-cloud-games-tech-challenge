@@ -1,6 +1,6 @@
 ﻿using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Repositories;
-using FiapCloundGames.API.Infrastructure.Persistance.Context;
+using FiapCloundGames.API.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace FiapCloundGames.API.Infrastructure.Repository

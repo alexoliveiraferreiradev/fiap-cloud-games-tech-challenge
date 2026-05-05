@@ -3,10 +3,9 @@ using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Configuration.Worker;
 using FiapCloundGames.API.Domain.Common.Interfaces;
 using FiapCloundGames.API.Domain.Repositories;
-using FiapCloundGames.API.Infrastructure.Persistance.Context;
+using FiapCloundGames.API.Infrastructure.Persistance;
 using FiapCloundGames.API.Infrastructure.Repository;
 using FiapCloundGames.API.Infrastructure.Security;
-using NuGet.Protocol.Resources;
 
 namespace FiapCloundGames.API.Configuration.Extensions
 {
