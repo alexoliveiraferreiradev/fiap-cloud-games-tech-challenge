@@ -15,7 +15,7 @@ namespace FiapCloundGames.API.Infrastructure.Repository
 
         public async Task<IEnumerable<Guid>> ObterIdsJogosDoUsuario(Guid usuarioId)
         {
-            return await _dbContext.Bibliotecas.Where(x => x.UsuarioId == usuarioId).Select(x => x.Id).ToListAsync();
+            return await _dbContext.Bibliotecas.Where(x => x.UsuarioId == usuarioId).Select(x => x.JogoId).ToListAsync();
         }
 
         public async Task<IEnumerable<Biblioteca>> ObterJogosPorUsuarioPaginacao(Guid usuarioId, int pagina =1, int tamanhoPagina = 10)

@@ -1,4 +1,5 @@
-﻿using FiapCloundGames.API.Application.Dtos.Jogos;
+﻿using AutoMapper;
+using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -12,13 +13,16 @@ namespace FiapCloundGames.API.Controller
     [Tags("Catálogo de Jogos")]
     public class CatalogoController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly ILogger<CatalogoController> _logger;
         private readonly IJogosService _jogoService;
-        public CatalogoController(ILogger<CatalogoController> logger, 
-            IJogosService jogosService)
+        public CatalogoController(ILogger<CatalogoController> logger,
+            IJogosService jogosService,
+            IMapper mapper)
         {
             _logger = logger;
             _jogoService = jogosService;
+            _mapper = mapper;
         }
         /// <summary>
         /// Recupera os detalhes completos de um jogo específico através do seu identificador único.
@@ -38,10 +42,10 @@ namespace FiapCloundGames.API.Controller
         /// <response code="400">O formato do identificador fornecido é inválido.</response>
         /// <response code="404">Nenhum jogo foi encontrado com o ID informado.</response>
         [HttpGet("{id:guid}")]
-        [ProducesResponseType(typeof(JogoResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(JogoUsuarioResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<JogoResponse>> ObterJogoPorId(Guid id)
+        public async Task<ActionResult<JogoUsuarioResponse>> ObterJogoPorId(Guid id)
         {
             await _jogoService.DesativaPromocoesInvalidas();
             _logger.LogInformation("Consultando detalhes do jogo. JogoId: {JogoId}", id);
@@ -51,8 +55,11 @@ namespace FiapCloundGames.API.Controller
                 _logger.LogInformation("Consulta finalizada. Jogo não encontrado na base de dados. JogoId: {JogoId}", id);
                 return NotFound();
             }
+
+            var response = _mapper.Map<JogoUsuarioResponse>(jogo);
+
             _logger.LogInformation("Consulta bem-sucedida. JogoId: {JogoId}, NomeJogo: {NomeJogo}", jogo.Id, jogo.Nome);
-            return Ok(jogo);
+            return Ok(response);
         }
 
         /// <summary>
@@ -70,20 +77,23 @@ namespace FiapCloundGames.API.Controller
         /// <response code="200">Sucesso. Retorna o catálogo paginado.</response>
         /// <response code="404">Não foram encontrados jogos para os critérios informados.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(PagedResult<JogoResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<JogoUsuarioResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<JogoResponse>>> ObtemCatalogoDeJogos([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
+        public async Task<ActionResult<IEnumerable<JogoUsuarioResponse>>> ObtemCatalogoDeJogos([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
         {
             await _jogoService.DesativaPromocoesInvalidas();
             _logger.LogInformation("Consultando catálogo de jogos. Pagina: {Pagina}, TamanhoPagina: {TamanhoPagina}", pagina, tamanhoPagina);
-            var jogos = await _jogoService.ObtemCatalagoJogoPaginado(pagina,tamanhoPagina);
+            var jogos = await _jogoService.ObtemCatalagoJogoPaginado(pagina, tamanhoPagina);
             if (jogos.Items == null || !jogos.Items.Any())
             {
                 _logger.LogInformation("Consulta ao catálogo finalizada. Nenhum jogo encontrado na Pagina: {Pagina}", pagina);
                 return NotFound("Não foi encontrado jogos");
             }
+
+            var response = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
+
             _logger.LogInformation("Catálogo recuperado com sucesso. Pagina: {Pagina}, Quantidade de Jogos Retornados: {QuantidadeJogos}", pagina, jogos.Items.Count());
-            return Ok(jogos);
+            return Ok(response);
         }
 
         /// <summary>
@@ -101,14 +111,16 @@ namespace FiapCloundGames.API.Controller
         [HttpGet("buscar-por-genero/{genero}")]
         [ProducesResponseType(typeof(PagedResult<JogoResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<JogoResponse>>> ListarPorGenero(GeneroJogo genero, [FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
+        public async Task<ActionResult<IEnumerable<JogoUsuarioResponse>>> ListarPorGenero(GeneroJogo genero, [FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
         {
             await _jogoService.DesativaPromocoesInvalidas();
-            var jogos =await _jogoService.ObtemPorGeneroPaginacao(genero);
+            var jogos = await _jogoService.ObtemPorGeneroPaginacao(genero);
             if (!jogos.Items.Any())
                 return NotFound("Não foi encontrado jogos");
 
-            return Ok(jogos);
+            var response = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -125,7 +137,7 @@ namespace FiapCloundGames.API.Controller
         [HttpGet("busca-jogos-com-promocao")]
         [ProducesResponseType(typeof(PagedResult<JogoResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<JogoResponse>> ObtemJogosComPromocao([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
+        public async Task<ActionResult<JogoUsuarioResponse>> ObtemJogosComPromocao([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
         {
             await _jogoService.DesativaPromocoesInvalidas();
             _logger.LogInformation("Iniciando busca por jogos em promoção. Pagina: {Pagina}, TamanhoPagina: {TamanhoPagina}", pagina, tamanhoPagina);
@@ -135,8 +147,10 @@ namespace FiapCloundGames.API.Controller
                 _logger.LogInformation("Busca de promoções finalizada. Nenhum jogo em oferta encontrado na Pagina: {Pagina}", pagina);
                 return NotFound("Não foi encontrado nenhum jogo com promoções");
             }
+            var response = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
             _logger.LogInformation("Jogos em promoção recuperados com sucesso. Pagina: {Pagina}, Quantidade Retornada: {QuantidadeJogos}", pagina, jogos.Items.Count());
-            return Ok(jogos);
+
+            return Ok(response);
         }
     }
 }
