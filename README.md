@@ -1,4 +1,4 @@
-# FIAP Cloud Games - Tech Challenge 1
+# FIAP Clound Games - Tech Challenge 1
 
 Este projeto é uma API de um **Plataforma de venda de jogos digitais e gestão de servidores para partidas online**. 
 
