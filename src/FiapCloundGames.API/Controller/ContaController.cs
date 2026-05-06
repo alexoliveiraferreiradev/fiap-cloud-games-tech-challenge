@@ -1,4 +1,5 @@
-﻿using FiapCloundGames.API.Application.Dtos.Usuario;
+﻿using AutoMapper;
+using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +13,16 @@ namespace FiapCloundGames.API.Controller
     [Tags("Minha Conta")]
     public class ContaController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly IUsuarioService _usuarioService;
         private readonly ILogger<ContaController> _logger;
         public ContaController(IUsuarioService usuarioService,
-            ILogger<ContaController> logger)
-        {         
+            ILogger<ContaController> logger,
+            IMapper mapper)
+        {
             _usuarioService = usuarioService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -36,7 +40,7 @@ namespace FiapCloundGames.API.Controller
         ///     PUT /api/usuario/3fa85f64-5717-4562-b3fc-2c963f66afa6
         ///     {
         ///        "nome": "Novo nome de usuário",
-        ///        "email": "novo.dev@exemplo.com"
+        ///        "senha": "Nova senha do usuário"
         ///     }
         /// </remarks>
         /// <param name="id">Identificador único do usuário.</param>
@@ -69,9 +73,11 @@ namespace FiapCloundGames.API.Controller
                 return NotFound("Usuário não encontrado.");
             }
 
+            var response = _mapper.Map<ContaJogadorResponse>(usuarioAtualizado);
+
             _logger.LogInformation("Perfil do usuário atualizado com sucesso. UserId: {UserId}", usuarioId);
 
-            return Ok(usuarioAtualizado);
+            return Ok(response);
         }
 
         /// <summary>
