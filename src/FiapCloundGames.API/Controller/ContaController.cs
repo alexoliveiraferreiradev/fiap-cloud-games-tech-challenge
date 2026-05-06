@@ -85,28 +85,35 @@ namespace FiapCloundGames.API.Controller
         /// <response code="204">Sucesso. A conta foi desativada (Não retorna conteúdo).</response>
         /// <response code="400">Operação inválida. Tentativa de desativar conta de terceiros.</response>
         /// <response code="401">Não autorizado. Token ausente ou inválido.</response>
-        [HttpDelete("desativar-conta/{id:guid}")]
+        [HttpDelete("desativar-conta")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult> DesativarConta(Guid id)
+        public async Task<ActionResult> DesativarConta()
         {
-            _logger.LogInformation("Solicitação recebida para desativar conta. TargetUserId: {TargetUserId}", id);
             var currentUserIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (!Guid.TryParse(currentUserIdClaim, out var currentUserId))
-            {                
-                _logger.LogWarning("Falha de autorização na desativação de conta. Token ausente ou inválido. TargetUserId: {TargetUserId}", id);
+
+            var currentId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (string.IsNullOrEmpty(currentId))
+            {
                 return Unauthorized();
             }
-            if (currentUserId != id)
-            {
-                _logger.LogWarning("Violação de segurança interceptada: Usuário autenticado {CurrentUserId} tentou desativar a conta do usuário {TargetUserId}", currentUserId, id);
-                return BadRequest("Operação inválida: Você não possui permissão para encerrar a conta de outro usuário.");
+            var usuarioId = Guid.Parse(currentId);
+
+            _logger.LogInformation("Solicitação recebida para desativar conta. TargetUserId: {TargetUserId}", usuarioId);
+            
+
+            if (!Guid.TryParse(currentUserIdClaim, out var currentUserId))
+            {                
+                _logger.LogWarning("Falha de autorização na desativação de conta. Token ausente ou inválido. TargetUserId: {TargetUserId}", usuarioId);
+                return Unauthorized();
             }
+           
 
-            await _usuarioService.DesativarConta(id);
+            await _usuarioService.DesativarConta(currentUserId);
 
-            _logger.LogInformation("Conta desativada com sucesso pelo próprio usuário. UserId: {UserId}", id);
+            _logger.LogInformation("Conta desativada com sucesso pelo próprio usuário. UserId: {UserId}", usuarioId);
             return NoContent();
         }
     }
