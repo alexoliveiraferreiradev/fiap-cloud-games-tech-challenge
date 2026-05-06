@@ -82,7 +82,7 @@ namespace FiapCloundGames.UnitTests.Domain.Entities
             //Arrange
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
             //Act
-            usuario.Desativar(MotivoExclusao.Outros);
+            usuario.Desativar(MotivoDesativacao.Outros);
             //Assert
             Assert.False(usuario.Ativo);            
         }
@@ -95,7 +95,7 @@ namespace FiapCloundGames.UnitTests.Domain.Entities
             //Arrange
             var usuario = _usuarioFixture.ObtemUsuarioInativo();
             //Act
-            var result = Assert.Throws<DomainException>(() => usuario.Desativar(MotivoExclusao.Outros));
+            var result = Assert.Throws<DomainException>(() => usuario.Desativar(MotivoDesativacao.Outros));
             //Assert
             Assert.Equal(MensagensDominio.UsuarioJaDesativado, result.Message);
         }

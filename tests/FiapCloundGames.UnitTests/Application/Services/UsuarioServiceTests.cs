@@ -405,7 +405,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Arrange
             var admin = _usuarioFixture.ObtemAdminComSucesso();
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoDesativacao.Inatividade);
             //Mock
             _usuarioMock.Setup(r => r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync(usuario);
             _usuarioMock.Setup(r => r.ObterPorId(admin.Id)).ReturnsAsync(admin);
@@ -423,7 +423,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange            
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoDesativacao.Inatividade);
             //Mock
             _usuarioMock.Setup(r => r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync(usuario);
             //Act
@@ -440,7 +440,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange            
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoDesativacao.Inatividade);
             //Mock
             //Act
            var result = await Assert.ThrowsAsync<DomainException>(async () => await _service.DesativarConta(deleteUsuarioRequest.Id));
@@ -455,7 +455,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             //Arrange
             var admin = _usuarioFixture.ObtemAdminComSucesso();
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
-            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoDesativacao.Inatividade);
             //Mock
             _usuarioMock.Setup(r => r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync(usuario);
             //Act
@@ -472,7 +472,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange
             var admin = _usuarioFixture.ObtemAdminComSucesso();
-            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoExclusao.Inatividade);
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(Guid.NewGuid(), MotivoDesativacao.Inatividade);
             //Mock
             _usuarioMock.Setup(r =>  r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync((Usuario)null);
             _usuarioMock.Setup(r => r.ObterPorId(admin.Id)).ReturnsAsync(admin);
@@ -489,7 +489,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
         {
             //Arrange
             var idUsuario = Guid.NewGuid();
-            var deleteUsuarioRequest = new DesativaUsuarioRequest(idUsuario, MotivoExclusao.Inatividade);
+            var deleteUsuarioRequest = new DesativaUsuarioRequest(idUsuario, MotivoDesativacao.Inatividade);
             //Mock
             _usuarioMock.Setup(r =>  r.ObterPorId(deleteUsuarioRequest.Id)).ReturnsAsync((Usuario)null);
             //Act

@@ -178,7 +178,7 @@ namespace FiapCloundGames.API.Controller
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DesativarUsuario(Guid id, MotivoExclusao motivoDesativacao)
+        public async Task<IActionResult> DesativarUsuario(Guid id, MotivoDesativacao motivoDesativacao)
         {
             _logger.LogInformation("Solicitação administrativa para desativar usuário recebida. TargetUserId: {TargetUserId}, Motivo: {Motivo}", id, motivoDesativacao);
             var currentUserIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

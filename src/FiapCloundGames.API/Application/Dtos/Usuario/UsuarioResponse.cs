@@ -10,6 +10,6 @@ namespace FiapCloundGames.API.Application.Dtos.Usuario
         public bool Ativo { get; set; }
         public TipoUsuario PerfilUsuario {  get; set; }
         public DateTime DataAlteracao { get; set; }
-        public MotivoExclusao? MotivoDesativacao { get; private set; }
+        public MotivoDesativacao? MotivoDesativacao { get; private set; }
     }
 }

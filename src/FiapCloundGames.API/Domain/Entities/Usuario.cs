@@ -22,7 +22,7 @@ namespace FiapCloundGames.API.Domain.Entities
         public bool Ativo { get; private set; }
         public DateTime DataCadastro { get; private set; }
         public DateTime DataAlteracao { get; private set; }
-        public MotivoExclusao? MotivoDesativacao { get; private set; }
+        public MotivoDesativacao? MotivoDesativacao { get; private set; }
 
         
 
@@ -59,7 +59,7 @@ namespace FiapCloundGames.API.Domain.Entities
             AssertionConcern.AssertArgumentNotNull(Senha, MensagensDominio.UsuarioSenhaObrigatoria);
         }
 
-        public void Desativar(MotivoExclusao motivo)
+        public void Desativar(MotivoDesativacao motivo)
         {
             if (!Ativo) throw new DomainException(MensagensDominio.UsuarioJaDesativado);
 

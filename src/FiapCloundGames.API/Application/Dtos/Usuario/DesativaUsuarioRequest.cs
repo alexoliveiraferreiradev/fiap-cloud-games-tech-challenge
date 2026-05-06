@@ -5,13 +5,13 @@ namespace FiapCloundGames.API.Application.Dtos.Usuario
     public class DesativaUsuarioRequest
     {
         public Guid Id { get; set; }
-        public MotivoExclusao MotivoDelecao { get; set; }
+        public MotivoDesativacao MotivoDelecao { get; set; }
 
         public DesativaUsuarioRequest()
         {            
         }
 
-        public DesativaUsuarioRequest(Guid id, MotivoExclusao motivoDelecao)
+        public DesativaUsuarioRequest(Guid id, MotivoDesativacao motivoDelecao)
         {
             Id = id;
             MotivoDelecao = motivoDelecao;
