@@ -70,7 +70,7 @@ namespace FiapCloundGames.API.Application.Services
             await _jogoRepository.Atualizar(jogo);
             await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
             await _cache.RemoveAsync($"jogos:catalogo:genero:{jogo.Genero}:pagina:1:tamanho:10");
-            await _cache.RemoveAsync($"jogos:detalhes:{id}");
+            await _cache.RemoveAsync($"jogo:detalhes:{id}");
             await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de atualização do jogo {JogoId} finalizado com sucesso.", id);
@@ -91,9 +91,9 @@ namespace FiapCloundGames.API.Application.Services
             _logger.LogInformation("Jogo {JogoId} inativado no banco de dados. Invalidando caches das vitrines...", jogoId);
 
             await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
-            await _cache.RemoveAsync("jogos:catalogo:genero:pagina:1:tamanho:10");
+            await _cache.RemoveAsync($"jogos:catalogo:genero:{jogo.Genero}:pagina:1:tamanho:10");
             await _cache.RemoveAsync("jogos:promocoes:v1:pagina:1:tamanho:10");
-            await _cache.RemoveAsync($"jogos:detalhes:{jogoId}");
+            await _cache.RemoveAsync($"jogo:detalhes:{jogoId}");
             await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de inativação do jogo {JogoId} finalizado com sucesso e caches limpos.", jogoId);
@@ -112,8 +112,8 @@ namespace FiapCloundGames.API.Application.Services
             _logger.LogInformation("Jogo {JogoId} reatviado no banco de dados. Invalidando caches das vitrines...", jogoId);
 
             await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
-            await _cache.RemoveAsync("jogos:catalogo:genero:pagina:1:tamanho:10");
-            await _cache.RemoveAsync($"jogos:detalhes:{jogoId}");
+            await _cache.RemoveAsync($"jogos:catalogo:genero:{jogo.Genero}:pagina:1:tamanho:10");
+            await _cache.RemoveAsync($"jogo:detalhes:{jogoId}");
             await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de reativação do jogo {JogoId} finalizado com sucesso e caches limpos.", jogoId);
@@ -352,7 +352,7 @@ namespace FiapCloundGames.API.Application.Services
 
             _logger.LogInformation("Varredura concluída. Invalidando cache da vitrine principal de promoções...");
 
-            await _cache.RemoveAsync("jogos:promocoes:v1:pagina:1:tamanho:10");
+            await _cache.RemoveAsync("jogos:promocoes:pagina:1:tamanho:10");
             await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de inativação de promoções expiradas finalizado com sucesso.");
