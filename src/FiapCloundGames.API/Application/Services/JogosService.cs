@@ -43,9 +43,8 @@ namespace FiapCloundGames.API.Application.Services
 
             _logger.LogInformation("Jogo {JogoId} salvo no banco de dados com sucesso. Invalidando caches de vitrine...", jogo.Id);
 
-            await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
+            await IncrementarVersaoCatalogo();
             await _cache.RemoveAsync("jogos:todos");
-            await _cache.RemoveAsync($"jogos:catalogo:genero:{jogo.Genero}:pagina:1:tamanho:10");
 
             _logger.LogInformation("Cadastro do jogo {JogoId} concluído e caches atualizados.", jogo.Id);
             return _mapper.Map<JogoResponse>(jogo);
@@ -64,12 +63,11 @@ namespace FiapCloundGames.API.Application.Services
             var descricaoJogoVO = new Descricao(updateJogosRequest.NovaDescricao);
 
             jogo.Atualizar(nomeJogoVO, descricaoJogoVO, precoVO, updateJogosRequest.NovoGenero);
+            await _jogoRepository.Atualizar(jogo);
 
             _logger.LogInformation("Jogo {JogoId} atualizado no banco de dados. Procedendo com a invalidação dos caches...", id);
 
-            await _jogoRepository.Atualizar(jogo);
-            await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
-            await _cache.RemoveAsync($"jogos:catalogo:genero:{jogo.Genero}:pagina:1:tamanho:10");
+            await IncrementarVersaoCatalogo();
             await _cache.RemoveAsync($"jogo:detalhes:{id}");
             await _cache.RemoveAsync("jogos:todos");
 
@@ -90,9 +88,8 @@ namespace FiapCloundGames.API.Application.Services
 
             _logger.LogInformation("Jogo {JogoId} inativado no banco de dados. Invalidando caches das vitrines...", jogoId);
 
-            await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
-            await _cache.RemoveAsync($"jogos:catalogo:genero:{jogo.Genero}:pagina:1:tamanho:10");
-            await _cache.RemoveAsync("jogos:promocoes:v1:pagina:1:tamanho:10");
+            await IncrementarVersaoCatalogo();
+            await IncrementarVersaoPromocao();
             await _cache.RemoveAsync($"jogo:detalhes:{jogoId}");
             await _cache.RemoveAsync("jogos:todos");
 
@@ -111,8 +108,7 @@ namespace FiapCloundGames.API.Application.Services
 
             _logger.LogInformation("Jogo {JogoId} reatviado no banco de dados. Invalidando caches das vitrines...", jogoId);
 
-            await _cache.RemoveAsync("jogos:catalogo:pagina:1:tamanho:10");
-            await _cache.RemoveAsync($"jogos:catalogo:genero:{jogo.Genero}:pagina:1:tamanho:10");
+            await IncrementarVersaoCatalogo();
             await _cache.RemoveAsync($"jogo:detalhes:{jogoId}");
             await _cache.RemoveAsync("jogos:todos");
 
@@ -145,7 +141,7 @@ namespace FiapCloundGames.API.Application.Services
 
             _logger.LogInformation("Promoção adicionada ao jogo {JogoId} no banco de dados. Invalidando caches...", promocaoRequest.JogoId);
 
-            await _cache.RemoveAsync("jogos:promocoes:pagina:1:tamanho:10");
+            await IncrementarVersaoPromocao();
             await _cache.RemoveAsync($"jogo:detalhes:{promocaoRequest.JogoId}");
             await _cache.RemoveAsync("jogos:todos");
 
@@ -182,13 +178,9 @@ namespace FiapCloundGames.API.Application.Services
 
             _logger.LogInformation("Promoção {PromocaoId} atualizada no banco. Invalidando caches...", promocaoId);
 
+            await IncrementarVersaoPromocao();
             await _cache.RemoveAsync($"promocao:detalhes:{promocaoId}");
-
-            await _cache.RemoveAsync("jogos:promocoes:pagina:1:tamanho:10");
-
             await _cache.RemoveAsync($"jogos:detalhes:{promocaoRequest.JogoId}");
-
-            await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Atualização da promoção {PromocaoId} concluída com sucesso.", promocaoId);
         }
@@ -213,12 +205,7 @@ namespace FiapCloundGames.API.Application.Services
 
             _logger.LogInformation("Promoção {PromocaoId} inativada no banco de dados. Invalidando caches...", promocaoId);
 
-            await _cache.RemoveAsync($"promocao:detalhes:{promocaoId}");
-
-            await _cache.RemoveAsync("jogos:promocoes:pagina:1:tamanho:10");
-
-            await _cache.RemoveAsync($"jogos:detalhes:{promocao.JogoId}");
-
+            await IncrementarVersaoPromocao();
             await _cache.RemoveAsync("jogos:todos");
 
             _logger.LogInformation("Processo de inativação da promoção {PromocaoId} finalizado com sucesso.", promocaoId);
@@ -226,7 +213,8 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<PagedResult<JogoResponse>> ObtemCatalagoJogoPaginado(int pagina = 1, int tamanhoPagina = 10)
         {
-            var cacheKey = $"jogos:catalogo:pagina:{pagina}:tamanho:{tamanhoPagina}";
+            var versao = await GetCatalogoVersion();
+            var cacheKey = $"jogos:catalogo:v{versao}:pagina:{pagina}:tamanho:{tamanhoPagina}";
             var dadosCache = await _cache.GetStringAsync(cacheKey);
 
             var jsonOptions = new JsonSerializerOptions
@@ -260,7 +248,8 @@ namespace FiapCloundGames.API.Application.Services
 
         public async Task<PagedResult<JogoResponse>> ObtemPorGeneroPaginacao(GeneroJogo generoJogo, int pagina = 1, int tamanhoPagina = 10)
         {
-            var cacheKey = $"jogos:catalogo:genero:{generoJogo}:pagina:{pagina}:tamanho:{tamanhoPagina}";
+            var versao = await GetPromocaoVersion();
+            var cacheKey = $"jogos:promocoes:v{versao}:pagina:{pagina}:tamanho:{tamanhoPagina}";
             var dadosCache = await _cache.GetStringAsync(cacheKey);
 
             var jsonOptions = new JsonSerializerOptions
@@ -430,5 +419,32 @@ namespace FiapCloundGames.API.Application.Services
 
             return response;
         }
+
+        private async Task<string> GetCatalogoVersion()
+        {
+            var version = await _cache.GetStringAsync("jogos:catalogo:versao");
+            return version ?? "1";
+        }
+
+        private async Task<string> GetPromocaoVersion()
+        {
+            var version = await _cache.GetStringAsync("jogos:promocao:versao");
+            return version ?? "1";
+        }
+
+        private async Task IncrementarVersaoCatalogo()
+        {
+            var version = await GetCatalogoVersion();
+            var nextVersion = (int.Parse(version) + 1).ToString();
+            await _cache.SetStringAsync("jogos:catalogo:versao", nextVersion);
+        }
+
+        private async Task IncrementarVersaoPromocao()
+        {
+            var version = await GetPromocaoVersion();
+            var nextVersion = (int.Parse(version) + 1).ToString();
+            await _cache.SetStringAsync("jogos:promocao:versao", nextVersion);
+        }
+
     }
 }
