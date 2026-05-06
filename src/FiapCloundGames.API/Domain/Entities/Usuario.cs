@@ -75,12 +75,11 @@ namespace FiapCloundGames.API.Domain.Entities
             DataAlteracao = DateTime.UtcNow;
         }
 
-        public void Atualizar(Nome novoNome, Email novoEmail, Senha novaSenha)
+        public void Atualizar(Nome novoNome, Senha novaSenha)
         {
             if (!Ativo) throw new DomainException(MensagensDominio.UsuarioInativo);
 
             AtualizarNomeUsuario(novoNome);
-            AtualizarEmail(novoEmail);
             AlterarSenha(novaSenha);
             DataAlteracao = DateTime.UtcNow;
         }
@@ -90,13 +89,7 @@ namespace FiapCloundGames.API.Domain.Entities
             if (NomeUsuario == nomeNovo) return;            
             NomeUsuario = nomeNovo;
         }
-
-
-        public void AtualizarEmail(Email novoEmail)
-        {         
-            if (EmailUsuario == novoEmail) return;            
-            EmailUsuario = novoEmail;
-        }
+                
 
         public void AlterarSenha(Senha novaSenha)
         {
