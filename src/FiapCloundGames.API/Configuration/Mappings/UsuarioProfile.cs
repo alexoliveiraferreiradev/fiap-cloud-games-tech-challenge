@@ -17,6 +17,13 @@ namespace FiapCloundGames.API.Configuration.Mapping
               .ForMember(dest => dest.NomeUsuario, opt => opt.MapFrom(src => new Nome(src.Nome)))
               .ForMember(dest => dest.EmailUsuario, opt => opt.MapFrom(src => new Email(src.Email)));
 
+            CreateMap<UsuarioResponse, ContaJogadorResponse>()
+             .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Nome))
+             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+             .ForMember(dest => dest.PerfilUsuario, opt => opt.MapFrom(src => src.PerfilUsuario))
+             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id ))
+             .ForMember(dest => dest.DataAlteracao, opt => opt.MapFrom(src => src.DataAlteracao));
+
             CreateMap<Usuario, UsuarioAtualizadoResponse>()
                 .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.NomeUsuario.Valor))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.EmailUsuario.Valor))
