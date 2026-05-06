@@ -94,9 +94,9 @@ namespace FiapCloundGames.API.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<JogoResponse>> Adicionar(CriarJogoRequest jogoRequest)
         {
-            _logger.LogInformation("Iniciando criação de novo jogo. Nome: {NomeJogo}, Preco: {PrecoBase}",jogoRequest.Nome, jogoRequest.Preco);
+            _logger.LogInformation("Iniciando criação de novo jogo. Nome: {NomeJogo}, Preco: {PrecoBase}", jogoRequest.Nome, jogoRequest.Preco);
             var jogo = await _jogoService.AdicionaJogo(jogoRequest);
-            _logger.LogInformation("Jogo adicionado com sucesso ao catálogo. JogoId: {JogoId}, Nome: {NomeJogo}",jogo.Id, jogo.Nome);
+            _logger.LogInformation("Jogo adicionado com sucesso ao catálogo. JogoId: {JogoId}, Nome: {NomeJogo}", jogo.Id, jogo.Nome);
             return CreatedAtAction(nameof(ObterJogoPorId), new { id = jogo.Id }, jogo);
         }
 
@@ -160,13 +160,9 @@ namespace FiapCloundGames.API.Controller
         [HttpPut("reativar/{id:guid}")] // Rota alterada para evitar conflito com o 'Atualizar'
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Reativar(Guid id, UpdateJogoRequest updateRequest)
+        public async Task<ActionResult> Reativar(Guid id)
         {
             _logger.LogInformation("Recebida requisição para atualizar jogo. ID: {Id}", id);
-            var jogo = await _jogoService.ObtemJogoPorId(id);
-            if (jogo == null)
-                return NotFound();
-
             await _jogoService.Reativar(id);
             _logger.LogInformation("Jogo {Id} reativado com sucesso.", id);
             return Ok();
