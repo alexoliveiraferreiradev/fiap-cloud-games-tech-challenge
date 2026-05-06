@@ -90,7 +90,10 @@ namespace FiapCloundGames.API.Controller
                 return NotFound("Não foi encontrado jogos");
             }
 
-            var response = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
+            var itensMapeados = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
+
+            var response = new PagedResult<JogoUsuarioResponse>(itensMapeados, jogos.PageNumber, jogos.PageSize, jogos.TotalItems);
+
 
             _logger.LogInformation("Catálogo recuperado com sucesso. Pagina: {Pagina}, Quantidade de Jogos Retornados: {QuantidadeJogos}", pagina, jogos.Items.Count());
             return Ok(response);
@@ -114,11 +117,14 @@ namespace FiapCloundGames.API.Controller
         public async Task<ActionResult<IEnumerable<JogoUsuarioResponse>>> ListarPorGenero(GeneroJogo genero, [FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
         {
             await _jogoService.DesativaPromocoesInvalidas();
-            var jogos = await _jogoService.ObtemPorGeneroPaginacao(genero);
+            var jogos = await _jogoService.ObtemPorGeneroPaginacao(genero,pagina,tamanhoPagina);
             if (!jogos.Items.Any())
                 return NotFound("Não foi encontrado jogos");
 
-            var response = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
+            var itensMapeados = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
+
+            var response = new PagedResult<JogoUsuarioResponse>(itensMapeados, jogos.PageNumber, jogos.PageSize, jogos.TotalItems);
+
 
             return Ok(response);
         }
@@ -137,17 +143,20 @@ namespace FiapCloundGames.API.Controller
         [HttpGet("busca-jogos-com-promocao")]
         [ProducesResponseType(typeof(PagedResult<JogoResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<JogoUsuarioResponse>> ObtemJogosComPromocao([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
+        public async Task<ActionResult<IEnumerable<JogoUsuarioResponse>>> ObtemJogosComPromocao([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
         {
             await _jogoService.DesativaPromocoesInvalidas();
             _logger.LogInformation("Iniciando busca por jogos em promoção. Pagina: {Pagina}, TamanhoPagina: {TamanhoPagina}", pagina, tamanhoPagina);
-            var jogos = await _jogoService.ObtemJogosPromovidosPaginacao();
+            var jogos = await _jogoService.ObtemJogosPromovidosPaginacao(pagina,tamanhoPagina);
             if (jogos.Items == null || !jogos.Items.Any())
             {
                 _logger.LogInformation("Busca de promoções finalizada. Nenhum jogo em oferta encontrado na Pagina: {Pagina}", pagina);
                 return NotFound("Não foi encontrado nenhum jogo com promoções");
             }
-            var response = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
+            var itensMapeados = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
+
+            var response = new PagedResult<JogoUsuarioResponse>(itensMapeados, jogos.PageNumber, jogos.PageSize, jogos.TotalItems);
+
             _logger.LogInformation("Jogos em promoção recuperados com sucesso. Pagina: {Pagina}, Quantidade Retornada: {QuantidadeJogos}", pagina, jogos.Items.Count());
 
             return Ok(response);
