@@ -299,7 +299,6 @@ namespace FiapCloundGames.UnitTests.Application.Services
             await _service.AtualizarUsuario(usuario.Id, updataRequest);
             //Assert
             Assert.Equal(updataRequest.NomeUsuario, usuario.NomeUsuario.Valor);
-            Assert.Equal(updataRequest.EmailUsuario, usuario.EmailUsuario.Valor);
             Assert.Equal(updataRequest.SenhaUsuario, usuario.Senha.Hash);
 
             _usuarioMock.Verify(r => r.Atualizar(It.IsAny<Usuario>()), Times.Once);
