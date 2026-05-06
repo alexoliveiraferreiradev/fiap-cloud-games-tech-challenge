@@ -134,13 +134,8 @@ namespace FiapCloundGames.API.Application.Services
             _logger.LogInformation("Iniciando a atualização de perfil do usuário {UsuarioId}.", id);
 
             var usuario = await _usuarioRepository.ObterPorId(id);
-            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);
+            if (usuario == null) throw new DomainException(MensagensDominio.UsuarioNaoEncontrado);                     
 
-            if (await _usuarioRepository.VerificaEmailCadastradoParaAlteracao(id, request.EmailUsuario))
-            {
-                _logger.LogWarning("Atualização abortada para o usuário {UsuarioId}: O e-mail {EmailUsuario} já pertence a outra conta.", id, request.EmailUsuario);
-                throw new DomainException(MensagensDominio.EmailJaCadastrado);
-            }
             if (await _usuarioRepository.VerificaNomeCadastradoParaAlteracao(id, request.NomeUsuario))
             {
                 _logger.LogWarning("Atualização abortada para o usuário {UsuarioId}: O nome de usuário {NomeUsuario} já pertence a outra conta.", id, request.NomeUsuario);
@@ -152,10 +147,8 @@ namespace FiapCloundGames.API.Application.Services
             var novaSenhaCriptografa = new Senha(_passwordHasher.HashPassword(request.SenhaUsuario));
 
             var novoUsuarioVO = new Nome(request.NomeUsuario);
-
-            var novoEmailUsuarioVO = new Email(request.EmailUsuario);
-
-            usuario.Atualizar(novoUsuarioVO, novoEmailUsuarioVO, novaSenhaCriptografa);
+                       
+            usuario.Atualizar(novoUsuarioVO, novaSenhaCriptografa);
 
             await _usuarioRepository.Atualizar(usuario);
 
