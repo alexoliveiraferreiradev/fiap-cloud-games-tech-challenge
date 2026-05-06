@@ -23,13 +23,7 @@ namespace FiapCloundGames.API.Infrastructure.Repository
         {
             return await _dbContext.Usuarios.AnyAsync(x => x.EmailUsuario.Valor.ToLower() == emailCadastrado.ToLower());
         }
-
-        public async Task<bool> VerificaEmailCadastradoParaAlteracao(Guid usuarioId, string emailUsuario)
-        {
-            return await _dbContext.Usuarios
-                        .AnyAsync(x => x.EmailUsuario.Valor.ToLower() == emailUsuario.ToLower()
-                     && x.Id != usuarioId);
-        }
+              
 
         public async Task<bool> VerificaMaisDeUmAdminCadastrado()
         {
