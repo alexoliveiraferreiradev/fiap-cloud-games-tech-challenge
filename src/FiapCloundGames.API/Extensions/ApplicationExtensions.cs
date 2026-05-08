@@ -4,6 +4,7 @@ using FiapCloudGames.Domain.Enum;
 using FiapCloudGames.Domain.ValueObjects;
 using FiapCloudGames.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace FiapCloudGames.API.Extensions
 {
@@ -74,6 +75,7 @@ namespace FiapCloudGames.API.Extensions
         public static WebApplication AddAppConfiguration(this WebApplication app)
         {
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseSerilogRequestLogging();
             app.MapControllers();
             app.UseRouting();
             app.UseCors();
