@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FiapCloudGames.Application.Dtos.Pedido;
-using FiapCloudGames.Application.Services.Interfaces;
+using FiapCloudGames.Application.Interfaces;
 using FiapCloudGames.Domain.Common.Exceptions;
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Repositories;

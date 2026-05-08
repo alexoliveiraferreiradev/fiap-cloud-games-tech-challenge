@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FiapCloudGames.Application.Dtos.Identity;
 using FiapCloudGames.Application.Dtos.Usuario;
-using FiapCloudGames.Application.Services.Interfaces;
+using FiapCloudGames.Application.Interfaces;
 using FiapCloudGames.Domain.Common;
 using FiapCloudGames.Domain.Common.Exceptions;
 using FiapCloudGames.Domain.Entities;
