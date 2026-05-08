@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -16,6 +17,8 @@ namespace FiapCloudGames.API.Extensions
         private static string connectionString;
         public static WebApplicationBuilder AddApiConfiguration(this WebApplicationBuilder builder)
         {
+            AddSeriLogConfig(builder);
+            builder.Host.UseSerilog();
             builder.Services.AddOpenApi();            
             builder.AddRedis();
             AddDbContextConfig(builder);
@@ -28,6 +31,12 @@ namespace FiapCloudGames.API.Extensions
             return builder;
         }
 
+        private static void AddSeriLogConfig(WebApplicationBuilder builder)
+        {
+            Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+             .CreateLogger();
+        }
        
         private static void AddDbContextConfig(WebApplicationBuilder builder)
         {
