@@ -1,6 +1,6 @@
-﻿using FiapCloudGames.API.Infrastructure.Security;
+﻿using FiapCloudGames.Infrastructure.Security;
 
-namespace FiapCloudGames.UnitTests.Infrastructure
+namespace FiapCloudGames.Infrastructure.Tests
 {
     public class PasswordTests
     {
