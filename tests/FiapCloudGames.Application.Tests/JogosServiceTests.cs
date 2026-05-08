@@ -6,6 +6,7 @@ using FiapCloudGames.Application.Interfaces;
 using FiapCloudGames.Application.Mappings;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Application.Tests.Fixtures;
+using FiapCloudGames.Domain.Common;
 using FiapCloudGames.Domain.Common.Exceptions;
 using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Enum;
@@ -429,17 +430,23 @@ namespace FiapCloudGames.Application.Tests
         public async Task ObtemCatalagoJogos_DeveObterComSucesso()
         {
             //Arrange
-            var listaJogosAtivos = new List<Jogo>();
             var jogoAtivo = _jogosFixture.ObtemJogosParaPromocao();
-            listaJogosAtivos.Add(jogoAtivo);
+            var listaJogosAtivos = new List<Jogo> { jogoAtivo };
 
-            _mockJogo.Setup(r => r.ObtemCatalogoPaginado(It.IsAny<int>(), It.IsAny<int>()))
-          .ReturnsAsync(listaJogosAtivos);
+            var pagedResultMock = new PagedResult<Jogo>(listaJogosAtivos, 1, 10, 1);
+
+            _mockJogo.Setup(r => r.ObtemPaginado(
+                            It.IsAny<int>(),      
+                            It.IsAny<int>(),      
+                            It.IsAny<string>(),   
+                            It.IsAny<GeneroJogo?>(), 
+                            It.IsAny<bool?>())).ReturnsAsync(pagedResultMock);
 
             //Act 
-            var respone = await _jogosService.ObtemPaginado(new JogoFiltroRequest { Pagina =1, Tamanho = 10});
+            var response = await _jogosService.ObtemPaginado(new JogoFiltroRequest { Pagina =1, Tamanho = 10});
             //Assert
-            Assert.True(respone.Itens.Any());
+            Assert.True(response.Itens.Any());
+            Assert.Equal(1, response.TotalItens);
         }
 
     }
