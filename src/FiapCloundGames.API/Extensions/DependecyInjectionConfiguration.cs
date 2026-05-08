@@ -1,13 +1,13 @@
 ﻿using FiapCloundGames.API.Application.Services;
 using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Configuration.Worker;
 using FiapCloundGames.API.Domain.Common.Interfaces;
 using FiapCloundGames.API.Domain.Repositories;
 using FiapCloundGames.API.Infrastructure.Persistance;
 using FiapCloundGames.API.Infrastructure.Repository;
 using FiapCloundGames.API.Infrastructure.Security;
+using FiapCloundGames.API.Infrastructure.Worker;
 
-namespace FiapCloundGames.API.Configuration.Extensions
+namespace FiapCloundGames.API.Extensions
 {
     public static class DependecyInjectionConfiguration
     {
@@ -15,7 +15,7 @@ namespace FiapCloundGames.API.Configuration.Extensions
         {
             builder.Services.AddHostedService<PromocaoCleanupWorker>();
             builder.Services.AddScoped<ApplicationDbContext>();
-            builder.Services.AddScoped<IToken, TokenConfiguration>();
+            builder.Services.AddScoped<ITokenService, JwtTokenService>();
             builder.Services.AddScoped<IUsuarioService, UsuarioService>();
             builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();

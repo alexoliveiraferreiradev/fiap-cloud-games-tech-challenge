@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace FiapCloundGames.API.Configuration.Extensions
+namespace FiapCloundGames.API.Extensions
 {
     public static class BuilderConfiguration
     {
@@ -28,7 +28,7 @@ namespace FiapCloundGames.API.Configuration.Extensions
 
         private static void AddRedisConfiguration(WebApplicationBuilder builder)
         {
-            var redisConfig = builder.Configuration.GetSection("Redis").Get<RedisConfiguration>();
+            var redisConfig = builder.Configuration.GetSection("Redis").Get<RedisOptions>();
             builder.Services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = redisConfig.Configuration;
@@ -77,9 +77,9 @@ namespace FiapCloundGames.API.Configuration.Extensions
         private static void AddJwtBearerConfiguration(WebApplicationBuilder builder)
         {
             var jwtSettingsSection = builder.Configuration.GetSection("JwtSettings");
-            builder.Services.Configure<JwtSettings>(jwtSettingsSection);
+            builder.Services.Configure<TokenSettings>(jwtSettingsSection);
 
-            var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
+            var jwtSettings = jwtSettingsSection.Get<TokenSettings>();
             var key = Encoding.ASCII.GetBytes(jwtSettings.Secret);
 
             //builder.Services.AddExceptionHandler<GlobalExceptionHandler>();

@@ -1,8 +1,8 @@
-﻿using FiapCloundGames.API.Configuration.Middlewares;
-using FiapCloundGames.API.Infrastructure.Persistance;
+﻿using FiapCloundGames.API.Infrastructure.Persistance;
+using FiapCloundGames.API.Middlewares;
 using Microsoft.EntityFrameworkCore;
 
-namespace FiapCloundGames.API.Configuration.Extensions
+namespace FiapCloundGames.API.Extensions
 {
     public static class ApplicationConfiguration
     {

@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
-namespace FiapCloundGames.API.Configuration.Extensions
+namespace FiapCloundGames.API.Extensions
 {
     public static class SwaggerConfiguration
     {
