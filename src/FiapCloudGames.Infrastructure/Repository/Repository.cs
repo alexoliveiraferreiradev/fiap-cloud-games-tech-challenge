@@ -1,9 +1,9 @@
-﻿using FiapCloundGames.API.Domain.Common;
-using FiapCloundGames.API.Domain.Repositories;
-using FiapCloundGames.API.Infrastructure.Persistance;
+﻿using FiapCloudGames.Domain.Common;
+using FiapCloudGames.Domain.Repositories;
+using FiapCloudGames.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
-namespace FiapCloundGames.API.Infrastructure.Repository
+namespace FiapCloudGames.Infrastructure.Repository
 {
     public abstract class Repository<Entidade> : IRepository<Entidade> where Entidade : AggregateRoot
     {

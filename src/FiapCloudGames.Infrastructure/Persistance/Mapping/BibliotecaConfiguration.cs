@@ -1,8 +1,8 @@
-﻿using FiapCloundGames.API.Domain.Entities;
+﻿using FiapCloudGames.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
+namespace FiapCloudGames.Infrastructure.Persistance.Mapping
 {
     public class BibliotecaConfiguration : IEntityTypeConfiguration<Biblioteca>
     {

@@ -1,11 +1,11 @@
-﻿using FiapCloundGames.API.Domain.Entities;
-using FiapCloundGames.API.Domain.Enum;
-using FiapCloundGames.API.Domain.ValueObjects;
-using FiapCloundGames.API.Infrastructure.Security;
+﻿using FiapCloudGames.Domain.Entities;
+using FiapCloudGames.Domain.Enum;
+using FiapCloudGames.Domain.ValueObjects;
+using FiapCloudGames.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
+namespace FiapCloudGames.Infrastructure.Persistance.Mapping
 {
     public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
     {

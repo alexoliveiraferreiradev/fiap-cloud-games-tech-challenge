@@ -1,9 +1,9 @@
-﻿using FiapCloundGames.API.Domain.Entities;
-using FiapCloundGames.API.Domain.Repositories;
-using FiapCloundGames.API.Infrastructure.Persistance;
+﻿using FiapCloudGames.Domain.Entities;
+using FiapCloudGames.Domain.Repositories;
+using FiapCloudGames.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
-namespace FiapCloundGames.API.Infrastructure.Repository
+namespace FiapCloudGames.Infrastructure.Repository
 {
     public class PedidoRepository : Repository<Pedido>, IPedidoRepository
     {

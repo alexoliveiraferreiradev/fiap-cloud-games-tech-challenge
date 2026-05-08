@@ -1,9 +1,9 @@
-﻿using FiapCloundGames.API.Domain.Entities;
-using FiapCloundGames.API.Domain.Enum;
+﻿using FiapCloudGames.Domain.Entities;
+using FiapCloudGames.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FiapCloundGames.API.Infrastructure.Persistance.Mapping
+namespace FiapCloudGames.Infrastructure.Persistance.Mapping
 {
     public class JogoConfiguration : IEntityTypeConfiguration<Jogo>
     {

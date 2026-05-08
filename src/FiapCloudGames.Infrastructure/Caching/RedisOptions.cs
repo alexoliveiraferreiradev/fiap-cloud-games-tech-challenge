@@ -1,4 +1,4 @@
-﻿namespace FiapCloundGames.API.Infrastructure.Caching
+﻿namespace FiapCloudGames.Infrastructure.Caching
 {
     public class RedisOptions
     {

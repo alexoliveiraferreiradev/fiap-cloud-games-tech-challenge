@@ -1,8 +1,8 @@
-﻿using FiapCloundGames.API.Domain.Common.Interfaces;
+﻿using FiapCloudGames.Application.Services.Interfaces;
 
-namespace FiapCloundGames.API.Infrastructure.Security
+namespace FiapCloudGames.Infrastructure.Security
 {
-    public class PasswordHasher : IPasswordHasher
+    public class PasswordHasher : IPasswordHasherService
     {
         public string HashPassword(string password) { return BCrypt.Net.BCrypt.HashPassword(password); }
 

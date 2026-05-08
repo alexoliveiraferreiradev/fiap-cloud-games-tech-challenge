@@ -1,14 +1,15 @@
-﻿using FiapCloundGames.API.Application.Dtos.Identity;
-using FiapCloundGames.API.Application.Dtos.Usuario;
-using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Domain.Enum;
+﻿using FiapCloudGames.Application.Dtos.Identity;
+using FiapCloudGames.Application.Dtos.Usuario;
+using FiapCloudGames.Application.Services.Interfaces;
+using FiapCloudGames.Domain.Enum;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace FiapCloundGames.API.Infrastructure.Security
+namespace FiapCloudGames.Infrastructure.Security
 {
     public class JwtTokenService : ITokenService
     {

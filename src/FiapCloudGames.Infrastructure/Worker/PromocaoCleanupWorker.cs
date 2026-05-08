@@ -1,6 +1,8 @@
-﻿using FiapCloundGames.API.Application.Services.Interfaces;
+﻿using FiapCloudGames.Application.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-namespace FiapCloundGames.API.Infrastructure.Worker
+namespace FiapCloudGames.Infrastructure.Worker
 {
     public class PromocaoCleanupWorker : BackgroundService
     {

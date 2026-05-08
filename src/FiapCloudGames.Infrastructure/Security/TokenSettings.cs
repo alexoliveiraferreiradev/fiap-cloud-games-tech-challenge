@@ -1,4 +1,4 @@
-﻿namespace FiapCloundGames.API.Infrastructure.Security
+﻿namespace FiapCloudGames.Infrastructure.Security
 {
     public class TokenSettings
     {
