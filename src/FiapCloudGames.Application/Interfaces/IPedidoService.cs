@@ -1,6 +1,6 @@
 ﻿using FiapCloudGames.Application.Dtos.Pedido;
 
-namespace FiapCloudGames.Application.Services.Interfaces
+namespace FiapCloudGames.Application.Interfaces
 {
     public interface IPedidoService
     {

@@ -1,7 +1,7 @@
 ﻿using FiapCloudGames.Application.Dtos.Identity;
 using FiapCloudGames.Application.Dtos.Usuario;
 
-namespace FiapCloudGames.Application.Services.Interfaces
+namespace FiapCloudGames.Application.Interfaces
 {
     public interface IUsuarioService  
     {

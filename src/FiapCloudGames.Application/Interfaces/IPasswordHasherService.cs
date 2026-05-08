@@ -1,4 +1,4 @@
-﻿namespace FiapCloudGames.Application.Services.Interfaces
+﻿namespace FiapCloudGames.Application.Interfaces
 {
     public interface IPasswordHasherService
     {

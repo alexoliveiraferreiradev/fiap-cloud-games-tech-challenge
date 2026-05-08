@@ -1,7 +1,7 @@
 ﻿using FiapCloudGames.Application.Dtos.Biblioteca;
-using FiapCloudGames.Application.Dtos.Jogos;
+using FiapCloudGames.Domain.Common;
 
-namespace FiapCloudGames.Application.Services.Interfaces
+namespace FiapCloudGames.Application.Interfaces
 {
     public interface IBibliotecaService
     {

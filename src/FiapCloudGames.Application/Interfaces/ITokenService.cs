@@ -2,7 +2,7 @@
 using FiapCloudGames.Application.Dtos.Usuario;
 using System.Security.Claims;
 
-namespace FiapCloudGames.Application.Services.Interfaces
+namespace FiapCloudGames.Application.Interfaces
 {
     public interface ITokenService
     {

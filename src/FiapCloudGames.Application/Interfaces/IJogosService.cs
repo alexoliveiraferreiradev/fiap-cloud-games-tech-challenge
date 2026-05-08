@@ -1,8 +1,8 @@
 ﻿using FiapCloudGames.Application.Dtos.Jogos;
 using FiapCloudGames.Application.Dtos.Promocao;
-using FiapCloudGames.Domain.Enum;
+using FiapCloudGames.Domain.Common;
 
-namespace FiapCloudGames.Application.Services.Interfaces
+namespace FiapCloudGames.Application.Interfaces
 {
     public interface IJogosService
     {
@@ -13,13 +13,11 @@ namespace FiapCloudGames.Application.Services.Interfaces
         Task<bool> VerificaDuplicidadeNome(string nomeJogo);
         Task<PromocaoResponse> AdicionarPromocao(CriaPromocaoRequest criaPromocaoRequest);
         Task AtualizaPromocao(Guid promocaoId,UpdatePromocaoRequest criaPromocaoRequest);
-        Task DesativarPromocao(Guid promocaoId);
-        Task<PagedResult<JogoResponse>> ObtemCatalagoJogoPaginado(int pagina =1,int tamanhoPagina = 10);
+        Task DesativarPromocao(Guid promocaoId);        
         Task<JogoResponse> ObtemJogoPorId(Guid jogoId);
         Task<IEnumerable<JogoResponse>> ObtemTodosJogo();
-        Task<PromocaoResponse?> ObtemPromocaoPorId(Guid promocaoId);
-        Task<PagedResult<JogoResponse>> ObtemPorGeneroPaginacao(GeneroJogo generoJogo, int pagina =1, int tamanhoPagina = 10);
-        Task<PagedResult<JogoResponse>> ObtemJogosPromovidosPaginacao(int pagina =1, int tamanhoPagina = 10);
+        Task<PromocaoResponse?> ObtemPromocaoPorId(Guid promocaoId);        
         Task DesativaPromocoesInvalidas();
+        Task<PagedResult<JogoResponse>> ObtemPaginado(JogoFiltroRequest filtroRequest);
     }
 }
