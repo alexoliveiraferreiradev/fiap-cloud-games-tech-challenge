@@ -1,6 +1,6 @@
 ﻿using FiapCloundGames.API.Application.Services.Interfaces;
 
-namespace FiapCloundGames.API.Configuration.Worker
+namespace FiapCloundGames.API.Infrastructure.Worker
 {
     public class PromocaoCleanupWorker : BackgroundService
     {
