@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
-using FiapCloundGames.API.Application.Mappings;
-using FiapCloundGames.API.Application.Services;
-using FiapCloundGames.API.Domain.Common.Exceptions;
-using FiapCloundGames.API.Domain.Entities;
-using FiapCloundGames.API.Domain.Repositories;
-using FiapCloundGames.API.Domain.Resources;
-using FiapCloundGames.UnitTests.Fixtures;
+using FiapCloudGames.Application.Mappings;
+using FiapCloudGames.Application.Services;
+using FiapCloudGames.Application.Tests.Fixtures;
+using FiapCloudGames.Domain.Common.Exceptions;
+using FiapCloudGames.Domain.Entities;
+using FiapCloudGames.Domain.Repositories;
+using FiapCloudGames.Domain.Resources;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
-namespace FiapCloundGames.UnitTests.Application.Services
+namespace FiapCloudGames.Application.Tests
 {
     public class BibliotecaServiceTests
     {

@@ -1,29 +1,28 @@
 ﻿using AutoMapper;
 using Bogus;
-using FiapCloundGames.API.Application.Dtos.Identity;
-using FiapCloundGames.API.Application.Dtos.Usuario;
-using FiapCloundGames.API.Application.Mappings;
-using FiapCloundGames.API.Application.Services;
-using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Domain.Common.Exceptions;
-using FiapCloundGames.API.Domain.Common.Interfaces;
-using FiapCloundGames.API.Domain.Entities;
-using FiapCloundGames.API.Domain.Enum;
-using FiapCloundGames.API.Domain.Repositories;
-using FiapCloundGames.API.Domain.Resources;
-using FiapCloundGames.API.Domain.ValueObjects;
-using FiapCloundGames.UnitTests.Fixtures;
+using FiapCloudGames.Application.Dtos.Identity;
+using FiapCloudGames.Application.Dtos.Usuario;
+using FiapCloudGames.Application.Mappings;
+using FiapCloudGames.Application.Services;
+using FiapCloudGames.Application.Services.Interfaces;
+using FiapCloudGames.Application.Tests.Fixtures;
+using FiapCloudGames.Domain.Common.Exceptions;
+using FiapCloudGames.Domain.Entities;
+using FiapCloudGames.Domain.Enum;
+using FiapCloudGames.Domain.Repositories;
+using FiapCloudGames.Domain.Resources;
+using FiapCloudGames.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
-namespace FiapCloundGames.UnitTests.Application.Services
+namespace FiapCloudGames.Application.Tests
 {
     public class UsuarioServiceTests
     {
         private readonly Faker _faker;
         private readonly UsuarioFixture _usuarioFixture;
-        private readonly Mock<IPasswordHasher> _passwordMock;
+        private readonly Mock<IPasswordHasherService> _passwordMock;
         private readonly Mock<IUsuarioRepository> _usuarioMock;
         private readonly Mock<ITokenService> _tokenService;
         private readonly UsuarioService _service;
@@ -41,7 +40,7 @@ namespace FiapCloundGames.UnitTests.Application.Services
             _tokenService = new Mock<ITokenService>();
             _mapper = config.CreateMapper();
             _usuarioMock = new Mock<IUsuarioRepository>();
-            _passwordMock = new Mock<IPasswordHasher>();
+            _passwordMock = new Mock<IPasswordHasherService>();
             _logger = NullLogger<UsuarioService>.Instance;
             _service = new UsuarioService(_usuarioMock.Object, _passwordMock.Object, _mapper,_logger, _tokenService.Object);
         }
@@ -513,6 +512,13 @@ namespace FiapCloundGames.UnitTests.Application.Services
             _passwordMock.Setup(h => h.HashPassword(loginRequest.Senha)).Returns(loginRequest.Senha);
             _passwordMock.Setup(h => h.VerifyPassword(loginRequest.Senha, usuario.Senha.Hash)).Returns(true);
             _usuarioMock.Setup( r => r.ObterPorEmail(loginRequest.Email)).ReturnsAsync(usuario);
+            _tokenService.Setup(r => r.GerarToken(new UsuarioResponse
+            {
+                Id = usuario.Id,
+                Nome = usuario.NomeUsuario.Valor,
+                Email = usuario.EmailUsuario.Valor,
+                PerfilUsuario = usuario.Perfil
+            }));
             //Act
             var result = await _service.Autenticar(loginRequest);
             //Assert
