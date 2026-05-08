@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FiapCloundGames.API.Application.Dtos.Identity;
 using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Application.Services.Interfaces;
 using FiapCloundGames.API.Domain.Common;
@@ -18,12 +19,15 @@ namespace FiapCloundGames.API.Application.Services
         private readonly IMapper _mapper;
         private readonly IPasswordHasher _passwordHasher;
         private readonly ILogger<UsuarioService> _logger;
-        public UsuarioService(IUsuarioRepository usuarioRepository, IPasswordHasher passwordHasher, IMapper mapper, ILogger<UsuarioService> logger)
+        private readonly ITokenService _tokenService;
+        public UsuarioService(IUsuarioRepository usuarioRepository, IPasswordHasher passwordHasher,
+            IMapper mapper, ILogger<UsuarioService> logger, ITokenService tokenService)
         {
             _usuarioRepository = usuarioRepository;
             _passwordHasher = passwordHasher;
             _mapper = mapper;
             _logger = logger;
+            _tokenService = tokenService;
         }
 
         public async Task<UsuarioResponse> PromoverParaAdmin(Guid id)
@@ -48,11 +52,12 @@ namespace FiapCloundGames.API.Application.Services
 
             _logger.LogInformation("Privilégios do usuário {UsuarioId} elevados para Administrador com sucesso no banco de dados.", id);
 
-            var response = _mapper.Map<UsuarioResponse>(usuario);
+            var response = _mapper.Map<UsuarioResponse>(usuario);             
 
             _logger.LogInformation("Processo de elevação de privilégio finalizado para o usuário {UsuarioId}.", id);
 
             return response;
+            
         }
 
         public async Task<UsuarioResponse> RebaixarParaJogador(Guid idUsuarioRebaixar, Guid idOperador)
@@ -91,7 +96,7 @@ namespace FiapCloundGames.API.Application.Services
             return response;
         }
 
-        public async Task<UsuarioResponse> CadastrarUsuario(CriaUsuarioRequest request)
+        public async Task<LoginResponse> Cadastrar(CriaUsuarioRequest request)
         {
             var nomeVO = new Nome(request.Nome);
             var emailVO = new Email(request.Email);
@@ -117,7 +122,19 @@ namespace FiapCloundGames.API.Application.Services
 
             _logger.LogInformation("Processo de cadastro finalizado. Usuário {UsuarioId} pronto para login.", usuario.Id);
 
-            return _mapper.Map<UsuarioResponse>(usuario);
+            var response = _mapper.Map<UsuarioResponse>(usuario);
+
+            var tokenResult = await _tokenService.GerarToken(response);
+
+            return new LoginResponse
+            {
+                AcessToken = tokenResult.AccessToken,
+                ExpiresIn = tokenResult.ExpiresIn,
+                Id = usuario.Id.ToString(),
+                Email = usuario.EmailUsuario.Valor,
+                PerfilUsuario = usuario.Perfil,
+                Claims = tokenResult.Claims
+            };
         }
 
         private static void ValidaSenhas(string senhaRequest, string confirmacaoSenhaRequest)
@@ -129,7 +146,7 @@ namespace FiapCloundGames.API.Application.Services
 
         }
 
-        public async Task<UsuarioResponse> AtualizarUsuario(Guid id, UpdateUsuarioRequest request)
+        public async Task<UsuarioResponse> Atualizar(Guid id, UpdateUsuarioRequest request)
         {
             _logger.LogInformation("Iniciando a atualização de perfil do usuário {UsuarioId}.", id);
 
@@ -229,7 +246,7 @@ namespace FiapCloundGames.API.Application.Services
             _logger.LogInformation("Conta do usuário {UsuarioId} inativada com sucesso no banco de dados.", id);
         }
 
-        public async Task<UsuarioResponse> Autenticar(LoginRequest request)
+        public async Task<LoginResponse> Autenticar(LoginRequest request)
         {
             _logger.LogInformation("Iniciando tentativa de autenticação para o e-mail {Email}.", request.Email);
             var usuario = await _usuarioRepository.ObterPorEmail(request.Email);
@@ -251,9 +268,21 @@ namespace FiapCloundGames.API.Application.Services
                 throw new DomainException(MensagensDominio.CrendenciasInvalidas);
             }
 
+            var response = _mapper.Map<UsuarioResponse>(usuario);
+
+            var tokenResult = await _tokenService.GerarToken(response);
+
             _logger.LogInformation("Autenticação realizada com sucesso para o usuário {UsuarioId}.", usuario.Id);
 
-            return _mapper.Map<UsuarioResponse>(usuario);
+            return new LoginResponse
+            {
+                AcessToken = tokenResult.AccessToken,
+                ExpiresIn = tokenResult.ExpiresIn,
+                Id = usuario.Id.ToString(),
+                Email = usuario.EmailUsuario.Valor,
+                PerfilUsuario = usuario.Perfil,
+                Claims = tokenResult.Claims
+            };
         }
 
         public async Task Reativar(Guid id)
