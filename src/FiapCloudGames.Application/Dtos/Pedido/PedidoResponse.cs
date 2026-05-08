@@ -1,0 +1,33 @@
+﻿using FiapCloudGames.Domain.Enum;
+
+namespace FiapCloudGames.Application.Dtos.Pedido
+{
+    public class PedidoResponse
+    {
+        public Guid Id { get; set; }
+        public Guid UsuarioId { get; set; }       
+        public DateTime DataPedido { get; set; }
+        public PedidoStatus Status { get; set; }       
+        public decimal ValorTotal { get; set; }
+        public List<string> MensagensInformativas { get; set; } = new();
+        public IEnumerable<PedidoItemResponse> Items { get; set; }
+        public PedidoResponse()
+        {
+            
+        }
+    }
+
+    public class PedidoItemResponse
+    {
+        public Guid JogoId { get; set; }
+        public string NomeJogo { get; set; }
+        public decimal PrecoOriginal { get; set; }
+        public decimal Desconto => PrecoOriginal - PrecoPago;
+        public decimal PrecoPago { get; set; }
+
+        public PedidoItemResponse()
+        {
+            
+        }
+    }
+}

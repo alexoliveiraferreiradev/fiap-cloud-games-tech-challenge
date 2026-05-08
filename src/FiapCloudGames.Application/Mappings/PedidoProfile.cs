@@ -1,0 +1,26 @@
+﻿using AutoMapper;
+using FiapCloudGames.Application.Dtos.Pedido;
+using FiapCloudGames.Domain.Entities;
+
+namespace FiapCloudGames.Application.Mappings
+{
+    public class PedidoProfile : Profile
+    {
+        public PedidoProfile()
+        {
+            CreateMap<Pedido, PedidoResponse>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest=>dest.UsuarioId,opt=> opt.MapFrom(src=>src.UsuarioId))
+            .ForMember(dest => dest.DataPedido, opt => opt.MapFrom(src => src.DataCadastro))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Jogos))
+            .ForMember(dest => dest.ValorTotal, opt => opt.MapFrom(src => src.ValorTotal.Valor));
+            CreateMap<PedidoJogo, PedidoItemResponse>()
+            .ForMember(dest => dest.JogoId, opt => opt.MapFrom(src => src.Jogo.Id))
+            .ForMember(dest => dest.NomeJogo, opt => opt.MapFrom(src => src.Jogo.Nome.Valor))
+            .ForMember(dest => dest.PrecoOriginal, opt => opt.MapFrom(src => src.Jogo.PrecoBase.Valor))
+            .ForMember(dest => dest.PrecoPago, opt => opt.MapFrom(src => src.Jogo.ObterPrecoAtual().Valor));
+
+        }
+    }
+}
