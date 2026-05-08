@@ -1,5 +1,4 @@
 ﻿using FiapCloudGames.Domain.Entities;
-using FiapCloudGames.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
