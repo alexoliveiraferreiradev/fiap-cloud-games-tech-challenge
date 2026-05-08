@@ -1,4 +1,5 @@
 ﻿using FiapCloudGames.Infrastructure.Caching;
+using FiapCloudGames.Infrastructure.IoC;
 using FiapCloudGames.Infrastructure.Persistance;
 using FiapCloudGames.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,31 +11,24 @@ using System.Text.Json.Serialization;
 
 namespace FiapCloudGames.API.Extensions
 {
-    public static class BuilderConfiguration
+    public static class BuilderExtensions
     {
         private static string connectionString;
         public static WebApplicationBuilder AddApiConfiguration(this WebApplicationBuilder builder)
         {
-            builder.Services.AddOpenApi();
-            AddRedisConfiguration(builder); 
+            builder.Services.AddOpenApi();            
+            builder.AddRedis();
             AddDbContextConfig(builder);
             AddControllConfiguration(builder);
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             AddJwtBearerConfiguration(builder);
             AddAuthorizationConfiguration(builder);
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddInfrastructureIoC(builder.Configuration);
             return builder;
         }
 
-        private static void AddRedisConfiguration(WebApplicationBuilder builder)
-        {
-            var redisConfig = builder.Configuration.GetSection("Redis").Get<RedisOptions>();
-            builder.Services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = redisConfig.Configuration;
-                options.InstanceName = redisConfig.InstanceName;
-            });
-        }
+       
         private static void AddDbContextConfig(WebApplicationBuilder builder)
         {
             connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
