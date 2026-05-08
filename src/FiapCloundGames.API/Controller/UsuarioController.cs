@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FiapCloudGames.Application.Dtos.Usuario;
-using FiapCloudGames.Application.Services.Interfaces;
+using FiapCloudGames.Application.Interfaces;
 using FiapCloudGames.Domain.Common.Exceptions;
 using FiapCloudGames.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;

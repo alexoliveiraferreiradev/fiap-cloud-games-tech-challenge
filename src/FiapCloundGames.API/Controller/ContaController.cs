@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FiapCloudGames.Application.Dtos.Usuario;
-using FiapCloudGames.Application.Services.Interfaces;
+using FiapCloudGames.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
