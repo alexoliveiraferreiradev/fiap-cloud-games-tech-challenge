@@ -1,6 +1,6 @@
 ﻿using FiapCloudGames.Application.Dtos.Identity;
 using FiapCloudGames.Application.Dtos.Usuario;
-using FiapCloudGames.Application.Services.Interfaces;
+using FiapCloudGames.Application.Interfaces;
 using FiapCloudGames.Domain.Enum;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

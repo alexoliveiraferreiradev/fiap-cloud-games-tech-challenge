@@ -1,4 +1,4 @@
-﻿using FiapCloudGames.Application.Services.Interfaces;
+﻿using FiapCloudGames.Application.Interfaces;
 
 namespace FiapCloudGames.Infrastructure.Security
 {
