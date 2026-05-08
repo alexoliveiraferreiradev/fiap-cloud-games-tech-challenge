@@ -1,5 +1,5 @@
 ﻿using FiapCloudGames.Application.Dtos.Jogos;
-using FiapCloudGames.Application.Services.Interfaces;
+using FiapCloudGames.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
