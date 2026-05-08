@@ -1,4 +1,4 @@
-﻿using FiapCloudGames.Application.Services.Interfaces;
+﻿using FiapCloudGames.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
