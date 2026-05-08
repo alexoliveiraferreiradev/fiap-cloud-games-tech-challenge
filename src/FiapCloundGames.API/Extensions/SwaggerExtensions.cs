@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace FiapCloudGames.API.Extensions
 {
-    public static class SwaggerConfiguration
+    public static class SwaggerExtensions
     {
         public static WebApplicationBuilder AddSwaggerConfiguration(this WebApplicationBuilder builder)
         {
