@@ -1,16 +1,10 @@
 ﻿using Bogus;
-using FiapCloundGames.API.Application.Services;
-using FiapCloundGames.API.Domain.Common.Exceptions;
-using FiapCloundGames.API.Domain.Common.Interfaces;
-using FiapCloundGames.API.Domain.Entities;
-using FiapCloundGames.API.Domain.Resources;
-using FiapCloundGames.API.Domain.ValueObjects;
-using FiapCloundGames.API.Infrastructure.Repository;
-using FiapCloundGames.API.Infrastructure.Security;
-using FiapCloundGames.UnitTests.Fixtures;
-using Moq;
+using FiapCloudGames.Domain.Common.Exceptions;
+using FiapCloudGames.Domain.Resources;
+using FiapCloudGames.Domain.Tests.Fixtures;
+using FiapCloudGames.Domain.ValueObjects;
 
-namespace FiapCloundGames.UnitTests.Domain.ValueObjects
+namespace FiapCloudGames.Domain.Tests.ValueObjects
 {
     public class SenhaTests
     {

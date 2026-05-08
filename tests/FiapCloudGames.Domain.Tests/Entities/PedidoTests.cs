@@ -1,16 +1,11 @@
-﻿using FiapCloundGames.API.Domain.Common.Exceptions;
-using FiapCloundGames.API.Domain.Entities;
-using FiapCloundGames.API.Domain.Enum;
-using FiapCloundGames.API.Domain.Resources;
-using FiapCloundGames.API.Domain.ValueObjects;
-using FiapCloundGames.UnitTests.Fixtures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FiapCloudGames.Domain.Common.Exceptions;
+using FiapCloudGames.Domain.Entities;
+using FiapCloudGames.Domain.Enum;
+using FiapCloudGames.Domain.Resources;
+using FiapCloudGames.Domain.Tests.Fixtures;
+using FiapCloudGames.Domain.ValueObjects;
 
-namespace FiapCloundGames.UnitTests.Domain.Entities
+namespace FiapCloudGames.Domain.Tests.Entities
 {
     public class PedidoTests
     {
