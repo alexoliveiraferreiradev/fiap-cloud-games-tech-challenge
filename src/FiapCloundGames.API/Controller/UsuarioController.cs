@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Configuration.Exceptions;
+using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
