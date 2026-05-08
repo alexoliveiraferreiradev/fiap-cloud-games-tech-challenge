@@ -63,7 +63,7 @@ namespace FiapCloundGames.API.Controller
         }
 
         /// <summary>
-        /// Obtém o catálogo de jogos ativos com suporte a paginação.
+        /// Obtém o catálogo de jogos.
         /// </summary>
         /// <remarks>
         /// Antes de retornar a lista, o sistema executa uma rotina interna para desativar promoções que expiraram, 
@@ -100,7 +100,7 @@ namespace FiapCloundGames.API.Controller
         }
 
         /// <summary>
-        /// Lista os jogos do catálogo filtrados por um gênero específico de forma paginada.
+        /// Lista os jogos do catálogo filtrados por um gênero específico.
         /// </summary>
         /// <remarks>
         /// Este endpoint permite explorar o catálogo por categorias. Antes da listagem, 
@@ -130,7 +130,7 @@ namespace FiapCloundGames.API.Controller
         }
 
         /// <summary>
-        /// Recupera de forma paginada apenas os jogos que possuem promoções ativas e válidas.
+        /// Recupera os jogos que possuem promoções ativas e válidas.
         /// </summary>
         /// <remarks>
         /// Ideal para a seção de 'Destaques' ou 'Ofertas' da loja. O sistema garante que 
