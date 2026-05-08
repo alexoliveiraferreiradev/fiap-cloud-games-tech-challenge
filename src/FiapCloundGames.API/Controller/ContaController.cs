@@ -65,7 +65,7 @@ namespace FiapCloundGames.API.Controller
 
             _logger.LogInformation("Iniciando atualização de perfil do usuário. UserId: {UserId}", usuarioId);
 
-            var usuarioAtualizado = await _usuarioService.AtualizarUsuario(usuarioId, updateUsuarioRequest);
+            var usuarioAtualizado = await _usuarioService.Atualizar(usuarioId, updateUsuarioRequest);
 
             if (usuarioAtualizado == null)
             {                
