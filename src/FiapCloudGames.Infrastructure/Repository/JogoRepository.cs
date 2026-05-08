@@ -67,6 +67,7 @@ namespace FiapCloudGames.Infrastructure.Repository
             var totalItens = await query.CountAsync();
 
             var itens = await query
+             .OrderBy(j => j.Nome.Valor)
             .Skip((pagina - 1) * tamanho)
             .Take(tamanho)
             .ToListAsync();
