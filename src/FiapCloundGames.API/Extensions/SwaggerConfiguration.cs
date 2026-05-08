@@ -1,8 +1,8 @@
-﻿using FiapCloundGames.API.Filters;
+﻿using FiapCloudGames.API.Filters;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
-namespace FiapCloundGames.API.Extensions
+namespace FiapCloudGames.API.Extensions
 {
     public static class SwaggerConfiguration
     {

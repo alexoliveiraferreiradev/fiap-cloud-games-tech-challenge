@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using FiapCloundGames.API.Application.Dtos.Jogos;
-using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Domain.Enum;
+using FiapCloudGames.Application.Dtos.Jogos;
+using FiapCloudGames.Application.Services.Interfaces;
+using FiapCloudGames.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FiapCloundGames.API.Controller
+namespace FiapCloudGames.API.Controller
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,10 +1,10 @@
-﻿using FiapCloundGames.API.Application.Dtos.Biblioteca;
-using FiapCloundGames.API.Application.Services.Interfaces;
+﻿using FiapCloudGames.Application.Dtos.Biblioteca;
+using FiapCloudGames.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace FiapCloundGames.API.Controller
+namespace FiapCloudGames.API.Controller
 {
     [Route("api/[controller]")]
     [ApiController]

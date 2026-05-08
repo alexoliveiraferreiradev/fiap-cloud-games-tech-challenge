@@ -1,6 +1,6 @@
-﻿using FiapCloundGames.API.Infrastructure.Caching;
-using FiapCloundGames.API.Infrastructure.Persistance;
-using FiapCloundGames.API.Infrastructure.Security;
+﻿using FiapCloudGames.Infrastructure.Caching;
+using FiapCloudGames.Infrastructure.Persistance;
+using FiapCloudGames.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace FiapCloundGames.API.Extensions
+namespace FiapCloudGames.API.Extensions
 {
     public static class BuilderConfiguration
     {

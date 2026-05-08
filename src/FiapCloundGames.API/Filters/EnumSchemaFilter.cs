@@ -1,7 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace FiapCloundGames.API.Filters
+namespace FiapCloudGames.API.Filters
 {
     public class EnumSchemaFilter : ISchemaFilter
     {

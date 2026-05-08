@@ -1,11 +1,10 @@
-﻿using Azure;
-using FiapCloundGames.API.Application.Dtos.Identity;
-using FiapCloundGames.API.Application.Dtos.Usuario;
-using FiapCloundGames.API.Application.Services.Interfaces;
+﻿using FiapCloudGames.Application.Dtos.Identity;
+using FiapCloudGames.Application.Dtos.Usuario;
+using FiapCloudGames.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FiapCloundGames.API.Controller
+namespace FiapCloudGames.API.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,14 +13,11 @@ namespace FiapCloundGames.API.Controller
     {
         private readonly IUsuarioService _usuarioService;
         private readonly ILogger<AutenticacaoController> _logger;
-        private readonly ITokenService _tokenConfiguration;
         public AutenticacaoController(IUsuarioService usuarioService, 
-            ILogger<AutenticacaoController> logger,
-            ITokenService tokeConfiguration)
+            ILogger<AutenticacaoController> logger)
         {
             _usuarioService = usuarioService;
             _logger = logger;
-            _tokenConfiguration = tokeConfiguration;
         }
 
         /// <summary>

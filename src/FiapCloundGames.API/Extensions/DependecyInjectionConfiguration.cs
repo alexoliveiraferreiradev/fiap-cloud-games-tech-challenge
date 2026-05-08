@@ -1,13 +1,12 @@
-﻿using FiapCloundGames.API.Application.Services;
-using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Domain.Common.Interfaces;
-using FiapCloundGames.API.Domain.Repositories;
-using FiapCloundGames.API.Infrastructure.Persistance;
-using FiapCloundGames.API.Infrastructure.Repository;
-using FiapCloundGames.API.Infrastructure.Security;
-using FiapCloundGames.API.Infrastructure.Worker;
+﻿using FiapCloudGames.Application.Services;
+using FiapCloudGames.Application.Services.Interfaces;
+using FiapCloudGames.Domain.Repositories;
+using FiapCloudGames.Infrastructure.Persistance;
+using FiapCloudGames.Infrastructure.Repository;
+using FiapCloudGames.Infrastructure.Security;
+using FiapCloudGames.Infrastructure.Worker;
 
-namespace FiapCloundGames.API.Extensions
+namespace FiapCloudGames.API.Extensions
 {
     public static class DependecyInjectionConfiguration
     {
@@ -18,7 +17,7 @@ namespace FiapCloundGames.API.Extensions
             builder.Services.AddScoped<ITokenService, JwtTokenService>();
             builder.Services.AddScoped<IUsuarioService, UsuarioService>();
             builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddScoped<IPasswordHasherService, PasswordHasher>();
             builder.Services.AddScoped<IPedidoService, PedidoService>();
             builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
             builder.Services.AddScoped<IBibliotecaService, BibliotecaService>();
