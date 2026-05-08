@@ -1,4 +1,4 @@
-using FiapCloundGames.API.Configuration.Extensions;
+using FiapCloundGames.API.Extensions;
 using FiapCloundGames.API.Infrastructure.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
