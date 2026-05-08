@@ -1,7 +1,7 @@
 ﻿using FiapCloundGames.API.Domain.Resources;
 using System.ComponentModel.DataAnnotations;
 
-namespace FiapCloundGames.API.Application.Dtos.Usuario
+namespace FiapCloundGames.API.Application.Dtos.Identity
 {
     public class LoginRequest {
 
