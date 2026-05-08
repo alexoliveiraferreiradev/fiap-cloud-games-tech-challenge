@@ -1,4 +1,4 @@
-﻿namespace FiapCloundGames.API.Configuration.Exceptions
+﻿namespace FiapCloundGames.API.Domain.Common.Exceptions
 {
     public class BusinessException : Exception
     {
