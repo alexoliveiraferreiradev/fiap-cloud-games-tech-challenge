@@ -1,4 +1,5 @@
-﻿using FiapCloudGames.Domain.Entities;
+﻿using FiapCloudGames.Domain.Common;
+using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Enum;
 using FiapCloudGames.Domain.Repositories;
 using FiapCloudGames.Infrastructure.Persistance;
@@ -18,25 +19,7 @@ namespace FiapCloudGames.Infrastructure.Repository
         {
             return await _dbContext.Jogos.Where(x => x.Ativo == true).ToListAsync();
         }
-
-        public async Task<int> TotalJogosPromovidos()
-        {
-            return  await _dbContext.Jogos
-                 .Where(x => x.Promocoes.Any(p => p.Ativo ))
-                 .Include(x => x.Promocoes.Where(p => p.Ativo ))
-                 .AsNoTracking()
-                 .CountAsync();
-        }
-        public async Task<IEnumerable<Jogo>> ObtemJogosPromovidosPaginacao(int pagina = 1, int tamanhoPagina = 10)
-        {
-            return await _dbContext.Jogos
-                .Where(x => x.Promocoes.Any(p => p.Ativo ))
-                .Include(x => x.Promocoes.Where(p => p.Ativo ))
-                .Skip((pagina - 1) * tamanhoPagina)
-                .Take(tamanhoPagina)
-                .AsNoTracking()
-                .ToListAsync();
-        }
+     
         public async Task DesativaPromocoesInvalidas()
         {
             var agora = DateTime.UtcNow;
@@ -44,24 +27,7 @@ namespace FiapCloudGames.Infrastructure.Repository
                 .SelectMany(j => j.Promocoes)
                 .Where(p => p.Ativo && p.Periodo.DataFim <= agora)
                 .ExecuteUpdateAsync(s => s.SetProperty(p => p.Ativo, false).SetProperty(p => p.DataAlteracao, DateTime.UtcNow));
-        }
-
-        public async Task<IEnumerable<Jogo>> ObtemPorGeneroPaginado(GeneroJogo generoJogo, int pagina = 1, int tamanhoPagina = 10)
-        {
-            return await _dbContext.Jogos.
-                Where(x => x.Ativo == true && x.Genero == generoJogo)
-                .Skip((pagina - 1) * tamanhoPagina)
-                .Take(tamanhoPagina)
-                .AsNoTracking()
-                .ToListAsync();
-        }
-        public async Task<int> TotalJogoPorGenero(GeneroJogo generoJogo)
-        {
-            return await _dbContext.Jogos.
-                Where(x => x.Ativo == true && x.Genero == generoJogo)
-                .AsNoTracking()
-                .CountAsync();
-        }
+        }    
 
         public async Task<Jogo?> ObtemPorNome(string nomeJogo)
         {
@@ -82,15 +48,30 @@ namespace FiapCloudGames.Infrastructure.Repository
             return await _dbContext.Jogos.Where(x => jogosIds.Contains(x.Id)).ToListAsync();
         }
 
-        public async Task<IEnumerable<Jogo>> ObtemCatalogoPaginado(int pagina = 1, int tamanhoPagina = 10)
+
+        public async Task<PagedResult<Jogo>> ObtemPaginado(int pagina = 1, int tamanho = 10, string? termoBusca = "", 
+            GeneroJogo? generoJogo = null, bool? promocao = false)
         {
-           return await _dbContext.Jogos.AsNoTracking() 
-                        .Where(j => j.Ativo)
-                        .OrderBy(j => j.Nome.Valor) 
-                        .Skip((pagina - 1) * tamanhoPagina)
-                        .Take(tamanhoPagina)
-                        .AsNoTracking()
-                        .ToListAsync();
+            var query = _dbContext.Jogos.AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(termoBusca))
+                query = query.Where(j => j.Nome.Valor.Contains(termoBusca));
+
+            if (generoJogo.HasValue)
+                query = query.Where(j => j.Genero == generoJogo.Value);
+
+            if (promocao == true)
+                query = query.Include(j => j.Promocoes.Where(p => p.Ativo))
+                     .Where(x => x.Promocoes.Any(p => p.Ativo));
+
+            var totalItens = await query.CountAsync();
+
+            var itens = await query
+            .Skip((pagina - 1) * tamanho)
+            .Take(tamanho)
+            .ToListAsync();
+
+            return new PagedResult<Jogo>(itens, pagina,tamanho,totalItens);
         }
     }
 }
