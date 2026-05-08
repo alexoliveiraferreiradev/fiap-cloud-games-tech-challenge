@@ -2,6 +2,7 @@
 using FiapCloudGames.Application.Dtos.Jogos;
 using FiapCloudGames.Application.Dtos.Promocao;
 using FiapCloudGames.Domain.Entities;
+using FiapCloudGames.Domain.Enum;
 
 namespace FiapCloudGames.Application.Mappings
 {
@@ -13,8 +14,9 @@ namespace FiapCloudGames.Application.Mappings
                 .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Nome.Valor))
                 .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao.Valor))
                 .ForMember(dest => dest.PrecoOriginal, opt => opt.MapFrom(src => src.PrecoBase.Valor))
-                .ForMember(dest=>dest.Ativo,opt=>opt.MapFrom(src=>src.Ativo))
-                .ForMember(dest=>dest.PrecoAtual,opt=>opt.MapFrom(src=>src.ObterPrecoAtual().Valor));
+                .ForMember(dest => dest.Ativo, opt => opt.MapFrom(src => src.Ativo))
+                .ForMember(dest => dest.PrecoAtual, opt => opt.MapFrom(src => src.ObterPrecoAtual().Valor))
+                .ForMember(dest => dest.Genero, opt => opt.MapFrom(src => src.Genero));
 
             CreateMap<JogoResponse, JogoUsuarioResponse>()
                 .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Nome))
@@ -26,6 +28,7 @@ namespace FiapCloudGames.Application.Mappings
                 .ForMember(dest => dest.NomeJogo, opt => opt.MapFrom(src => src.Nome.Valor))
                 .ForMember(dest => dest.DescricaoJogo, opt => opt.MapFrom(src => src.Descricao.Valor))
                 .ForMember(dest => dest.ValorPromocao, opt => opt.MapFrom(src => src.ObterPrecoAtual().Valor));
+
         }
     }
 }
