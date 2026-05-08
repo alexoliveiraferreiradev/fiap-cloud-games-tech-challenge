@@ -11,7 +11,6 @@ namespace FiapCloudGames.Domain.Repositories
         Task<Promocao?> ObterPromocaoPorId(Guid id);       
         Task<IEnumerable<Jogo>> ObterJogosPorIds(IEnumerable<Guid> jogosIds);
         Task DesativaPromocoesInvalidas();
-        Task<IEnumerable<Jogo>> ObtemCatalogoPaginado(int pagina = 1, int tamanhoPagina = 10);
         Task<PagedResult<Jogo>> ObtemPaginado(int pagina = 1, int tamanho = 10, string? termoBusca = "", 
             GeneroJogo? generoJogo = null, bool? promocao = false);
     }
