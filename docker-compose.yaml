@@ -6,7 +6,7 @@ services:
       - "1433:1433"
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=FiapCloundGames@2026
+      - MSSQL_SA_PASSWORD=FiapCloudGames@2026
       - MSSQL_PID=Developer
     networks:
       - fiap-network
