@@ -2,7 +2,7 @@
 using FiapCloundGames.API.Application.Dtos.Pedido;
 using FiapCloundGames.API.Domain.Entities;
 
-namespace FiapCloundGames.API.Configuration.Mapping
+namespace FiapCloundGames.API.Application.Mappings
 {
     public class PedidoProfile : Profile
     {

@@ -3,7 +3,7 @@ using FiapCloundGames.API.Application.Dtos.Usuario;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.ValueObjects;
 
-namespace FiapCloundGames.API.Configuration.Mapping
+namespace FiapCloundGames.API.Application.Mappings
 {
     public class UsuarioProfile : Profile
     {
