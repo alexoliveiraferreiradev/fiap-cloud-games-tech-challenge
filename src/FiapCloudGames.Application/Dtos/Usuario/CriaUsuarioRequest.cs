@@ -1,5 +1,4 @@
-﻿using FiapCloudGames.Domain.Enum;
-using FiapCloudGames.Domain.Resources;
+﻿using FiapCloudGames.Domain.Resources;
 using System.ComponentModel.DataAnnotations;
 
 namespace FiapCloudGames.Application.Dtos.Usuario

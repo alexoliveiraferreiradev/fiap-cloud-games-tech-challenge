@@ -1,6 +1,5 @@
 ﻿using FiapCloudGames.Domain.Enum;
 using FiapCloudGames.Domain.Resources;
-using FiapCloudGames.Domain.ValueObjects;
 using System.ComponentModel.DataAnnotations;
 
 namespace FiapCloudGames.Application.Dtos.Jogos
