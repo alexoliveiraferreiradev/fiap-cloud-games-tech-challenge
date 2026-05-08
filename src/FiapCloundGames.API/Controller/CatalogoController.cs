@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FiapCloudGames.Application.Dtos.Jogos;
-using FiapCloudGames.Application.Services.Interfaces;
+using FiapCloudGames.Application.Interfaces;
+using FiapCloudGames.Domain.Common;
+using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -83,19 +85,22 @@ namespace FiapCloudGames.API.Controller
         {
             await _jogoService.DesativaPromocoesInvalidas();
             _logger.LogInformation("Consultando catálogo de jogos. Pagina: {Pagina}, TamanhoPagina: {TamanhoPagina}", pagina, tamanhoPagina);
-            var jogos = await _jogoService.ObtemCatalagoJogoPaginado(pagina, tamanhoPagina);
-            if (jogos.Items == null || !jogos.Items.Any())
+
+            var jogoFiltro = new JogoFiltroRequest { Pagina = pagina, Tamanho = tamanhoPagina };
+
+            var jogosPaginados = await _jogoService.ObtemPaginado(jogoFiltro);
+            if (jogosPaginados.Itens == null || !jogosPaginados.Itens.Any())
             {
                 _logger.LogInformation("Consulta ao catálogo finalizada. Nenhum jogo encontrado na Pagina: {Pagina}", pagina);
                 return NotFound("Não foi encontrado jogos");
             }
 
-            var itensMapeados = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
+            var itensMapeados = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogosPaginados.Itens);
 
-            var response = new PagedResult<JogoUsuarioResponse>(itensMapeados, jogos.PageNumber, jogos.PageSize, jogos.TotalItems);
+            var response = new PagedResult<JogoUsuarioResponse>(itensMapeados, jogosPaginados.PageNumber, jogosPaginados.PageSize, jogosPaginados.TotalItens);
 
 
-            _logger.LogInformation("Catálogo recuperado com sucesso. Pagina: {Pagina}, Quantidade de Jogos Retornados: {QuantidadeJogos}", pagina, jogos.Items.Count());
+            _logger.LogInformation("Catálogo recuperado com sucesso. Pagina: {Pagina}, Quantidade de Jogos Retornados: {QuantidadeJogos}", pagina, jogosPaginados.Itens.Count());
             return Ok(response);
         }
 
@@ -117,13 +122,16 @@ namespace FiapCloudGames.API.Controller
         public async Task<ActionResult<IEnumerable<JogoUsuarioResponse>>> ListarPorGenero(GeneroJogo genero, [FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
         {
             await _jogoService.DesativaPromocoesInvalidas();
-            var jogos = await _jogoService.ObtemPorGeneroPaginacao(genero,pagina,tamanhoPagina);
-            if (!jogos.Items.Any())
+
+            var jogoFiltro = new JogoFiltroRequest { Pagina = pagina, Tamanho = tamanhoPagina, Genero = genero };
+
+            var jogos = await _jogoService.ObtemPaginado(jogoFiltro);
+            if (!jogos.Itens.Any())
                 return NotFound("Não foi encontrado jogos");
 
-            var itensMapeados = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
+            var itensMapeados = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Itens);
 
-            var response = new PagedResult<JogoUsuarioResponse>(itensMapeados, jogos.PageNumber, jogos.PageSize, jogos.TotalItems);
+            var response = new PagedResult<JogoUsuarioResponse>(itensMapeados, jogos.PageNumber, jogos.PageSize, jogos.TotalItens);
 
 
             return Ok(response);
@@ -147,17 +155,21 @@ namespace FiapCloudGames.API.Controller
         {
             await _jogoService.DesativaPromocoesInvalidas();
             _logger.LogInformation("Iniciando busca por jogos em promoção. Pagina: {Pagina}, TamanhoPagina: {TamanhoPagina}", pagina, tamanhoPagina);
-            var jogos = await _jogoService.ObtemJogosPromovidosPaginacao(pagina,tamanhoPagina);
-            if (jogos.Items == null || !jogos.Items.Any())
+
+            var jogoFiltro = new JogoFiltroRequest { Pagina = pagina, Tamanho = tamanhoPagina, ApenasPromovidos = true };
+
+            var jogos = await _jogoService.ObtemPaginado(jogoFiltro);
+
+            if (jogos.Itens == null || !jogos.Itens.Any())
             {
                 _logger.LogInformation("Busca de promoções finalizada. Nenhum jogo em oferta encontrado na Pagina: {Pagina}", pagina);
                 return NotFound("Não foi encontrado nenhum jogo com promoções");
             }
-            var itensMapeados = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Items);
+            var itensMapeados = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Itens);
 
-            var response = new PagedResult<JogoUsuarioResponse>(itensMapeados, jogos.PageNumber, jogos.PageSize, jogos.TotalItems);
+            var response = new PagedResult<JogoUsuarioResponse>(itensMapeados, jogos.PageNumber, jogos.PageSize, jogos.TotalItens);
 
-            _logger.LogInformation("Jogos em promoção recuperados com sucesso. Pagina: {Pagina}, Quantidade Retornada: {QuantidadeJogos}", pagina, jogos.Items.Count());
+            _logger.LogInformation("Jogos em promoção recuperados com sucesso. Pagina: {Pagina}, Quantidade Retornada: {QuantidadeJogos}", pagina, jogos.Itens.Count());
 
             return Ok(response);
         }
