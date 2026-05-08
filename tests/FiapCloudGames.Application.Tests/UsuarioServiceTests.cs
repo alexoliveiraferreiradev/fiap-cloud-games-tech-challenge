@@ -28,6 +28,7 @@ namespace FiapCloudGames.Application.Tests
         private readonly UsuarioService _service;
         private readonly ILogger<UsuarioService> _logger;
         private IMapper _mapper;
+        private readonly Mock<IMapper> _mapperMock;
         public UsuarioServiceTests()
         {
             _usuarioFixture = new UsuarioFixture();
@@ -41,6 +42,7 @@ namespace FiapCloudGames.Application.Tests
             _mapper = config.CreateMapper();
             _usuarioMock = new Mock<IUsuarioRepository>();
             _passwordMock = new Mock<IPasswordHasherService>();
+            _mapperMock = new Mock<IMapper>();
             _logger = NullLogger<UsuarioService>.Instance;
             _service = new UsuarioService(_usuarioMock.Object, _passwordMock.Object, _mapper,_logger, _tokenService.Object);
         }
@@ -122,9 +124,17 @@ namespace FiapCloudGames.Application.Tests
         {
             //Arrange
             var usuarioRequest = _usuarioFixture.UsuarioRequest();
+            var usuarioResponse = new UsuarioResponse { Email = usuarioRequest.Email, Nome = usuarioRequest.Nome };
+            var tokenResult = new TokenResult { AccessToken = "token-gerado-pelo-test" };
             //Mock
 
             _passwordMock.Setup(h => h.HashPassword(usuarioRequest.Senha)).Returns(usuarioRequest.Senha);
+            _mapperMock.Setup(m => m.Map<UsuarioResponse>(It.IsAny<Usuario>()))
+            .Returns(usuarioResponse);
+            
+            _tokenService.Setup(s => s.GerarToken(It.IsAny<UsuarioResponse>()))
+                     .ReturnsAsync(tokenResult);
+
             //Act
             var result = await _service.Cadastrar(usuarioRequest);
             //Assert
@@ -508,17 +518,17 @@ namespace FiapCloudGames.Application.Tests
             //Arrange
             var loginRequest = new LoginRequest(_faker.Internet.Email(), "Senha@123");
             var usuario = _usuarioFixture.ObtemJogadorComSucesso();
+            var tokenResult = new TokenResult { AccessToken = "token-gerado-pelo-teste" };
+            var usuarioResponse = new UsuarioResponse { Id = usuario.Id, Email = usuario.EmailUsuario.Valor };
             //Mock 
             _passwordMock.Setup(h => h.HashPassword(loginRequest.Senha)).Returns(loginRequest.Senha);
             _passwordMock.Setup(h => h.VerifyPassword(loginRequest.Senha, usuario.Senha.Hash)).Returns(true);
             _usuarioMock.Setup( r => r.ObterPorEmail(loginRequest.Email)).ReturnsAsync(usuario);
-            _tokenService.Setup(r => r.GerarToken(new UsuarioResponse
-            {
-                Id = usuario.Id,
-                Nome = usuario.NomeUsuario.Valor,
-                Email = usuario.EmailUsuario.Valor,
-                PerfilUsuario = usuario.Perfil
-            }));
+            _mapperMock.Setup(m => m.Map<UsuarioResponse>(It.IsAny<Usuario>()))
+               .Returns(usuarioResponse);
+            _tokenService.Setup(s => s.GerarToken(It.IsAny<UsuarioResponse>()))
+                     .ReturnsAsync(tokenResult);
+
             //Act
             var result = await _service.Autenticar(loginRequest);
             //Assert
