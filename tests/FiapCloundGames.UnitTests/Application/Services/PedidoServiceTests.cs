@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using Castle.Core.Logging;
+using FiapCloundGames.API.Application.Mappings;
 using FiapCloundGames.API.Application.Services;
 using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Configuration.Mapping;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
@@ -13,7 +12,6 @@ using FiapCloundGames.UnitTests.Fixtures;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using System.Net.NetworkInformation;
 
 namespace FiapCloundGames.UnitTests.Application.Services
 {

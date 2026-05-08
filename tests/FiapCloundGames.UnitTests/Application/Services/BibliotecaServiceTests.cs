@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using Castle.Core.Logging;
+using FiapCloundGames.API.Application.Mappings;
 using FiapCloundGames.API.Application.Services;
-using FiapCloundGames.API.Configuration.Mappings;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Repositories;

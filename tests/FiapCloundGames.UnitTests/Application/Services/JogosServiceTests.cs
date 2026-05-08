@@ -2,9 +2,8 @@
 using Bogus;
 using FiapCloundGames.API.Application.Dtos.Jogos;
 using FiapCloundGames.API.Application.Dtos.Promocao;
+using FiapCloundGames.API.Application.Mappings;
 using FiapCloundGames.API.Application.Services;
-using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Configuration.Mapping;
 using FiapCloundGames.API.Domain.Common.Exceptions;
 using FiapCloundGames.API.Domain.Entities;
 using FiapCloundGames.API.Domain.Enum;
