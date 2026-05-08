@@ -2,6 +2,7 @@
 using Bogus;
 using FiapCloudGames.Application.Dtos.Jogos;
 using FiapCloudGames.Application.Dtos.Promocao;
+using FiapCloudGames.Application.Interfaces;
 using FiapCloudGames.Application.Mappings;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Application.Tests.Fixtures;
@@ -11,7 +12,6 @@ using FiapCloudGames.Domain.Enum;
 using FiapCloudGames.Domain.Repositories;
 using FiapCloudGames.Domain.Resources;
 using FiapCloudGames.Domain.ValueObjects;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -22,25 +22,25 @@ namespace FiapCloudGames.Application.Tests
     {
         private readonly Faker _faker;
         private readonly Mock<IJogoRepository> _mockJogo;
+        private readonly Mock<ICacheService> _cacheService;
         private readonly JogosService _jogosService;
         private readonly JogosFixture _jogosFixture;
         private readonly PromocaoFixture _promocaoFixture;
         private readonly IMapper _mapper;
         private readonly ILogger<JogosService> _logger;
-        private readonly Mock<IDistributedCache> _cacheMock;
         public JogosServiceTests()
         {
             _faker = new Faker();
             _mockJogo = new Mock<IJogoRepository>();
+            _cacheService = new Mock<ICacheService>();
             var configMapper = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<JogoProfile>();
                 cfg.AddProfile<PromocaoProfile>();
             });
-            _cacheMock = new Mock<IDistributedCache>(); 
             _mapper = configMapper.CreateMapper();
             _logger = NullLogger<JogosService>.Instance;
-            _jogosService = new JogosService(_mockJogo.Object,_mapper, _cacheMock.Object,_logger);
+            _jogosService = new JogosService(_mockJogo.Object,_mapper, _cacheService.Object, _logger);
             _jogosFixture = new JogosFixture();
             _promocaoFixture = new PromocaoFixture();
         }
@@ -437,9 +437,9 @@ namespace FiapCloudGames.Application.Tests
           .ReturnsAsync(listaJogosAtivos);
 
             //Act 
-            var respone = await _jogosService.ObtemCatalagoJogoPaginado(pagina: 1, tamanhoPagina: 10);
+            var respone = await _jogosService.ObtemPaginado(new JogoFiltroRequest { Pagina =1, Tamanho = 10});
             //Assert
-            Assert.True(respone.Items.Any());
+            Assert.True(respone.Itens.Any());
         }
 
     }
