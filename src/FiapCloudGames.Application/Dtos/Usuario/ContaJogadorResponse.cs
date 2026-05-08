@@ -1,0 +1,14 @@
+﻿using FiapCloudGames.Domain.Enum;
+
+namespace FiapCloudGames.Application.Dtos.Usuario
+{
+    public class ContaJogadorResponse
+    {
+        public Guid Id { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public bool Ativo { get; set; }
+        public TipoUsuario PerfilUsuario { get; set; }
+        public DateTime DataAlteracao { get; set; }
+    }
+}

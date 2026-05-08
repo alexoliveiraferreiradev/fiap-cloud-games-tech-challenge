@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using FiapCloundGames.API.Application.Dtos.Jogos;
-using FiapCloundGames.API.Application.Dtos.Promocao;
-using FiapCloundGames.API.Application.Services.Interfaces;
+﻿using FiapCloudGames.Application.Dtos.Jogos;
+using FiapCloudGames.Application.Dtos.Promocao;
+using FiapCloudGames.Application.Interfaces;
+using FiapCloudGames.Domain.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FiapCloundGames.API.Controller
+namespace FiapCloudGames.API.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -37,13 +37,16 @@ namespace FiapCloundGames.API.Controller
         {
             _logger.LogInformation("Iniciando consulta de jogos em promoção.");
             await _jogoService.DesativaPromocoesInvalidas();
-            var jogos = await _jogoService.ObtemJogosPromovidosPaginacao(1,10);
-            if ( jogos == null|| !jogos.Items.Any())
+            
+            var jogoFiltro = new JogoFiltroRequest { Pagina = pagina, Tamanho =  tamanhoPagina };   
+
+            var jogos = await _jogoService.ObtemPaginado(jogoFiltro);
+            if ( jogos == null|| !jogos.Itens.Any())
             {
                 _logger.LogInformation("Consulta finalizada. Nenhuma promoção ativa encontrada no momento.");
                 return NotFound("Não foi encontrado nenhum jogo com promoções");
             }
-            _logger.LogInformation("Promoções recuperadas com sucesso. Quantidade de Jogos: {QuantidadeJogos}",jogos.Items.Count());
+            _logger.LogInformation("Promoções recuperadas com sucesso. Quantidade de Jogos: {QuantidadeJogos}",jogos.Itens.Count());
             return Ok(jogos);
         }
         /// <summary>

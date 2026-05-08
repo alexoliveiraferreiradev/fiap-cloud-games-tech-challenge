@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using FiapCloundGames.API.Application.Dtos.Usuario;
-using FiapCloundGames.API.Application.Services.Interfaces;
+using FiapCloudGames.Application.Dtos.Usuario;
+using FiapCloudGames.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace FiapCloundGames.API.Controller
+namespace FiapCloudGames.API.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -65,7 +65,7 @@ namespace FiapCloundGames.API.Controller
 
             _logger.LogInformation("Iniciando atualização de perfil do usuário. UserId: {UserId}", usuarioId);
 
-            var usuarioAtualizado = await _usuarioService.AtualizarUsuario(usuarioId, updateUsuarioRequest);
+            var usuarioAtualizado = await _usuarioService.Atualizar(usuarioId, updateUsuarioRequest);
 
             if (usuarioAtualizado == null)
             {                

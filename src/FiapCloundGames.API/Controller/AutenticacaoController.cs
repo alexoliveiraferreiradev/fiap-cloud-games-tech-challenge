@@ -1,11 +1,10 @@
-﻿using Azure;
-using FiapCloundGames.API.Application.Dtos.Usuario;
-using FiapCloundGames.API.Application.Services.Interfaces;
-using FiapCloundGames.API.Domain.Common.Interfaces;
+﻿using FiapCloudGames.Application.Dtos.Identity;
+using FiapCloudGames.Application.Dtos.Usuario;
+using FiapCloudGames.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FiapCloundGames.API.Controller
+namespace FiapCloudGames.API.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,14 +13,11 @@ namespace FiapCloundGames.API.Controller
     {
         private readonly IUsuarioService _usuarioService;
         private readonly ILogger<AutenticacaoController> _logger;
-        private readonly IToken _tokenConfiguration;
         public AutenticacaoController(IUsuarioService usuarioService, 
-            ILogger<AutenticacaoController> logger,
-            IToken tokeConfiguration)
+            ILogger<AutenticacaoController> logger)
         {
             _usuarioService = usuarioService;
             _logger = logger;
-            _tokenConfiguration = tokeConfiguration;
         }
 
         /// <summary>
@@ -52,15 +48,15 @@ namespace FiapCloundGames.API.Controller
         public async Task<ActionResult<LoginResponse>> Login(LoginRequest loginRequest)
         {
             _logger.LogInformation("Iniciando processo de autenticação. Email: {Email}", loginRequest.Email);
-            var usuarioResponse = await _usuarioService.Autenticar(loginRequest);
-            if (usuarioResponse == null)
+            var loginResponse = await _usuarioService.Autenticar(loginRequest);
+            if (loginResponse == null)
             {
                 _logger.LogInformation("Usuário não foi encontrado no banco de dados. EMAIL: {email}", loginRequest.Email);
                 return NotFound("Usuário não encotrado.");
             }
-            var response = await _tokenConfiguration.RetornaJwt(usuarioResponse);
-            _logger.LogInformation("Login realizado com sucesso. UsuarioId: {UserId}, Email: {Email}", usuarioResponse.Id, loginRequest.Email);
-            return StatusCode(StatusCodes.Status200OK,response);
+           
+            _logger.LogInformation("Login realizado com sucesso. UsuarioId: {UserId}, Email: {Email}", loginResponse.Id, loginRequest.Email);
+            return StatusCode(StatusCodes.Status200OK, loginResponse);
         }
 
         /// <summary>
@@ -98,11 +94,11 @@ namespace FiapCloundGames.API.Controller
         public async Task<ActionResult<LoginResponse>> Cadastrar(CriaUsuarioRequest request)
         {
             _logger.LogInformation("Iniciando tentativa de cadastro de novo usuário. Email: {Email}", request.Email);
-            var usuario = await _usuarioService.CadastrarUsuario(request);
-            _logger.LogInformation("Usuário criado com sucesso. Gerando token de acesso. UserId: {UserId}, Email: {Email}", usuario.Id, request.Email);
-            var response = await _tokenConfiguration.RetornaJwt(usuario);
-            _logger.LogInformation("Fluxo de cadastro e autenticação inicial concluído. UserId: {UserId}", usuario.Id);
-            return StatusCode(StatusCodes.Status201Created, response);
+            var loginResponse = await _usuarioService.Cadastrar(request);
+            _logger.LogInformation("Usuário criado com sucesso. Gerando token de acesso. UserId: {UserId}, Email: {Email}", loginResponse.Id, loginResponse.Email);
+          
+            _logger.LogInformation("Fluxo de cadastro e autenticação inicial concluído. UserId: {UserId}", loginResponse.Id);
+            return StatusCode(StatusCodes.Status201Created, loginResponse);
         }
 
         

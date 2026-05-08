@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/docs/">
+    <File Path="docs/script-migration.sql" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/FiapCloudGames.Application/FiapCloudGames.Application.csproj" Id="be916803-8044-4e81-bdcd-ff754a9c335c" />
+    <Project Path="src/FiapCloudGames.Domain/FiapCloudGames.Domain.csproj" Id="203ffc82-f1f2-49d4-b4a7-1286a6d0d86a" />
+    <Project Path="src/FiapCloudGames.Infrastructure.IoC/FiapCloudGames.Infrastructure.IoC.csproj" Id="a79d5a2d-f333-4856-bc8c-06891f5d4d8f" />
+    <Project Path="src/FiapCloudGames.Infrastructure/FiapCloudGames.Infrastructure.csproj" Id="c2393f9d-4498-48af-bbc2-276d8da84f63" />
+    <Project Path="src/FiapCloundGames.API/FiapCloudGames.API.csproj" Id="c1edca7b-ed13-4737-8314-fc3edb1d749a" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FiapCloudGames.Application.Tests/FiapCloudGames.Application.Tests.csproj" Id="f2e82466-8630-4b31-ad8f-e3f07461822d" />
+    <Project Path="tests/FiapCloudGames.Domain.Tests/FiapCloudGames.Domain.Tests.csproj" Id="cf83905e-1554-45eb-91af-a8cbd946a513" />
+    <Project Path="tests/FiapCloudGames.Infrastructure.Tests/FiapCloudGames.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>

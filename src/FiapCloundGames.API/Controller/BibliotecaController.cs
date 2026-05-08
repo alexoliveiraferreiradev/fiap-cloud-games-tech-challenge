@@ -1,10 +1,10 @@
-﻿using FiapCloundGames.API.Application.Dtos.Biblioteca;
-using FiapCloundGames.API.Application.Services.Interfaces;
+﻿using FiapCloudGames.Application.Dtos.Biblioteca;
+using FiapCloudGames.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace FiapCloundGames.API.Controller
+namespace FiapCloudGames.API.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -49,12 +49,12 @@ namespace FiapCloundGames.API.Controller
             _logger.LogInformation("Consultando biblioteca de jogos. UserId: {UserId}, Pagina: {Pagina}, TamanhoPagina: {TamanhoPagina}", currentUserId, pagina, tamanhoPagina);
             var jogosBiblioteca = await _bibliotecaService.ObtemBibliotecaDoUsuarioPaginacao(currentUserId,pagina,tamanhoPagina);
 
-            if (jogosBiblioteca == null || !jogosBiblioteca.Items.Any())
+            if (jogosBiblioteca == null || !jogosBiblioteca.Itens.Any())
             {
                 _logger.LogInformation("Consulta finalizada. Nenhum jogo encontrado na biblioteca para o UserId: {UserId}", currentUserId);
                 return NotFound("Não há jogos na biblioteca do usuário.");
             }
-            _logger.LogInformation("Consulta de biblioteca bem-sucedida. UserId: {UserId}, Quantidade de Jogos Retornados: {QuantidadeJogos}", currentUserId, jogosBiblioteca.Items.Count());
+            _logger.LogInformation("Consulta de biblioteca bem-sucedida. UserId: {UserId}, Quantidade de Jogos Retornados: {QuantidadeJogos}", currentUserId, jogosBiblioteca.Itens.Count());
             return Ok(jogosBiblioteca);
         }
         
