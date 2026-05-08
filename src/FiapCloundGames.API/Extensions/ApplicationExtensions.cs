@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FiapCloudGames.API.Extensions
 {
-    public static class ApplicationConfiguration
+    public static class ApplicationExtensions
     {
         public static void SeedData(this IApplicationBuilder app)
         {
@@ -60,6 +60,7 @@ namespace FiapCloudGames.API.Extensions
         {
             if (app.Environment.IsDevelopment())
             {
+                app.SeedData();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
