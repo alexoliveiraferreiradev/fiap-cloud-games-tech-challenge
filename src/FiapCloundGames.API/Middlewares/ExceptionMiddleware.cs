@@ -1,9 +1,8 @@
-﻿using FiapCloundGames.API.Configuration.Exceptions;
-using FiapCloundGames.API.Domain.Common.Exceptions;
+﻿using FiapCloundGames.API.Domain.Common.Exceptions;
 using System.Net;
 using System.Text.Json;
 
-namespace FiapCloundGames.API.Configuration.Middlewares
+namespace FiapCloundGames.API.Middlewares
 {
     public class ExceptionMiddleware
     {
