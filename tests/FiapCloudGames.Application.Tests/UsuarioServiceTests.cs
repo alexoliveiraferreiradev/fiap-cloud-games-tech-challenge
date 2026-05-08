@@ -2,9 +2,9 @@
 using Bogus;
 using FiapCloudGames.Application.Dtos.Identity;
 using FiapCloudGames.Application.Dtos.Usuario;
+using FiapCloudGames.Application.Interfaces;
 using FiapCloudGames.Application.Mappings;
 using FiapCloudGames.Application.Services;
-using FiapCloudGames.Application.Services.Interfaces;
 using FiapCloudGames.Application.Tests.Fixtures;
 using FiapCloudGames.Domain.Common.Exceptions;
 using FiapCloudGames.Domain.Entities;
