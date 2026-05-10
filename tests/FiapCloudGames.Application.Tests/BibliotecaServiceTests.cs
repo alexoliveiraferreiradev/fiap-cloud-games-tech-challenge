@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FiapCloudGames.Application.Interfaces;
 using FiapCloudGames.Application.Mappings;
 using FiapCloudGames.Application.Services;
 using FiapCloudGames.Application.Tests.Fixtures;
@@ -22,10 +23,12 @@ namespace FiapCloudGames.Application.Tests
         private IMapper _mapper;
         private readonly ILogger<BibliotecaService> _logger;
         private readonly BibliotecaService _service;
+        private readonly Mock<ICacheService> _cacheService;
         public BibliotecaServiceTests()
         {
             _jogoFixture = new JogosFixture();
             _usuarioFixture = new UsuarioFixture();
+            _cacheService = new Mock<ICacheService>();  
             _bibliotecaMock = new Mock<IBibliotecaRepository>();
             _usuarioMock = new Mock<IUsuarioRepository>();
             _jogoMock = new Mock<IJogoRepository>();
@@ -37,7 +40,7 @@ namespace FiapCloudGames.Application.Tests
             _logger = NullLogger<BibliotecaService>.Instance;
 
             _service = new BibliotecaService(_bibliotecaMock.Object, _usuarioMock.Object,
-                _jogoMock.Object, _mapper, _logger);
+                _jogoMock.Object, _mapper, _logger, _cacheService.Object);
 
         }
         [Fact(DisplayName = "Sucesso ao adicionar jogo na biblioteca - adiciona jogo com sucesso")]
