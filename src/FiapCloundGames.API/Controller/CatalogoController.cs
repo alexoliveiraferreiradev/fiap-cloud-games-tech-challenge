@@ -158,20 +158,17 @@ namespace FiapCloudGames.API.Controller
 
             var jogoFiltro = new JogoFiltroRequest { Pagina = pagina, Tamanho = tamanhoPagina, ApenasPromovidos = true };
 
-            var jogos = await _jogoService.ObtemPaginado(jogoFiltro);
+            var jogosPromovidos = await _jogoService.ObtemPromocaoPaginado(jogoFiltro);
 
-            if (jogos.Itens == null || !jogos.Itens.Any())
+            if (jogosPromovidos.Itens == null || !jogosPromovidos.Itens.Any())
             {
                 _logger.LogInformation("Busca de promoções finalizada. Nenhum jogo em oferta encontrado na Pagina: {Pagina}", pagina);
                 return NotFound("Não foi encontrado nenhum jogo com promoções");
-            }
-            var itensMapeados = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Itens);
+            }         
 
-            var response = new PagedResult<JogoUsuarioResponse>(itensMapeados, jogos.PageNumber, jogos.PageSize, jogos.TotalItens);
+            _logger.LogInformation("Jogos em promoção recuperados com sucesso. Pagina: {Pagina}, Quantidade Retornada: {QuantidadeJogos}", pagina, jogosPromovidos.Itens.Count());
 
-            _logger.LogInformation("Jogos em promoção recuperados com sucesso. Pagina: {Pagina}, Quantidade Retornada: {QuantidadeJogos}", pagina, jogos.Itens.Count());
-
-            return Ok(response);
+            return Ok(jogosPromovidos);
         }
     }
 }
