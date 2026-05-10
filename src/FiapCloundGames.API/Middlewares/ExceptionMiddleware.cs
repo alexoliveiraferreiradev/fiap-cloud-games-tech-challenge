@@ -7,10 +7,11 @@ namespace FiapCloudGames.API.Middlewares
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-
-        public ExceptionMiddleware(RequestDelegate next)
+        private readonly ILogger<ExceptionMiddleware> _logger;
+        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
@@ -25,7 +26,7 @@ namespace FiapCloudGames.API.Middlewares
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
 
@@ -33,13 +34,18 @@ namespace FiapCloudGames.API.Middlewares
             var message = "Ocorreu um erro interno no servidor. Tente novamente mais tarde.";
             if (exception is DomainException || exception is BusinessException)
             {
+                _logger.LogInformation("Regra de Negócio: {Mensagem}", exception.Message);
                 statusCode = (int)HttpStatusCode.BadRequest;
                 message = exception.Message;
             }
+            else
+            {
+                _logger.LogError(exception, "Erro Crítico: {Mensagem}", exception.Message);
+            }
+
 
             context.Response.StatusCode = statusCode;
-            var result = JsonSerializer.Serialize(new { message });
-            return context.Response.WriteAsync(result);
+            await context.Response.WriteAsJsonAsync(new { erro = message });
         }
     }
 }
