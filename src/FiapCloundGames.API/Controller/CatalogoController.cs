@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FiapCloudGames.Application.Dtos.Jogos;
-using FiapCloudGames.Application.Dtos.Promocao;
 using FiapCloudGames.Application.Interfaces;
 using FiapCloudGames.Domain.Common;
 using FiapCloudGames.Domain.Entities;
@@ -25,6 +24,7 @@ namespace FiapCloudGames.API.Controller
         {
             _logger = logger;
             _jogoService = jogosService;
+            _mapper = mapper;
         }
         /// <summary>
         /// Recupera os detalhes completos de um jogo específico através do seu identificador único.
@@ -151,24 +151,27 @@ namespace FiapCloudGames.API.Controller
         [HttpGet("busca-jogos-com-promocao")]
         [ProducesResponseType(typeof(PagedResult<JogoResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<PromocaoResponse>>> ObtemJogosComPromocao([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
+        public async Task<ActionResult<IEnumerable<JogoUsuarioResponse>>> ObtemJogosComPromocao([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10)
         {
             await _jogoService.DesativaPromocoesInvalidas();
             _logger.LogInformation("Iniciando busca por jogos em promoção. Pagina: {Pagina}, TamanhoPagina: {TamanhoPagina}", pagina, tamanhoPagina);
 
             var jogoFiltro = new JogoFiltroRequest { Pagina = pagina, Tamanho = tamanhoPagina, ApenasPromovidos = true };
 
-            var jogosPromovidos = await _jogoService.ObtemPromocaoPaginado(jogoFiltro);
+            var jogos = await _jogoService.ObtemPaginado(jogoFiltro);
 
-            if (jogosPromovidos.Itens == null || !jogosPromovidos.Itens.Any())
+            if (jogos.Itens == null || !jogos.Itens.Any())
             {
                 _logger.LogInformation("Busca de promoções finalizada. Nenhum jogo em oferta encontrado na Pagina: {Pagina}", pagina);
                 return NotFound("Não foi encontrado nenhum jogo com promoções");
             }
+            var itensMapeados = _mapper.Map<IEnumerable<JogoUsuarioResponse>>(jogos.Itens);
 
-            _logger.LogInformation("Jogos em promoção recuperados com sucesso. Pagina: {Pagina}, Quantidade Retornada: {QuantidadeJogos}", pagina, jogosPromovidos.Itens.Count());
+            var response = new PagedResult<JogoUsuarioResponse>(itensMapeados, jogos.PageNumber, jogos.PageSize, jogos.TotalItens);
 
-            return Ok(jogosPromovidos);
+            _logger.LogInformation("Jogos em promoção recuperados com sucesso. Pagina: {Pagina}, Quantidade Retornada: {QuantidadeJogos}", pagina, jogos.Itens.Count());
+
+            return Ok(response);
         }
     }
 }

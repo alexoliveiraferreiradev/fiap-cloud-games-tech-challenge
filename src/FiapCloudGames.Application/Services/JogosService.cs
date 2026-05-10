@@ -210,33 +210,6 @@ namespace FiapCloudGames.Application.Services
             _logger.LogInformation("Processo de inativação da promoção {PromocaoId} finalizado com sucesso.", promocaoId);
         }
 
-        public async Task<PagedResult<PromocaoResponse>> ObtemPromocaoPaginado(JogoFiltroRequest filtro)
-        {           
-            string p = filtro.ApenasPromovidos.GetValueOrDefault() ? "sim" : "nao";
-
-            var cacheKey = $"jogos:pag:p{filtro.Pagina}:t{filtro.Tamanho}:prom_{p}";
-
-            var jogosEmCache = await _cacheService.ObterAsync<PagedResult<PromocaoResponse>>(cacheKey);
-
-            if (jogosEmCache != null)
-            {
-                _logger.LogInformation("Catálogo recuperado do CACHE. Pagina: {Pagina}", filtro.Pagina);
-                return jogosEmCache;
-
-            }
-            _logger.LogInformation("Cache miss. Buscando catálogo no BANCO DE DADOS. Pagina: {Pagina}", filtro.Pagina);
-
-            var pagedJogos = await _jogoRepository.ObtemPaginado(filtro.Pagina, filtro.Tamanho, filtro.Busca, filtro.Genero, filtro.ApenasPromovidos);
-            
-            var promocaoMapeado = _mapper.Map<List<PromocaoResponse>>(pagedJogos.Itens);            
-
-            if (pagedJogos.Itens.Any())
-            {
-                await _cacheService.DefinirAsync(cacheKey, promocaoMapeado, TimeSpan.FromMinutes(5));
-            }
-
-            return new PagedResult<PromocaoResponse>(promocaoMapeado, pagedJogos.PageNumber, pagedJogos.TotalPages, pagedJogos.TotalItens);
-        }
 
         public async Task<PagedResult<JogoResponse>> ObtemPaginado(JogoFiltroRequest filtro)
         {
@@ -281,7 +254,7 @@ namespace FiapCloudGames.Application.Services
             var response = _mapper.Map<JogoResponse>(await _jogoRepository.ObterPorId(jogoId));
             if (response != null)
             {
-                await _cacheService.DefinirAsync(cacheKey, response, TimeSpan.FromMinutes(5));
+                await _cacheService.DefinirAsync(cacheKey, JsonSerializer.Serialize(response), TimeSpan.FromMinutes(5));
             }
             return response;
         }
@@ -323,7 +296,7 @@ namespace FiapCloudGames.Application.Services
 
             if (promocaResponse != null)
             {
-                await _cacheService.DefinirAsync(cacheKey, promocaResponse, TimeSpan.FromMinutes(5));
+                await _cacheService.DefinirAsync(cacheKey, JsonSerializer.Serialize(promocaResponse), TimeSpan.FromMinutes(5));
             }
 
             return promocaResponse;
@@ -348,7 +321,7 @@ namespace FiapCloudGames.Application.Services
 
             if (response != null)
             {
-                await _cacheService.DefinirAsync(cacheKey, response, TimeSpan.FromMinutes(5));
+                await _cacheService.DefinirAsync(cacheKey, JsonSerializer.Serialize(response), TimeSpan.FromMinutes(5));
             }
 
             return response;

@@ -8,17 +8,15 @@ namespace FiapCloudGames.Application.Mappings
     {
         public PromocaoProfile()
         {
+            CreateMap<Promocao, PromocaoResponse>()
+                .ForMember(dest=>dest.PromocaoId,opt=>opt.MapFrom(src=>src.Id))
+                .ForMember(dest=>dest.JogoId,opt=>opt.MapFrom(src=>src.JogoId))
+                .ForMember(dest=>dest.ValorPromocao,opt=>opt.MapFrom(src=>src.ValorPromocao.Valor))
+                .ForMember(dest=>dest.DataFim,opt=>opt.MapFrom(src=>src.Periodo.DataFim));
 
             CreateMap<Jogo, PromocaoResponse>()
                 .ForMember(dest => dest.NomeJogo, opt => opt.MapFrom(src => src.Nome.Valor))
-                .ForMember(dest => dest.DescricaoJogo, opt => opt.MapFrom(src => src.Descricao.Valor))
-                .ForMember(dest=>dest.JogoId,opt=>opt.MapFrom(src=>src.Id))
-                .ForMember(dest => dest.PromocaoId, opt => opt.MapFrom(src => src.Promocoes.FirstOrDefault(p => p.Ativo).Id))
-                .ForMember(dest => dest.ValorPromocao, opt => opt.MapFrom(src => src.Promocoes.FirstOrDefault(p => p.Ativo).ValorPromocao.Valor))
-                .ForMember(dest => dest.DataFim, opt => opt.MapFrom(src => src.Promocoes.FirstOrDefault(p => p.Ativo).Periodo.DataInicio))
-                .ForMember(dest => dest.DataFim, opt => opt.MapFrom(src => src.Promocoes.FirstOrDefault(p => p.Ativo).Periodo.DataFim));
-
-
+                .ForMember(dest => dest.DescricaoJogo, opt => opt.MapFrom(src => src.Descricao.Valor));
         }
     }
 }
