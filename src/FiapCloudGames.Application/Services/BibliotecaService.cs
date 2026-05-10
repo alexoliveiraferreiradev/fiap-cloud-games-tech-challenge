@@ -55,10 +55,12 @@ namespace FiapCloudGames.Application.Services
         }
 
         public async Task<PagedResult<BibliotecaResponse>> ObtemBibliotecaDoUsuarioPaginacao(Guid usuarioId, int pagina = 1, int tamanhoPagina = 10)
-        {
-            var totalRegistros = await _bibliotecaRepository.TotalJogosPorUsuario(usuarioId);
-            var bibliotecaResponse = _mapper.Map<IEnumerable<BibliotecaResponse>>(await _bibliotecaRepository.ObterJogosPorUsuarioPaginacao(usuarioId, pagina, tamanhoPagina));
-            return new PagedResult<BibliotecaResponse>(bibliotecaResponse, pagina, tamanhoPagina, totalRegistros);
+        {           
+            var pagedBiblioteca = await _bibliotecaRepository.ObterJogosPorUsuarioPaginacao(usuarioId, pagina, tamanhoPagina);
+
+            var bibliotecaMapeada = _mapper.Map<IEnumerable<BibliotecaResponse>>(pagedBiblioteca.Itens);
+
+            return new PagedResult<BibliotecaResponse>(bibliotecaMapeada,pagina,tamanhoPagina,pagedBiblioteca.TotalItens);
         }
 
         public async Task<IEnumerable<Guid>> ObterIdsJogosDoUsuario(Guid usuarioId)
