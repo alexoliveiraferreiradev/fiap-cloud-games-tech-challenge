@@ -1,4 +1,5 @@
-﻿using FiapCloudGames.Application.Dtos.Jogos;
+﻿using AutoMapper;
+using FiapCloudGames.Application.Dtos.Jogos;
 using FiapCloudGames.Application.Dtos.Promocao;
 using FiapCloudGames.Application.Interfaces;
 using FiapCloudGames.Domain.Common;
@@ -40,14 +41,15 @@ namespace FiapCloudGames.API.Controller
             
             var jogoFiltro = new JogoFiltroRequest { Pagina = pagina, Tamanho =  tamanhoPagina,ApenasPromovidos = true };   
 
-            var jogos = await _jogoService.ObtemPaginado(jogoFiltro);
-            if ( jogos == null|| !jogos.Itens.Any())
+            var jogosPromovidos = await _jogoService.ObtemPromocaoPaginado(jogoFiltro);
+            if ( jogosPromovidos == null|| !jogosPromovidos.Itens.Any())
             {
                 _logger.LogInformation("Consulta finalizada. Nenhuma promoção ativa encontrada no momento.");
                 return NotFound("Não foi encontrado nenhum jogo com promoções");
             }
-            _logger.LogInformation("Promoções recuperadas com sucesso. Quantidade de Jogos: {QuantidadeJogos}",jogos.Itens.Count());
-            return Ok(jogos);
+
+            _logger.LogInformation("Promoções recuperadas com sucesso. Quantidade de Jogos: {QuantidadeJogos}",jogosPromovidos.Itens.Count());
+            return Ok(jogosPromovidos);
         }
         /// <summary>
         /// Obtém informações detalhadas de uma promoção específica através do seu ID.
