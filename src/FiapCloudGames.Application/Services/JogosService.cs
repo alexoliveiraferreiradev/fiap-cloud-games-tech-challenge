@@ -210,6 +210,34 @@ namespace FiapCloudGames.Application.Services
             _logger.LogInformation("Processo de inativação da promoção {PromocaoId} finalizado com sucesso.", promocaoId);
         }
 
+        public async Task<PagedResult<PromocaoResponse>> ObtemPromocaoPaginado(JogoFiltroRequest filtro)
+        {
+            string p = filtro.ApenasPromovidos.GetValueOrDefault() ? "sim" : "nao";
+
+            var cacheKey = $"jogos:pag:p{filtro.Pagina}:t{filtro.Tamanho}:prom_{p}";
+
+            var jogosPromovidosEmCache = await _cacheService.ObterAsync<PagedResult<PromocaoResponse>>(cacheKey);
+
+            if (jogosPromovidosEmCache != null)
+            {
+                _logger.LogInformation("Catálogo recuperado do CACHE. Pagina: {Pagina}", filtro.Pagina);
+                return jogosPromovidosEmCache;
+
+            }
+            _logger.LogInformation("Cache miss. Buscando catálogo no BANCO DE DADOS. Pagina: {Pagina}", filtro.Pagina);
+
+            var pagedJogos = await _jogoRepository.ObtemPaginado(filtro.Pagina, filtro.Tamanho, filtro.Busca, filtro.Genero, filtro.ApenasPromovidos);
+
+            var jogoPromovidosMapeados = _mapper.Map<List<PromocaoResponse>>(pagedJogos.Itens.ToList());
+
+            if (pagedJogos.Itens.Any())
+            {
+                await _cacheService.DefinirAsync(cacheKey, jogoPromovidosMapeados, TimeSpan.FromMinutes(5));
+            }
+
+            return new PagedResult<PromocaoResponse>(jogoPromovidosMapeados, pagedJogos.PageNumber, pagedJogos.TotalPages, pagedJogos.TotalItens);
+        }
+
 
         public async Task<PagedResult<JogoResponse>> ObtemPaginado(JogoFiltroRequest filtro)
         {
