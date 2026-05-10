@@ -107,7 +107,10 @@ namespace FiapCloudGames.Domain.Entities
         public Preco ObterPrecoAtual()
         {
             var promoAtiva = _promocoes.FirstOrDefault(p => p.EstaValida());
-            return promoAtiva != null ? promoAtiva.ValorPromocao : PrecoBase;
+
+            var precoReferencia = promoAtiva != null ? promoAtiva.ValorPromocao : PrecoBase;
+
+            return new Preco(precoReferencia.Valor);
         }
         public void DesativarPromocao(Guid promocaoId)
         {
