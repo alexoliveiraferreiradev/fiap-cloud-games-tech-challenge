@@ -17,14 +17,16 @@ namespace FiapCloudGames.Application.Services
         private readonly IJogoRepository _jogoRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<BibliotecaService> _logger;
+        private readonly ICacheService _cacheService;
         public BibliotecaService(IBibliotecaRepository bibliotecaRepository, IUsuarioRepository usuarioRepository,
-            IJogoRepository jogosRepository, IMapper mapper, ILogger<BibliotecaService> logger)
+            IJogoRepository jogosRepository, IMapper mapper, ILogger<BibliotecaService> logger, ICacheService cacheService)
         {
             _bibliotecaRepository = bibliotecaRepository;
             _usuarioRepository = usuarioRepository;
             _jogoRepository = jogosRepository;
             _mapper = mapper;
             _logger = logger;
+            _cacheService = cacheService;
         }
         public async Task LiberarJogosAposPedido(Guid usuarioId, List<Guid> jogosIds)
         {
@@ -46,6 +48,11 @@ namespace FiapCloudGames.Application.Services
                 await _bibliotecaRepository.Adicionar(bibliotecaItem);
                 _logger.LogInformation("Jogo {JogoId} liberado com sucesso na biblioteca do usuário {UsuarioId}.", jogo.Id, usuario.Id);
             }
+
+            _logger.LogInformation("Biblioteca atualizada no banco. Invalidando caches da biblioteca do usuário...", usuario.Id);
+
+            await _cacheService.RemoverPorPrefixoAsync($"biblioteca:u_{usuarioId}:todos");
+
             _logger.LogInformation("Processo de liberação finalizado com sucesso para o usuário {UsuarioId}.", usuario.Id);
         }
 
@@ -55,12 +62,26 @@ namespace FiapCloudGames.Application.Services
         }
 
         public async Task<PagedResult<BibliotecaResponse>> ObtemBibliotecaDoUsuarioPaginacao(Guid usuarioId, int pagina = 1, int tamanhoPagina = 10)
-        {           
+         {
+            var cacheKey = $"biblioteca:u_{usuarioId}:todos";
+            var bibliotecaEmCache = await _cacheService.ObterAsync<PagedResult<BibliotecaResponse>>(cacheKey);
+            if(bibliotecaEmCache != null)
+            {
+                return bibliotecaEmCache;
+            }
+
             var pagedBiblioteca = await _bibliotecaRepository.ObterJogosPorUsuarioPaginacao(usuarioId, pagina, tamanhoPagina);
 
             var bibliotecaMapeada = _mapper.Map<IEnumerable<BibliotecaResponse>>(pagedBiblioteca.Itens);
 
-            return new PagedResult<BibliotecaResponse>(bibliotecaMapeada,pagina,tamanhoPagina,pagedBiblioteca.TotalItens);
+            var responseBiblioteca = new PagedResult<BibliotecaResponse>(bibliotecaMapeada,pagina,tamanhoPagina,pagedBiblioteca.TotalItens);
+
+            if(bibliotecaMapeada.Any())
+            {
+                await _cacheService.DefinirAsync(cacheKey, responseBiblioteca, TimeSpan.FromMinutes(5));
+            }
+
+            return responseBiblioteca;
         }
 
         public async Task<IEnumerable<Guid>> ObterIdsJogosDoUsuario(Guid usuarioId)
