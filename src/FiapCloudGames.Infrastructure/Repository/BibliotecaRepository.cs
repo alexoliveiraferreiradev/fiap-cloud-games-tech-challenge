@@ -19,13 +19,14 @@ namespace FiapCloudGames.Infrastructure.Repository
 
         }
 
-        public async Task<IEnumerable<Biblioteca>> ObterJogosPorUsuarioPaginacao(Guid usuarioId, int pagina =1, int tamanhoPagina = 10)
+        public async Task<IEnumerable<Biblioteca>> ObterJogosPorUsuarioPaginacao(Guid usuarioId, int pagina = 1, int tamanhoPagina = 10)
         {
             return await _dbContext.Bibliotecas
-                     .AsNoTracking() 
-                     .Include(b=>b.Jogo)
+                     .AsNoTracking()
+                     .Include(b => b.Jogo)
                     .Where(b => b.UsuarioId == usuarioId)
                      .Skip((pagina - 1) * tamanhoPagina)
+                     .OrderBy(b => b.DataCadastro)
                     .Take(tamanhoPagina)
                     .ToListAsync();
         }
@@ -40,7 +41,7 @@ namespace FiapCloudGames.Infrastructure.Repository
 
         public async Task<bool> VerificaSeUsuarioPossuiJogo(Guid usuarioId, Guid jogoId)
         {
-            return await _dbContext.Bibliotecas.AnyAsync(p =>p.UsuarioId == usuarioId && p.JogoId == jogoId);
+            return await _dbContext.Bibliotecas.AnyAsync(p => p.UsuarioId == usuarioId && p.JogoId == jogoId);
         }
     }
 }
