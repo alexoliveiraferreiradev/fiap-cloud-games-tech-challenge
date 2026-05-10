@@ -30,7 +30,7 @@ namespace FiapCloudGames.API.Controller
         /// </summary>
         /// <remarks>
         /// * **Validação de Nome:** Obrigatório, entre 3 e 20 caracteres.
-        /// * **Validação de E-mail:** Obrigatório, formato válido, verificação de duplicidade.
+        /// * **Validação de Senha:** Obrigatório e formato válido.
         /// Este endpoint permite a alteração de dados como nome e preferências. 
         /// 
         /// **Nota:** O ID na URL deve coincidir com o ID do recurso que se deseja atualizar.
@@ -85,9 +85,7 @@ namespace FiapCloudGames.API.Controller
         /// </summary>
         /// <remarks>
         /// Por motivos de segurança, um usuário só pode encerrar sua própria conta. 
-        /// O sistema valida se o ID fornecido na URL é o mesmo contido no Token JWT.
         /// </remarks>
-        /// <param name="id">ID da conta que será desativada.</param>
         /// <response code="204">Sucesso. A conta foi desativada (Não retorna conteúdo).</response>
         /// <response code="400">Operação inválida. Tentativa de desativar conta de terceiros.</response>
         /// <response code="401">Não autorizado. Token ausente ou inválido.</response>
