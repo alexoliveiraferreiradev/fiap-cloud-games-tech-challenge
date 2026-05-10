@@ -17,14 +17,21 @@ namespace FiapCloudGames.API.Extensions
                     Description = "API para gestão de catálogo de jogos e processamento de pedidos.",
                     Contact = new OpenApiContact
                     {
-                        Name = "Alex Oliveira Ferreira",
-                        Email = "alexoliveiraferreiradev@gmail.com"
+                        Name = "Alex Oliveira Ferreira"
                     }
                 });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
+
+                var xmlFileApp = "FiapCloudGames.Application.xml";
+                var xmlPathApp = Path.Combine(AppContext.BaseDirectory, xmlFileApp);
+
+                if (File.Exists(xmlPathApp))
+                {
+                    options.IncludeXmlComments(xmlPathApp);
+                }
 
                 options.SchemaFilter<EnumSchemaFilter>();
 
