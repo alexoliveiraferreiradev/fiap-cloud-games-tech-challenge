@@ -1,4 +1,5 @@
-﻿using FiapCloudGames.Domain.Entities;
+﻿using FiapCloudGames.Domain.Common;
+using FiapCloudGames.Domain.Entities;
 using FiapCloudGames.Domain.Repositories;
 using FiapCloudGames.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
@@ -19,24 +20,19 @@ namespace FiapCloudGames.Infrastructure.Repository
 
         }
 
-        public async Task<IEnumerable<Biblioteca>> ObterJogosPorUsuarioPaginacao(Guid usuarioId, int pagina = 1, int tamanhoPagina = 10)
+        public async Task<PagedResult<Biblioteca>> ObterJogosPorUsuarioPaginacao(Guid usuarioId, int pagina = 1, int tamanhoPagina = 10)
         {
-            return await _dbContext.Bibliotecas
-                     .AsNoTracking()
-                     .Include(b => b.Jogo)
-                    .Where(b => b.UsuarioId == usuarioId)
-                     .Skip((pagina - 1) * tamanhoPagina)
-                     .OrderBy(b => b.DataCadastro)
-                    .Take(tamanhoPagina)
-                    .ToListAsync();
-        }
+            var query = _dbContext.Bibliotecas.AsNoTracking().AsQueryable();
+            var totalItens = await query.CountAsync();
+            var itensUsuario = await query
+                            .Where(x=>x.UsuarioId == usuarioId)
+                            .Include(j=>j.Jogo)
+                            .OrderBy(b => b.DataCadastro)
+                            .Skip((pagina - 1) * tamanhoPagina)
+                            .Take(tamanhoPagina)
+                            .ToListAsync();
 
-        public async Task<int> TotalJogosPorUsuario(Guid usuarioId)
-        {
-            return await _dbContext.Bibliotecas
-                    .AsNoTracking()
-                    .Include(b => b.Jogo)
-                   .Where(b => b.UsuarioId == usuarioId).CountAsync();
+            return new PagedResult<Biblioteca>(itensUsuario, pagina, tamanhoPagina, totalItens);
         }
 
         public async Task<bool> VerificaSeUsuarioPossuiJogo(Guid usuarioId, Guid jogoId)
