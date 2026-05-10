@@ -19,5 +19,6 @@ namespace FiapCloudGames.Application.Interfaces
         Task<PromocaoResponse?> ObtemPromocaoPorId(Guid promocaoId);        
         Task DesativaPromocoesInvalidas();
         Task<PagedResult<JogoResponse>> ObtemPaginado(JogoFiltroRequest filtroRequest);
+        Task<PagedResult<PromocaoResponse>> ObtemPromocaoPaginado(JogoFiltroRequest filtroRequest);
     }
 }
