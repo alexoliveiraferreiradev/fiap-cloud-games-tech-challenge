@@ -22,10 +22,9 @@ namespace FiapCloudGames.Infrastructure.Repository
 
         public async Task<PagedResult<Biblioteca>> ObterJogosPorUsuarioPaginacao(Guid usuarioId, int pagina = 1, int tamanhoPagina = 10)
         {
-            var query = _dbContext.Bibliotecas.AsNoTracking().AsQueryable();
+            var query = _dbContext.Bibliotecas.Where(x => x.UsuarioId == usuarioId).AsNoTracking().AsQueryable();
             var totalItens = await query.CountAsync();
             var itensUsuario = await query
-                            .Where(x=>x.UsuarioId == usuarioId)
                             .Include(j=>j.Jogo)
                             .OrderBy(b => b.DataCadastro)
                             .Skip((pagina - 1) * tamanhoPagina)
