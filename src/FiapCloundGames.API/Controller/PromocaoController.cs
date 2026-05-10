@@ -22,7 +22,7 @@ namespace FiapCloudGames.API.Controller
         }
 
         /// <summary>
-        /// Recupera o catálogo de jogos que possuem ofertas ativas, de forma paginada.
+        /// Recupera o catálogo de jogos que possuem ofertas ativas.
         /// </summary>
         /// <remarks>
         /// Antes de listar, o sistema executa uma limpeza automática de promoções expiradas 
@@ -38,7 +38,7 @@ namespace FiapCloudGames.API.Controller
             _logger.LogInformation("Iniciando consulta de jogos em promoção.");
             await _jogoService.DesativaPromocoesInvalidas();
             
-            var jogoFiltro = new JogoFiltroRequest { Pagina = pagina, Tamanho =  tamanhoPagina };   
+            var jogoFiltro = new JogoFiltroRequest { Pagina = pagina, Tamanho =  tamanhoPagina,ApenasPromovidos = true };   
 
             var jogos = await _jogoService.ObtemPaginado(jogoFiltro);
             if ( jogos == null|| !jogos.Itens.Any())
