@@ -19,7 +19,7 @@ namespace FiapCloudGames.API.Extensions
         {
             AddSeriLogConfig(builder);
             builder.Host.UseSerilog();
-            builder.Services.AddOpenApi();            
+            builder.Services.AddOpenApi();
             builder.AddRedis();
             AddDbContextConfig(builder);
             AddControllConfiguration(builder);
@@ -37,13 +37,14 @@ namespace FiapCloudGames.API.Extensions
             .ReadFrom.Configuration(builder.Configuration)
              .CreateLogger();
         }
-       
+
         private static void AddDbContextConfig(WebApplicationBuilder builder)
         {
             connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(connectionString);
+                options.UseSqlServer(connectionString,
+                sqlServerOptions => sqlServerOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
             });
         }
 
