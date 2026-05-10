@@ -49,7 +49,7 @@ Para facilitar a avaliação das funcionalidades administrativas (como a criaç�
 
 *   E-mail: admin@fiapcloudgames.com.br
 
-*   Senha: Senha@Admin123
+*   Senha: SenhaAdmin@123
 
 Nota: Realize o login no endpoint /login para obter o Token JWT e utilize o botão Authorize do Swagger para enviar o cabeçalho de autorização.
 
