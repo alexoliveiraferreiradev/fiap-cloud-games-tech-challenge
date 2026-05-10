@@ -263,7 +263,7 @@ namespace FiapCloudGames.Application.Services
 
             if (pagedJogos.Itens.Any())
             {
-                await _cacheService.DefinirAsync(cacheKey, JsonSerializer.Serialize(jogoMapeados), TimeSpan.FromMinutes(5));
+                await _cacheService.DefinirAsync(cacheKey, jogoMapeados, TimeSpan.FromMinutes(5));
             }
 
             return new PagedResult<JogoResponse>(jogoMapeados, pagedJogos.PageNumber, pagedJogos.TotalPages, pagedJogos.TotalItens);
@@ -282,7 +282,7 @@ namespace FiapCloudGames.Application.Services
             var response = _mapper.Map<JogoResponse>(await _jogoRepository.ObterPorId(jogoId));
             if (response != null)
             {
-                await _cacheService.DefinirAsync(cacheKey, JsonSerializer.Serialize(response), TimeSpan.FromMinutes(5));
+                await _cacheService.DefinirAsync(cacheKey, response, TimeSpan.FromMinutes(5));
             }
             return response;
         }
@@ -324,7 +324,7 @@ namespace FiapCloudGames.Application.Services
 
             if (promocaResponse != null)
             {
-                await _cacheService.DefinirAsync(cacheKey, JsonSerializer.Serialize(promocaResponse), TimeSpan.FromMinutes(5));
+                await _cacheService.DefinirAsync(cacheKey, promocaResponse, TimeSpan.FromMinutes(5));
             }
 
             return promocaResponse;
@@ -349,7 +349,7 @@ namespace FiapCloudGames.Application.Services
 
             if (response != null)
             {
-                await _cacheService.DefinirAsync(cacheKey, JsonSerializer.Serialize(response), TimeSpan.FromMinutes(5));
+                await _cacheService.DefinirAsync(cacheKey, response, TimeSpan.FromMinutes(5));
             }
 
             return response;
