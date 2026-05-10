@@ -74,14 +74,14 @@ namespace FiapCloudGames.API.Extensions
 
         public static WebApplication AddAppConfiguration(this WebApplication app)
         {
-            app.UseMiddleware<ExceptionMiddleware>();
             app.UseSerilogRequestLogging();
-            app.MapControllers();
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseHttpsRedirection();
+            app.MapControllers();
             return app;
         }
     }
