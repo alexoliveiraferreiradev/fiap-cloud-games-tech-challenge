@@ -65,6 +65,7 @@ Nota: Realize o login no endpoint /login para obter o Token JWT e utilize o bot�
 *   **ORM:** Entity Framework Core
 *   **Testes:** Testes Unitários com **xUnit**
 *   **Documentação:** Swagger (OpenAPI)
+*   **Serilog** (Logging estruturado com sinks para Console e Arquivos rotativos)
 
 ---
 
