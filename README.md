@@ -63,7 +63,7 @@ Nota: Realize o login no endpoint /login para obter o Token JWT e utilize o bot�
 *   **Banco de Dados:** SQL Server 2022 via Docker
 *   **Cache:** Redis via Docker
 *   **ORM:** Entity Framework Core
-*   **Testes:** Testes Unitários com **xUnit**
+*   **Testes:** Testes Unitários e BDD (Behavior-Driven Development) usando **xUnit**, **Reqnroll** (Gherkin), **Moq** (Mocks) e **Bogus** (Faker para massa de dados)
 *   **Documentação:** Swagger (OpenAPI)
 *   **Serilog** (Logging estruturado com sinks para Console e Arquivos rotativos)
 
