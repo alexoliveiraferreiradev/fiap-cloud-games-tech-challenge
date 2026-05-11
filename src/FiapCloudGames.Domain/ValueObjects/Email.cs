@@ -11,8 +11,8 @@ namespace FiapCloudGames.Domain.ValueObjects
         {
             AssertionConcern.AssertArgumentRealValues(valor, MensagensDominio.EmailNaoReal);
             AssertionConcern.AssertArgumentEmpty(valor, MensagensDominio.UsuarioEmailObrigatorio);
-            AssertionConcern.AssertArgumentEmailFormat(valor, MensagensDominio.EmailInvalido);
             AssertionConcern.AssertArgumentLength(valor, 7, 100, MensagensDominio.EmailTamanhoInvalido);
+            AssertionConcern.AssertArgumentEmailFormat(valor, MensagensDominio.EmailInvalido);
             Valor = valor;
         }
 
