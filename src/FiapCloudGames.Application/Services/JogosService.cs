@@ -149,7 +149,7 @@ namespace FiapCloudGames.Application.Services
 
             var response = _mapper.Map<PromocaoResponse>(jogo);
 
-            return _mapper.Map(novaPromocao, response);
+            return response;
         }
 
         public async Task AtualizaPromocao(Guid promocaoId, UpdatePromocaoRequest promocaoRequest)
